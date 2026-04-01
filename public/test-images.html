@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Q100 — Test Inspection Images</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f1f5f9; color: #0f172a; padding: 24px; }
+  h1 { font-size: 22px; margin-bottom: 6px; }
+  p.sub { color: #64748b; font-size: 14px; margin-bottom: 24px; }
+  .section { background: #fff; border-radius: 12px; border: 1px solid #e2e8f0; padding: 20px; margin-bottom: 20px; }
+  .section h2 { font-size: 16px; margin-bottom: 4px; }
+  .section .desc { font-size: 13px; color: #64748b; margin-bottom: 12px; }
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .card { border: 1px solid #e2e8f0; border-radius: 10px; overflow: hidden; }
+  .card img { width: 100%; height: 200px; object-fit: cover; display: block; cursor: pointer; }
+  .card .info { padding: 10px; }
+  .card .info h3 { font-size: 13px; font-weight: 700; }
+  .card .info p { font-size: 11px; color: #64748b; margin-top: 2px; }
+  .badge { display: inline-block; padding: 2px 8px; border-radius: 6px; font-size: 10px; font-weight: 700; margin-top: 4px; }
+  .badge.master { background: #dbeafe; color: #1e40af; }
+  .badge.pass { background: #dcfce7; color: #166534; }
+  .badge.fail { background: #fee2e2; color: #991b1b; }
+  .tip { background: #fffbeb; border: 1px solid #fde68a; border-radius: 10px; padding: 14px; margin-bottom: 20px; font-size: 13px; color: #92400e; }
+  a.dl { display: inline-block; margin-top: 6px; font-size: 12px; color: #4f46e5; text-decoration: none; font-weight: 600; }
+  a.dl:hover { text-decoration: underline; }
+</style>
+</head>
+<body>
+
+<h1>Q100 Retail AI — Test Images for Inspection</h1>
+<p class="sub">Right-click any image → "Save image as..." to download, then upload in Photo Mode to test.</p>
+
+<div class="tip">
+  <strong>How to test:</strong> Open the app → Enter Photo Mode → Go to a section → Switch to Upload mode → Upload one of these inspection images → Click "Capture & Analyze". The AI will compare it against the master image and report missing/misplaced products.
+</div>
+
+<!-- MASTER IMAGES (same as used in app) -->
+<div class="section">
+  <h2>Master Reference Images (used by the app)</h2>
+  <div class="desc">These are the "ideal" shelf images the AI compares against. They're loaded automatically in Photo Mode.</div>
+  <div class="grid">
+    <div class="card">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/76/Tesco_Supermarket_%28Cakes_%26_Biscuits%29.jpg/1280px-Tesco_Supermarket_%28Cakes_%26_Biscuits%29.jpg" alt="Biscuits shelf" />
+      <div class="info">
+        <h3>Section 1 & 2: Biscuits Shelf</h3>
+        <p>Tesco Cakes & Biscuits aisle — fully stocked</p>
+        <span class="badge master">MASTER</span>
+      </div>
+    </div>
+    <div class="card">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5f/Extra_%28Coop_supermarket%29_Bergen_Storsenter_Norway_2017-11-16_snacks_aisle.jpg/1280px-Extra_%28Coop_supermarket%29_Bergen_Storsenter_Norway_2017-11-16_snacks_aisle.jpg" alt="Snacks aisle" />
+      <div class="info">
+        <h3>Section 3: Namkeen & Savoury</h3>
+        <p>Coop supermarket snacks aisle — fully stocked</p>
+        <span class="badge master">MASTER</span>
+      </div>
+    </div>
+    <div class="card">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/6/6a/Potato_Chip_Aisle.jpg" alt="Chips aisle" />
+      <div class="info">
+        <h3>Section 4: Chips & Crisps</h3>
+        <p>Potato chip aisle — fully stocked</p>
+        <span class="badge master">MASTER</span>
+      </div>
+    </div>
+    <div class="card">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a2/Tesco_Supermarket_%28Confectionery%29.jpg/1280px-Tesco_Supermarket_%28Confectionery%29.jpg" alt="Confectionery shelf" />
+      <div class="info">
+        <h3>Section 5: Chocolates & Candy</h3>
+        <p>Tesco confectionery aisle — fully stocked</p>
+        <span class="badge master">MASTER</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- INSPECTION TEST IMAGES -->
+<div class="section">
+  <h2>Inspection Test Images (download & upload these)</h2>
+  <div class="desc">These images simulate real inspection scenarios. Download them and upload in Photo Mode to test the AI comparison.</div>
+  <div class="grid">
+
+    <div class="card">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/76/Tesco_Supermarket_%28Cakes_%26_Biscuits%29.jpg/1280px-Tesco_Supermarket_%28Cakes_%26_Biscuits%29.jpg" alt="Matching shelf" />
+      <div class="info">
+        <h3>Test 1: Matching Shelf (should be OK)</h3>
+        <p>Same as master → AI should return "OK" status</p>
+        <span class="badge pass">EXPECT: OK</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/Tesco_Supermarket_%28Crisps%29.jpg/1280px-Tesco_Supermarket_%28Crisps%29.jpg" alt="Different shelf" />
+      <div class="info">
+        <h3>Test 2: Wrong Shelf (should be NOT_OK)</h3>
+        <p>Crisps shelf uploaded for Biscuits section → AI should detect mismatch</p>
+        <span class="badge fail">EXPECT: NOT_OK</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/64/200324-Abstand-halten-01.jpg/1280px-200324-Abstand-halten-01.jpg" alt="Partially empty shelf" />
+      <div class="info">
+        <h3>Test 3: Partially Empty Shelf</h3>
+        <p>Shelf with gaps visible → AI should detect missing products</p>
+        <span class="badge fail">EXPECT: NOT_OK</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/6/6a/Potato_Chip_Aisle.jpg" alt="Chip aisle" />
+      <div class="info">
+        <h3>Test 4: Chips for Biscuits Section (should be NOT_OK)</h3>
+        <p>Upload this for the Biscuits section → AI detects completely wrong products</p>
+        <span class="badge fail">EXPECT: NOT_OK</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a2/Tesco_Supermarket_%28Confectionery%29.jpg/1280px-Tesco_Supermarket_%28Confectionery%29.jpg" alt="Confectionery" />
+      <div class="info">
+        <h3>Test 5: Confectionery for Chips Section (should be NOT_OK)</h3>
+        <p>Upload this for Chips section → AI detects product mismatch</p>
+        <span class="badge fail">EXPECT: NOT_OK</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f2/Covid-19_pandemic_food_store_Lordship_Lane_Tottenham%2C_London%2C_England_2.jpg/1280px-Covid-19_pandemic_food_store_Lordship_Lane_Tottenham%2C_London%2C_England_2.jpg" alt="Empty shelves" />
+      <div class="info">
+        <h3>Test 6: Nearly Empty Store Shelf</h3>
+        <p>COVID-era empty shelf → AI should report massive stock-outs</p>
+        <span class="badge fail">EXPECT: NOT_OK</span>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="section">
+  <h2>Use Your Own Real Photos</h2>
+  <div class="desc">For the best test, take real photos of store shelves (DMart, Smart Bazaar, Reliance Fresh, etc.) with your phone and upload them. The AI works best with real photos.</div>
+  <ul style="font-size:13px; color:#475569; padding-left:20px; line-height:1.8;">
+    <li>Take a photo of a fully stocked biscuit/snack shelf → use as "matching" test</li>
+    <li>Take a photo of a different aisle (drinks, cereals) → use as "mismatch" test</li>
+    <li>Take a photo of a shelf with visible gaps/empty spots → use as "stock-out" test</li>
+  </ul>
+</div>
+
+</body>
+</html>
