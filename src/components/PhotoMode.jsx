@@ -36,7 +36,7 @@ export default function PhotoMode({ shelf, onComplete, onClose }) {
   const sec = sections[idx];
   const st = states[idx];
 
-  const { videoRef, error: cameraError, hasCamera, takeSnapshot } = useCamera({
+  const { videoRef, error: cameraError, hasCamera, takeSnapshot, rotated } = useCamera({
     active: st.status === 'pending' && inputMode === 'capture',
     facingMode: 'environment',
   });
@@ -287,7 +287,7 @@ export default function PhotoMode({ shelf, onComplete, onClose }) {
                     {/* Camera viewfinder (Capture mode) */}
                     {inputMode === 'capture' && (
                       <div className="pm-compare-camera">
-                        <video ref={videoRef} autoPlay playsInline muted className="pm-camera-video" />
+                        <video ref={videoRef} autoPlay playsInline muted className={`pm-camera-video${rotated ? ' pm-camera-rotated' : ''}`} />
                         {!hasCamera && (
                           <div className="pm-camera-fallback">
                             <Camera size={28} weight="duotone" />

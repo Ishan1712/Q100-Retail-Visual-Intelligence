@@ -33,7 +33,7 @@ export default function VideoMode({ shelf, onComplete, onClose }) {
   const ref = useRef(null);
   const holdRef = useRef(null);
 
-  const { videoRef, error: cameraError, hasCamera } = useCamera({
+  const { videoRef, error: cameraError, hasCamera, rotated } = useCamera({
     active: !stopped,
     facingMode: 'environment',
   });
@@ -63,9 +63,10 @@ export default function VideoMode({ shelf, onComplete, onClose }) {
           holdRef.current = null;
           setHoldProgress(0);
           holdingRef.current = false;
-          // Capture
+          // Capture — flash + haptic buzz
           setFlash(true);
           setTimeout(() => setFlash(false), 200);
+          if (navigator.vibrate) navigator.vibrate(80);
           setCaps(p => [...p, { si: upcoming.si, done: false }]);
           setNextSec(upcoming.si + 1);
           setTimeout(() => setCaps(p => p.map(c => c.si === upcoming.si ? { ...c, done: true } : c)), 2000);
@@ -309,7 +310,7 @@ export default function VideoMode({ shelf, onComplete, onClose }) {
 
       {/* ── VIEWFINDER ── */}
       <div className={`vm-viewfinder ${rec ? 'recording' : 'idle'}`}>
-        <video ref={videoRef} autoPlay playsInline muted className="vm-camera-feed" />
+        <video ref={videoRef} autoPlay playsInline muted className={`vm-camera-feed${rotated ? ' vm-camera-rotated' : ''}`} />
 
         {/* Idle state */}
         {!rec && !hasCamera && (

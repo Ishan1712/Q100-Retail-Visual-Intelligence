@@ -345,6 +345,13 @@
   object-fit: cover; z-index: 0;
 }
 
+/* When stream is landscape but device is portrait, rotate the video 90° to match.
+   Scale it up so the rotated frame fully covers the container (no black bars). */
+.pm-camera-video.pm-camera-rotated {
+  transform: rotate(-90deg) scale(1.35);
+  transform-origin: center center;
+}
+
 .pm-camera-fallback {
   position: absolute; inset: 0;
   display: flex; flex-direction: column;
@@ -1713,6 +1720,10 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
+}
+.pm-compare-camera .pm-camera-video.pm-camera-rotated {
+  transform: rotate(-90deg) scale(1.35);
+  transform-origin: center center;
 }
 .pm-compare-camera .pm-camera-fallback {
   position: absolute;
