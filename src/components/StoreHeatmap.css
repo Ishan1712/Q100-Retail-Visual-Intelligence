@@ -708,13 +708,58 @@
   .revenue-ticker { padding: 10px 12px; gap: 8px; }
   .ticker-amount { font-size: 1rem; }
   .floor-map { padding: 14px; }
-  .shelf-strip { padding: 6px 8px; }
+  .shelf-strip { padding: 6px 8px; min-height: 44px; }
   .shelf-cat { font-size: .66rem; }
+  .shelf-num { width: 22px; height: 22px; font-size: .64rem; border-radius: 6px; }
   .alert-card { padding: 10px 12px; }
   .alert-dispatch-btn { padding: 7px 10px; font-size: .7rem; }
   .feed-item { padding: 7px 10px; }
   .feed-body { font-size: .66rem; }
   .vip-card { padding: 10px 12px; }
+  .alerts-panel, .feed-panel { padding: 14px; border-radius: 12px; }
+  .panel-title-row h3 { font-size: .82rem; }
   /* Tooltips above shelves won't fit — show inline */
   .shelf-tooltip { display: none; }
+}
+
+@media (max-width: 360px) {
+  .heatmap-screen { padding: 10px 8px 96px; gap: 12px; }
+  .hero-bar { padding: 10px; gap: 8px; border-radius: 12px; }
+  .hero-compliance { gap: 12px; }
+  .donut-wrap { width: 58px; height: 58px; }
+  .donut-center strong { font-size: .82rem; }
+  .hero-value { font-size: 1.1rem; }
+  .hero-label { font-size: .58rem; }
+  .hero-donut-legend span { font-size: .58rem; }
+  .hero-stats { gap: 8px; }
+  .hs-val { font-size: .95rem; }
+  .hs-label { font-size: .56rem; }
+  .revenue-ticker { padding: 8px 10px; gap: 6px; border-radius: 10px; }
+  .ticker-icon { width: 30px; height: 30px; min-width: 30px; border-radius: 8px; }
+  .ticker-label { font-size: .55rem; }
+  .ticker-amount { font-size: .88rem; }
+  .floor-map { padding: 10px; border-radius: 12px; }
+  .floor-header { font-size: .64rem; margin-bottom: 10px; }
+  .shelf-strip { padding: 5px 6px; border-radius: 8px; min-height: 38px; }
+  .shelf-num { width: 20px; height: 20px; font-size: .58rem; }
+  .shelf-cat { font-size: .58rem; }
+  .shelf-pct { font-size: .72rem; }
+  .shelf-mini-bar { width: 30px; }
+  .floor-entrance { padding: 10px; font-size: .56rem; }
+  .floor-checkout { padding: 10px; font-size: .6rem; }
+  .floor-storeroom { padding: 10px; font-size: .6rem; }
+  .floor-legend { gap: 8px; }
+  .legend-item { font-size: .56rem; }
+  .vip-section { padding: 12px; border-radius: 12px; }
+  .vip-card { padding: 8px 10px; border-radius: 10px; }
+  .vip-brand { font-size: .76rem; }
+  .alert-card { padding: 8px 10px; border-radius: 10px; }
+  .alert-shelf { font-size: .7rem; }
+  .alert-products { font-size: .66rem; }
+  .alert-dispatch-btn { padding: 6px 8px; font-size: .64rem; border-radius: 7px; }
+  .feed-item { padding: 6px 8px; }
+  .feed-time { font-size: .6rem; min-width: 48px; }
+  .feed-body { font-size: .6rem; }
+  .alerts-panel, .feed-panel { padding: 12px; border-radius: 10px; }
+  .panel-title-row h3 { font-size: .76rem; }
 }

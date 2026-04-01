@@ -287,7 +287,7 @@
   .reg-kpi-strip { grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)) !important; }
   .roi-hero-owner { flex-direction: column; text-align: center; padding: 20px; gap: 16px; }
   .roi-hero-main { flex: 1 1 auto; min-width: 0; }
-  .roi-hero-compare { flex-direction: row; flex-wrap: wrap; justify-content: center; max-width: 100%; }
+  .roi-hero-compare { flex-direction: row; flex-wrap: wrap; justify-content: center; max-width: 100%; min-width: 0; }
   .lb-metrics { flex-wrap: wrap; gap: 6px; }
   .fin-donut-row { flex-direction: column; align-items: center; }
   .hm-grid-table { display: block; overflow-x: auto; white-space: nowrap; }
@@ -295,7 +295,7 @@
   .brand-table { display: block; overflow-x: auto; }
   .owner-table { display: block; overflow-x: auto; }
   .owner-compare-row { grid-template-columns: 1fr; }
-  .owner-bar-label { min-width: 180px; font-size: .66rem; }
+  .owner-bar-label { min-width: 0; max-width: none; font-size: .66rem; }
 }
 
 @media (max-width: 768px) {
@@ -313,14 +313,19 @@
   .radar-section > .reg-card { min-height: 280px; }
   .roi-hero-big { font-size: 2rem; }
   .owner-recovery-big { font-size: 1.6rem; }
-  .owner-bar-label { min-width: 140px; font-size: .62rem; }
+  .owner-bar-label { min-width: 0; font-size: .62rem; }
+  .roi-hero-compare { gap: 6px; }
+  .roi-compare-item { padding: 8px 12px; }
 }
 
 @media (max-width: 480px) {
   .reg-screen { padding: 12px 12px 100px; }
-  .reg-kpi-strip { grid-template-columns: 1fr !important; }
+  .reg-kpi-strip { grid-template-columns: 1fr 1fr !important; gap: 6px; }
+  .reg-kpi { padding: 8px; border-radius: 10px; }
+  .reg-kpi-body strong { font-size: .9rem; }
   .staff-summary { grid-template-columns: 1fr; }
   .roi-hero-big { font-size: 1.6rem; }
+  .roi-hero-owner { padding: 16px; border-radius: 12px; }
   .owner-recovery-big { font-size: 1.4rem; }
   .owner-bar-row { flex-wrap: wrap; }
   .owner-bar-label { min-width: 100%; font-size: .64rem; }
@@ -329,4 +334,25 @@
   .report-gen-body { gap: 12px; }
   .drill-controls { gap: 4px; }
   .drill-btn { padding: 5px 8px; font-size: .64rem; }
+  .reg-card { padding: 14px; border-radius: 12px; }
+  .reg-card h3 { font-size: .8rem; }
+  .lb-row { gap: 6px; padding: 8px 0; }
+  .roi-compare-item { padding: 6px 10px; }
+  .roi-compare-label { font-size: .58rem; }
+  .roi-compare-val { font-size: .88rem; }
+}
+
+@media (max-width: 360px) {
+  .reg-screen { padding: 10px 8px 96px; }
+  .reg-kpi-strip { grid-template-columns: 1fr !important; gap: 5px; }
+  .reg-kpi { padding: 6px 8px; }
+  .reg-kpi-body strong { font-size: .82rem; }
+  .roi-hero-big { font-size: 1.3rem; }
+  .roi-hero-owner { padding: 12px; }
+  .owner-recovery-big { font-size: 1.2rem; }
+  .reg-card { padding: 10px; border-radius: 10px; }
+  .reg-card h3 { font-size: .74rem; }
+  .rg-page { padding: 8px; }
+  .drill-btn { padding: 4px 6px; font-size: .58rem; }
+  .radar-section > .reg-card { min-height: 220px; }
 }

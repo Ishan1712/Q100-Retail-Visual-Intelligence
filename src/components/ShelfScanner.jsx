@@ -112,25 +112,19 @@ export default function ShelfScanner({ shelf, onConfirm, onClose }) {
 
             {/* Dark decorative top area */}
             <div className="scanner-confirm-dark-top">
-              <div className="scanner-confirm-rings">
-                <div className="scanner-confirm-ring" />
-                <div className="scanner-confirm-ring" />
-                <div className="scanner-confirm-ring" />
-              </div>
               <motion.div className="scanner-success-icon"
                 initial={{ scale: 0 }} animate={{ scale: 1 }}
                 transition={{ type: 'spring', stiffness: 200, damping: 15, delay: 0.2 }}>
-                <Tooltip text="Shelf Detected Successfully"><CheckCircle size={32} weight="duotone" color="#4ade80" /></Tooltip>
+                <Tooltip text="Shelf Detected Successfully"><CheckCircle size={28} weight="duotone" color="#4ade80" /></Tooltip>
               </motion.div>
+              <button onClick={onClose} className="scanner-close" aria-label="Close">
+                <Tooltip text="Close"><X size={18} weight="bold" color="#fff" /></Tooltip>
+              </button>
             </div>
 
-            <button onClick={onClose} className="scanner-close" style={{ zIndex: 20 }} aria-label="Close">
-              <Tooltip text="Close"><X size={18} weight="bold" color="#fff" /></Tooltip>
-            </button>
-
             {/* Sliding white card */}
-            <motion.div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'flex-end', position: 'relative', zIndex: 2 }}
-              initial={{ y: 80 }} animate={{ y: 0 }}
+            <motion.div className="scanner-confirm-card-wrap"
+              initial={{ y: 40 }} animate={{ y: 0 }}
               transition={{ type: 'spring', stiffness: 180, damping: 24 }}>
               <div className="scanner-confirm-card">
                 <div className="scanner-card-handle" />
