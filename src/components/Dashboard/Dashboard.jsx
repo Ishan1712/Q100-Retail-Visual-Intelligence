@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence, useSpring, useTransform } from "framer-motion";
 import {
-  Sun, CloudSun, MoonStars, Trophy, BellRinging, WifiSlash,
+  Sun, CloudSun, MoonStars, Trophy, BellRinging,
   Scan, Storefront, Sparkle, Fire, CaretRight, Clock,
   CheckCircle, Lightning, Crosshair, Check, CaretDown, UserCircle,
   Grains, Wine, Cookie, Drop, Flask, Broom, Baby, BowlSteam, ShoppingCart, Package,
-  ChartBar, Buildings, MapPin
+  ChartBar, Buildings, MapPin, SignOut
 } from "@phosphor-icons/react";
 import { shiftData, shelves } from "../../data";
 import ShelfScanner from "../ShelfScanner";
@@ -19,14 +19,12 @@ import ManagerInspection from "../ManagerInspection";
 import RestockDispatcher from "../RestockDispatcher";
 import DailyReport from "../DailyReport";
 import PlanogramGallery from "../PlanogramGallery";
-import LiveFloorMap from "../LiveFloorMap";
 import PortfolioHQ from "../regional/PortfolioHQ";
 import StoreCompare from "../regional/StoreCompare";
 import FinancialROI from "../regional/FinancialROI";
 import BrandHeatmap from "../regional/BrandHeatmap";
 import StaffAnalytics from "../regional/StaffAnalytics";
 import ReportGenerator from "../regional/ReportGenerator";
-import OnboardingSimulator from "../regional/OnboardingSimulator";
 import Tooltip from "../Tooltip";
 import "./Dashboard.css";
 
@@ -265,12 +263,9 @@ const Dashboard = () => {
     else if (role === "manager") setCurrentPage("heatmap");
     else if (role === "regional") setCurrentPage("portfolio");
   }, [setCurrentPage]);
-  const clock = useLiveClock();
-
   const progress = Math.round((shiftData.scanned / shiftData.total) * 100);
   const avatarLetter = shiftData.workerName?.charAt(0)?.toUpperCase() || "R";
   const animProg = useAnimatedCounter(progress, 1600);
-  const timeStr = clock.toLocaleTimeString("en-IN", { hour: "2-digit", minute: "2-digit", second: "2-digit", hour12: true });
 
   const sorted = [...shelves].sort((a, b) => {
     if (a.priority && !b.priority) return -1;
@@ -298,13 +293,11 @@ const Dashboard = () => {
         <aside className="sidebar">
           <div className="sidebar-inner">
             <div className="sb-brand">
-              <div className="sb-brand-icon"><Tooltip text="Q100 AI"><img src="/augle-logo.png" alt="Augle AI" className="sb-augle-logo" /></Tooltip></div>
-              <div>
-                <span className="sb-eyebrow">Q100 AI</span>
-                <strong className="sb-title">
-                  {currentRole === "worker" ? "Worker Console" : currentRole === "manager" ? "Manager Dashboard" : "Regional HQ"}
-                </strong>
+              <div className="sb-brand-top">
+                <div className="sb-brand-icon"><Tooltip text="Q100 AI"><img src="/augle-logo.png" alt="Augle AI" className="sb-augle-logo" /></Tooltip></div>
+                <strong className="sb-brand-name">Q100.ai</strong>
               </div>
+              <span className="sb-brand-tagline">Retail Visual Intelligence</span>
             </div>
 
             <nav className="sb-nav">
@@ -320,15 +313,13 @@ const Dashboard = () => {
                 { icon: <Tooltip text="Restock Dispatch"><Package size={18} weight="duotone" /></Tooltip>, label: "Restock Dispatch", page: "dispatch" },
                 { icon: <Tooltip text="Daily Report"><ChartBar size={18} weight="duotone" /></Tooltip>, label: "Daily Report", page: "daily-report" },
                 { icon: <Tooltip text="Planogram Gallery"><Grains size={18} weight="duotone" /></Tooltip>, label: "Planogram Gallery", page: "planograms" },
-                { icon: <Tooltip text="Live Floor Map"><MapPin size={18} weight="duotone" /></Tooltip>, label: "Live Floor Map", page: "floor-map" },
               ] : [
-                { icon: <Tooltip text="Portfolio"><Buildings size={18} weight="duotone" /></Tooltip>, label: "Portfolio HQ", page: "portfolio" },
-                { icon: <Tooltip text="Store Compare"><ChartBar size={18} weight="duotone" /></Tooltip>, label: "Store Compare", page: "compare" },
-                { icon: <Tooltip text="Financial ROI"><Trophy size={18} weight="duotone" /></Tooltip>, label: "Financial ROI", page: "roi" },
-                { icon: <Tooltip text="Brand Standards"><Grains size={18} weight="duotone" /></Tooltip>, label: "Brand Standards", page: "brand-standards" },
+                { icon: <Tooltip text="Store Dashboard"><Buildings size={18} weight="duotone" /></Tooltip>, label: "Store Dashboard", page: "portfolio" },
+                { icon: <Tooltip text="Store Performance"><ChartBar size={18} weight="duotone" /></Tooltip>, label: "Store Performance", page: "compare" },
+                { icon: <Tooltip text="Product Intelligence"><Package size={18} weight="duotone" /></Tooltip>, label: "Product Intelligence", page: "brand-standards" },
+                { icon: <Tooltip text="Revenue Impact"><Trophy size={18} weight="duotone" /></Tooltip>, label: "Revenue Impact", page: "roi" },
                 { icon: <Tooltip text="Staff Analytics"><UserCircle size={18} weight="duotone" /></Tooltip>, label: "Staff Analytics", page: "staff" },
-                { icon: <Tooltip text="Reports"><Package size={18} weight="duotone" /></Tooltip>, label: "Report Generator", page: "reports" },
-                { icon: <Tooltip text="New Store"><MapPin size={18} weight="duotone" /></Tooltip>, label: "New Store Sim", page: "onboarding" },
+                { icon: <Tooltip text="Reports"><Grains size={18} weight="duotone" /></Tooltip>, label: "Reports", page: "reports" },
               ]).map((n) => {
                 const isActive = n.matchPages
                   ? n.matchPages.includes(currentPage)
@@ -354,12 +345,12 @@ const Dashboard = () => {
 
             <RoleSwitcher currentRole={currentRole} onSwitch={handleRoleSwitch} />
 
-            <div className="sb-clock">
-              <div className="sb-clock-ic"><Tooltip text="Current Time"><Clock size={17} weight="duotone" /></Tooltip></div>
-              <div>
-                <strong className="sb-clock-time">{timeStr}</strong>
-                <span className="sb-clock-shift">{shiftData.shift}</span>
-              </div>
+            <div className="sb-footer">
+              <button className="sb-logout">
+                <SignOut size={16} weight="bold" />
+                <span>Logout</span>
+              </button>
+              <span className="sb-copyright">© 2025 Q100.AI</span>
             </div>
           </div>
         </aside>
@@ -394,9 +385,9 @@ const Dashboard = () => {
                 ) : (
                   <>
                     <div className="greeting-row">
-                      <h1>Regional Portfolio</h1>
+                      <h1>Store Command Centre</h1>
                     </div>
-                    <p className="shift-sub">Marathwada Retail Group &middot; 5 Stores</p>
+                    <p className="shift-sub">Q-Mart Chain &middot; Maharashtra Region &middot; 5 Stores</p>
                   </>
                 )}
               </div>
@@ -457,85 +448,86 @@ const Dashboard = () => {
             </div>
           </header>
 
+          {/* ════ MOBILE ROLE SWITCHER ════ */}
+          <div className="mobile-role-strip">
+            {roles.map(r => (
+              <button key={r.id}
+                className={`mobile-role-btn${r.id === currentRole ? " active" : ""}`}
+                onClick={() => handleRoleSwitch(r.id)}>
+                <r.icon size={15} weight={r.id === currentRole ? "fill" : "duotone"} />
+                <span className="mobile-role-label">{r.id === "worker" ? "Worker" : r.id === "manager" ? "Manager" : "Owner"}</span>
+                {r.id === currentRole && <Check size={12} weight="bold" className="mobile-role-check" />}
+              </button>
+            ))}
+          </div>
+
           {/* ════ INNER CONTENT ════ */}
           <AnimatePresence mode="wait">
           {currentRole === "manager" && currentPage === "heatmap" ? (
-            <motion.div key="heatmap" style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}
+            <motion.div key="heatmap" style={{ flex: 1, display: 'flex', flexDirection: 'column', minHeight: 0, overflow: 'hidden' }}
               initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }}
               transition={{ type: 'spring', stiffness: 300, damping: 30 }}>
               <StoreHeatmap />
             </motion.div>
           ) : currentRole === "manager" && currentPage === "inspection" ? (
-            <motion.div key="inspection" style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}
+            <motion.div key="inspection" style={{ flex: 1, display: 'flex', flexDirection: 'column', minHeight: 0, overflow: 'hidden' }}
               initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -30 }}
               transition={{ type: 'spring', stiffness: 300, damping: 30 }}>
               <ManagerInspection />
             </motion.div>
           ) : currentRole === "manager" && currentPage === "dispatch" ? (
-            <motion.div key="dispatch" style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}
+            <motion.div key="dispatch" style={{ flex: 1, display: 'flex', flexDirection: 'column', minHeight: 0, overflow: 'hidden' }}
               initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -30 }}
               transition={{ type: 'spring', stiffness: 300, damping: 30 }}>
               <RestockDispatcher />
             </motion.div>
           ) : currentRole === "manager" && currentPage === "daily-report" ? (
-            <motion.div key="daily-report" style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}
+            <motion.div key="daily-report" style={{ flex: 1, display: 'flex', flexDirection: 'column', minHeight: 0, overflow: 'hidden' }}
               initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }}
               transition={{ type: 'spring', stiffness: 300, damping: 30 }}>
               <DailyReport />
             </motion.div>
           ) : currentRole === "manager" && currentPage === "planograms" ? (
-            <motion.div key="planograms" style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}
+            <motion.div key="planograms" style={{ flex: 1, display: 'flex', flexDirection: 'column', minHeight: 0, overflow: 'hidden' }}
               initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }}
               transition={{ type: 'spring', stiffness: 300, damping: 30 }}>
               <PlanogramGallery />
             </motion.div>
-          ) : currentRole === "manager" && currentPage === "floor-map" ? (
-            <motion.div key="floor-map" style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}
-              initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -30 }}
-              transition={{ type: 'spring', stiffness: 300, damping: 30 }}>
-              <LiveFloorMap />
-            </motion.div>
           ) : currentRole === "regional" && currentPage === "portfolio" ? (
-            <motion.div key="portfolio" style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}
+            <motion.div key="portfolio" style={{ flex: 1, display: 'flex', flexDirection: 'column', minHeight: 0, overflow: 'hidden' }}
               initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }}
               transition={{ type: 'spring', stiffness: 300, damping: 30 }}>
               <PortfolioHQ />
             </motion.div>
           ) : currentRole === "regional" && currentPage === "compare" ? (
-            <motion.div key="compare" style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}
+            <motion.div key="compare" style={{ flex: 1, display: 'flex', flexDirection: 'column', minHeight: 0, overflow: 'hidden' }}
               initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -30 }}
               transition={{ type: 'spring', stiffness: 300, damping: 30 }}>
               <StoreCompare />
             </motion.div>
           ) : currentRole === "regional" && currentPage === "roi" ? (
-            <motion.div key="roi" style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}
+            <motion.div key="roi" style={{ flex: 1, display: 'flex', flexDirection: 'column', minHeight: 0, overflow: 'hidden' }}
               initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }}
               transition={{ type: 'spring', stiffness: 300, damping: 30 }}>
               <FinancialROI />
             </motion.div>
           ) : currentRole === "regional" && currentPage === "brand-standards" ? (
-            <motion.div key="brand-standards" style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}
+            <motion.div key="brand-standards" style={{ flex: 1, display: 'flex', flexDirection: 'column', minHeight: 0, overflow: 'hidden' }}
               initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -30 }}
               transition={{ type: 'spring', stiffness: 300, damping: 30 }}>
               <BrandHeatmap />
             </motion.div>
           ) : currentRole === "regional" && currentPage === "staff" ? (
-            <motion.div key="staff" style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}
+            <motion.div key="staff" style={{ flex: 1, display: 'flex', flexDirection: 'column', minHeight: 0, overflow: 'hidden' }}
               initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }}
               transition={{ type: 'spring', stiffness: 300, damping: 30 }}>
               <StaffAnalytics />
             </motion.div>
           ) : currentRole === "regional" && currentPage === "reports" ? (
-            <motion.div key="reports" style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}
+            <motion.div key="reports" style={{ flex: 1, display: 'flex', flexDirection: 'column', minHeight: 0, overflow: 'hidden' }}
               initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }}
               transition={{ type: 'spring', stiffness: 300, damping: 30 }}>
               <ReportGenerator />
-            </motion.div>
-          ) : currentRole === "regional" && currentPage === "onboarding" ? (
-            <motion.div key="onboarding" style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}
-              initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -30 }}
-              transition={{ type: 'spring', stiffness: 300, damping: 30 }}>
-              <OnboardingSimulator />
             </motion.div>
           ) : currentPage === "report" || currentPage === "alerts" ? (
             <motion.div key="report" style={{flex:1,display:'flex',flexDirection:'column',overflow:'hidden'}}
@@ -559,31 +551,32 @@ const Dashboard = () => {
             <motion.div key="dashboard" style={{flex:1,display:'flex',flexDirection:'column',overflow:'hidden'}}
               initial={{opacity:0}} animate={{opacity:1}} exit={{opacity:0}}
               transition={{duration:0.2}}>
-              {/* Quick Stats Strip — only on dashboard */}
-              <div className="stats-strip">
-                <div className="stat-item">
-                  <span className="stat-dot green" />
-                  <span className="stat-val">{counts.done}</span>
-                  <span className="stat-lbl">Compliant</span>
+              {/* Quick Stats Cards */}
+              <div className="stats-cards">
+                <div className="sc-card sc-green">
+                  <span className="sc-num">{counts.done}</span>
+                  <span className="sc-label">Compliant</span>
+                  <span className="sc-dot green" />
                 </div>
-                <div className="stat-item">
-                  <span className="stat-dot red" />
-                  <span className="stat-val">{counts.oos}</span>
-                  <span className="stat-lbl">OOS detected</span>
+                <div className="sc-card sc-red">
+                  <span className="sc-num">{counts.oos}</span>
+                  <span className="sc-label">OOS Detected</span>
+                  <span className="sc-dot red" />
                 </div>
-                <div className="stat-item">
-                  <span className="stat-dot grey" />
-                  <span className="stat-val">{counts.pending}</span>
-                  <span className="stat-lbl">Pending scan</span>
+                <div className="sc-card sc-grey">
+                  <span className="sc-num">{counts.pending}</span>
+                  <span className="sc-label">Pending</span>
+                  <span className="sc-dot grey" />
                 </div>
-                <div className="stat-item">
-                  <span className="stat-dot amber" />
-                  <span className="stat-val">{counts.priority}</span>
-                  <span className="stat-lbl">Priority</span>
+                <div className="sc-card sc-amber">
+                  <span className="sc-num">{counts.priority}</span>
+                  <span className="sc-label">Priority</span>
+                  <span className="sc-dot amber" />
                 </div>
-                <div className="stat-item">
-                  <span className="stat-val" style={{ color: "#059669" }}>{animProg}%</span>
-                  <span className="stat-lbl">Coverage</span>
+                <div className="sc-card sc-coverage">
+                  <span className="sc-num">{animProg}%</span>
+                  <span className="sc-label">Coverage</span>
+                  <span className="sc-dot coverage" />
                 </div>
               </div>
 
@@ -591,22 +584,8 @@ const Dashboard = () => {
               <motion.main className="content-scroll" initial="hidden" animate="visible"
                 variants={{ hidden: { opacity: 0 }, visible: { opacity: 1, transition: { staggerChildren: 0.07, delayChildren: 0.1 } } }}
               >
-                {/* Offline banner */}
-                {shiftData.offline && (
-                  <motion.div className="offline-bar" variants={fadeUp}>
-                    <div className="offline-left">
-                      <div className="offline-ic"><Tooltip text="No Internet Connection"><WifiSlash size={17} weight="duotone" /></Tooltip></div>
-                      <div>
-                        <strong>Offline mode active</strong>
-                        <p>Scans saved locally — will sync when connected</p>
-                      </div>
-                    </div>
-                    <span className="offline-dot" />
-                  </motion.div>
-                )}
-
                 {/* Stats row */}
-                <motion.section className="stats-row" variants={fadeUp}>
+                <section className="stats-row">
                   <div className="card progress-card">
                     <div className="card-top">
                       <div>
@@ -640,7 +619,7 @@ const Dashboard = () => {
                   </div>
 
                   <div className="summary-col">
-                    <motion.div className="card summary-card summary-amber" variants={fadeUp}
+                    <motion.div className="card summary-card summary-amber"
                       whileHover={{ y: -2, boxShadow: "0 8px 24px rgba(245,158,11,0.1)" }}
                     >
                       <div className="sum-icon amber"><Tooltip text="Storeroom Alerts"><BellRinging size={19} weight="duotone" /></Tooltip></div>
@@ -658,7 +637,7 @@ const Dashboard = () => {
                       </div>
                     </motion.div>
 
-                    <motion.div className="card summary-card summary-red" variants={fadeUp}
+                    <motion.div className="card summary-card summary-red"
                       whileHover={{ y: -2, boxShadow: "0 8px 24px rgba(239,68,68,0.08)" }}
                     >
                       <div className="sum-icon red"><Tooltip text="Priority Tracking"><Fire size={19} weight="duotone" /></Tooltip></div>
@@ -669,7 +648,7 @@ const Dashboard = () => {
                       </div>
                     </motion.div>
                   </div>
-                </motion.section>
+                </section>
 
                 {/* Queue header */}
                 <motion.div className="queue-header" variants={fadeUp}>
@@ -726,12 +705,12 @@ const Dashboard = () => {
           { icon: <Tooltip text="Inspect"><Scan size={20} weight="duotone" /></Tooltip>, label: "Inspect", page: "inspection" },
           { icon: <Tooltip text="Dispatch"><Package size={22} weight="duotone" /></Tooltip>, label: "Dispatch", page: "dispatch", isFab: true },
           { icon: <Tooltip text="Report"><ChartBar size={20} weight="duotone" /></Tooltip>, label: "Report", page: "daily-report" },
-          { icon: <Tooltip text="Floor Map"><MapPin size={20} weight="duotone" /></Tooltip>, label: "Floor", page: "floor-map" },
+          { icon: <Tooltip text="Planograms"><Grains size={20} weight="duotone" /></Tooltip>, label: "Planogram", page: "planograms" },
         ] : [
-          { icon: <Tooltip text="Portfolio"><Buildings size={20} weight="duotone" /></Tooltip>, label: "Portfolio", page: "portfolio" },
-          { icon: <Tooltip text="Compare"><ChartBar size={20} weight="duotone" /></Tooltip>, label: "Compare", page: "compare" },
-          { icon: <Tooltip text="ROI"><Trophy size={22} weight="duotone" /></Tooltip>, label: "ROI", page: "roi", isFab: true },
-          { icon: <Tooltip text="Brands"><Grains size={20} weight="duotone" /></Tooltip>, label: "Brands", page: "brand-standards" },
+          { icon: <Tooltip text="Dashboard"><Buildings size={20} weight="duotone" /></Tooltip>, label: "Dashboard", page: "portfolio" },
+          { icon: <Tooltip text="Stores"><ChartBar size={20} weight="duotone" /></Tooltip>, label: "Stores", page: "compare" },
+          { icon: <Tooltip text="Revenue"><Trophy size={22} weight="duotone" /></Tooltip>, label: "Revenue", page: "roi", isFab: true },
+          { icon: <Tooltip text="Products"><Package size={20} weight="duotone" /></Tooltip>, label: "Products", page: "brand-standards" },
           { icon: <Tooltip text="Staff"><UserCircle size={20} weight="duotone" /></Tooltip>, label: "Staff", page: "staff" },
         ]).map((n) => {
           const isActive = n.matchPages

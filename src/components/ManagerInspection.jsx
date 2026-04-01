@@ -12,11 +12,11 @@ const scenarios = [
   {
     id: 1,
     title: "Out-of-Stock Detection",
-    aisle: 7, section: 2, sectionName: "Value Biscuits",
+    shelf: 7, section: 2, sectionName: "Value Biscuits",
     worker: "Rahul M.", capturedAt: "9:18 AM",
-    masterImg: "https://upload.wikimedia.org/wikipedia/commons/7/76/Tesco_Supermarket_%28Cakes_%26_Biscuits%29.jpg",
-    capturedImg: "https://upload.wikimedia.org/wikipedia/commons/6/6b/Tesco_Supermarket_%28Crisps%29.jpg",
-    afterImg: "https://upload.wikimedia.org/wikipedia/commons/7/76/Tesco_Supermarket_%28Cakes_%26_Biscuits%29.jpg",
+    masterImg: "/shelves/shelf7-snacks/shelf7S2(master).png",
+    capturedImg: "/shelves/shelf7-snacks/shelf7S2(inspected).png",
+    afterImg: "/shelves/shelf7-snacks/shelf7S2(master).png",
     complianceBefore: 67,
     complianceAfter: 100,
     restoredAt: "9:31 AM",
@@ -36,11 +36,11 @@ const scenarios = [
   {
     id: 2,
     title: "Misplacement Detection",
-    aisle: 7, section: 3, sectionName: "Namkeen & Savoury",
+    shelf: 7, section: 3, sectionName: "Namkeen & Savoury",
     worker: "Rahul M.", capturedAt: "9:18 AM",
-    masterImg: "https://upload.wikimedia.org/wikipedia/commons/5/5f/Extra_%28Coop_supermarket%29_Bergen_Storsenter_Norway_2017-11-16_snacks_aisle.jpg",
-    capturedImg: "https://upload.wikimedia.org/wikipedia/commons/6/6a/Potato_Chip_Aisle.jpg",
-    afterImg: "https://upload.wikimedia.org/wikipedia/commons/5/5f/Extra_%28Coop_supermarket%29_Bergen_Storsenter_Norway_2017-11-16_snacks_aisle.jpg",
+    masterImg: "/shelves/shelf7-snacks/shelf7S3(master).png",
+    capturedImg: "/shelves/shelf7-snacks/shelf7S3(inspected).png",
+    afterImg: "/shelves/shelf7-snacks/shelf7S3(master).png",
     complianceBefore: 33,
     complianceAfter: 100,
     restoredAt: "9:33 AM",
@@ -110,7 +110,7 @@ const ManagerInspection = () => {
       {/* Header */}
       <div className="insp-header">
         <div className="insp-header-left">
-          <h2>Aisle {s.aisle}, Section {s.section} — {s.sectionName}</h2>
+          <h2>Shelf {s.shelf}, Section {s.section} — {s.sectionName}</h2>
           <div className="insp-meta">
             <span><Clock size={13} weight="duotone" /> Captured {s.capturedAt} by {s.worker}</span>
             <span className="insp-compliance-badge">
