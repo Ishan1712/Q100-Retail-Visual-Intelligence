@@ -457,6 +457,18 @@ const Dashboard = () => {
             </div>
           </header>
 
+          {/* ════ MOBILE ROLE SWITCHER ════ */}
+          <div className="mobile-role-strip">
+            {roles.map(r => (
+              <button key={r.id}
+                className={`mobile-role-btn${r.id === currentRole ? " active" : ""}`}
+                onClick={() => handleRoleSwitch(r.id)}>
+                <r.icon size={14} weight={r.id === currentRole ? "fill" : "duotone"} />
+                <span>{r.label.split(" ")[0]}</span>
+              </button>
+            ))}
+          </div>
+
           {/* ════ INNER CONTENT ════ */}
           <AnimatePresence mode="wait">
           {currentRole === "manager" && currentPage === "heatmap" ? (

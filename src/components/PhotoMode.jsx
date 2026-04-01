@@ -223,8 +223,8 @@ export default function PhotoMode({ shelf, onComplete, onClose }) {
               <button className="pm-step-btn" onClick={() => { setIdx(i); setUploadedImage(null); setUploadedFile(null); }}>
                 <Tooltip text={`${s.name}${isDone ? (isStepPass ? ' — Passed' : ' — Issues') : ''}`}>
                   <div className={`pm-step ${cls}`}>
-                    {isStepPass ? <CheckCircle size={14} weight="bold" />
-                      : isStepFail ? <Warning size={14} weight="bold" />
+                    {isStepPass ? <CheckCircle size={12} weight="bold" />
+                      : isStepFail ? <Warning size={12} weight="bold" />
                         : i + 1}
                   </div>
                 </Tooltip>
