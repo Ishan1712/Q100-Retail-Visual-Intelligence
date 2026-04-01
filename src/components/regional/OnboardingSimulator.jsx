@@ -2,7 +2,7 @@ import React, { useState, useMemo } from "react";
 import { Lightning, Storefront, TrendUp, CheckCircle, MapPin } from "@phosphor-icons/react";
 import "./Regional.css";
 
-const defaults = { name: "Q-Mart City Centre, Solapur", sqft: 5800, aisles: 8, footfall: 1200, oosRate: 18, storeroomStaff: 2, brandPartners: 4 };
+const defaults = { name: "Q-Mart City Centre, Solapur", sqft: 5800, shelves: 8, footfall: 1200, oosRate: 18, storeroomStaff: 2, brandPartners: 4 };
 
 const OnboardingSimulator = () => {
   const [form, setForm] = useState(defaults);
@@ -39,8 +39,8 @@ const OnboardingSimulator = () => {
               <input type="number" value={form.sqft} onChange={e => update("sqft", +e.target.value)} />
             </div>
             <div className="sim-field">
-              <label>Number of Aisles</label>
-              <input type="number" value={form.aisles} onChange={e => update("aisles", +e.target.value)} />
+              <label>Number of Shelves</label>
+              <input type="number" value={form.shelves} onChange={e => update("shelves", +e.target.value)} />
             </div>
             <div className="sim-field">
               <label>Daily Footfall</label>
