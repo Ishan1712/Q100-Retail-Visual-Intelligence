@@ -28,6 +28,82 @@ export const shelves = [
    PLANOGRAM DATA — Shelf 7: Snacks & Biscuits
    6 sections with shelf-level product data
    ═══════════════════════════════════════ */
+/* ═══════════════════════════════════════
+   STORE MANAGER DASHBOARD DATA
+   Screen 2.1 — Morning Readiness / Store Heatmap
+   ═══════════════════════════════════════ */
+export const managerStore = {
+  name: "Q-Mart Kothrud, Pune",
+  date: "Wednesday, 25 March 2026",
+  time: "10:15 AM",
+  overallCompliance: 84.2,
+  complianceYesterday: 78.6,
+  totalAisles: 10,
+  endCapZones: 2,
+  checkoutZones: 1,
+  lostSalesPerHour: 1240,
+  lostSalesRate: 4.2, // ₹ per minute
+};
+
+export const managerAisles = [
+  { id: 1,  category: "Checkout Impulse",     compliance: 92, oosItems: 2,  lastScan: "9:45 AM",  color: "lightgreen", icon: "🛒" },
+  { id: 2,  category: "Dairy & Frozen",       compliance: 71, oosItems: 8,  lastScan: "9:52 AM",  color: "red",        icon: "🥛" },
+  { id: 3,  category: "Staples & Grains",     compliance: 96, oosItems: 1,  lastScan: "8:15 AM",  color: "darkgreen",  icon: "🌾" },
+  { id: 4,  category: "Cooking Oil & Masalas", compliance: 88, oosItems: 3,  lastScan: "10:02 AM", color: "lightgreen", icon: "🫙" },
+  { id: 5,  category: "Beverages",            compliance: 91, oosItems: 2,  lastScan: "8:32 AM",  color: "lightgreen", icon: "🍼", vip: { brand: "Coca-Cola", type: "End-cap display", rent: "₹15,000/mo" } },
+  { id: 6,  category: "Household & Cleaning",  compliance: 74, oosItems: 7,  lastScan: "10:08 AM", color: "amber",      icon: "🧴" },
+  { id: 7,  category: "Snacks & Biscuits",    compliance: 79, oosItems: 4,  lastScan: "9:18 AM",  color: "amber",      icon: "🍪", vip: { brand: "Cadbury Dairy Milk Silk", type: "Promotional bay", compliance: 100 } },
+  { id: 8,  category: "Baby & Health",        compliance: 94, oosItems: 1,  lastScan: "9:35 AM",  color: "lightgreen", icon: "🩺" },
+  { id: 9,  category: "Personal Care",        compliance: 89, oosItems: 3,  lastScan: "9:05 AM",  color: "lightgreen", icon: "🧼" },
+  { id: 10, category: "Breakfast & Cereals",  compliance: 87, oosItems: 3,  lastScan: "10:12 AM", color: "lightgreen", icon: "🥣" },
+];
+
+export const managerAlerts = [
+  {
+    id: 1,
+    severity: "critical",
+    aisle: 2,
+    category: "Dairy & Frozen",
+    icon: "🥛",
+    products: "Mother Dairy Curd 400g OOS, Amul Butter low stock",
+    topProduct: "Mother Dairy Curd 400g",
+    lossPerHour: 480,
+    lastScan: "9:52 AM",
+    status: "Restock dispatched, pending",
+  },
+  {
+    id: 2,
+    severity: "critical",
+    aisle: 6,
+    category: "Household & Cleaning",
+    icon: "🧴",
+    products: "Surf Excel 1kg OOS, Vim Bar low stock, Harpic OOS",
+    topProduct: "Surf Excel 1kg",
+    lossPerHour: 340,
+    lastScan: "10:08 AM",
+    status: "Not yet dispatched",
+  },
+  {
+    id: 3,
+    severity: "warning",
+    aisle: 7,
+    category: "Snacks & Biscuits",
+    icon: "🍪",
+    products: "Parle-G 250g restocking, Kurkure OOS, Dairy Milk low",
+    topProduct: "Kurkure Multi Grain",
+    lossPerHour: 280,
+    lastScan: "9:18 AM",
+    status: "Restocking ETA 4 mins",
+  },
+];
+
+export const managerRestockFeed = [
+  { id: 1, time: "10:04 AM", worker: "Manoj",  action: "picking",    product: "Surf Excel 1kg × 5",       target: "Aisle 6",            done: false },
+  { id: 2, time: "9:38 AM",  worker: "Manoj",  action: "restocked",  product: "Dairy Milk 50g × 3",       target: "Aisle 7, Section 5",  done: true },
+  { id: 3, time: "9:33 AM",  worker: "Suresh", action: "restocking", product: "Kurkure Multi Grain × 6",  target: "Aisle 7, Section 3",  done: false },
+  { id: 4, time: "9:31 AM",  worker: "Suresh", action: "restocked",  product: "Parle-G 250g × 4",        target: "Aisle 7, Section 2",  done: true },
+];
+
 export const shelf7Sections = [
   {
     id: 1,

@@ -3,8 +3,9 @@ import { motion, AnimatePresence, useSpring, useTransform } from "framer-motion"
 import {
   Sun, CloudSun, MoonStars, Trophy, BellRinging, WifiSlash,
   Scan, Storefront, Sparkle, Fire, CaretRight, Clock,
-  CheckCircle, Lightning, Crosshair, Check,
-  Grains, Wine, Cookie, Drop, Flask, Broom, Baby, BowlSteam, ShoppingCart, Package
+  CheckCircle, Lightning, Crosshair, Check, CaretDown, UserCircle,
+  Grains, Wine, Cookie, Drop, Flask, Broom, Baby, BowlSteam, ShoppingCart, Package,
+  ChartBar, Buildings, MapPin
 } from "@phosphor-icons/react";
 import { shiftData, shelves } from "../../data";
 import ShelfScanner from "../ShelfScanner";
@@ -13,6 +14,19 @@ import VideoMode from "../VideoMode";
 import ActionReport from "../ActionReport";
 import ShiftSummary from "../ShiftSummary";
 import ShelfHistory from "../ShelfHistory";
+import StoreHeatmap from "../StoreHeatmap";
+import ManagerInspection from "../ManagerInspection";
+import RestockDispatcher from "../RestockDispatcher";
+import DailyReport from "../DailyReport";
+import PlanogramGallery from "../PlanogramGallery";
+import LiveFloorMap from "../LiveFloorMap";
+import PortfolioHQ from "../regional/PortfolioHQ";
+import StoreCompare from "../regional/StoreCompare";
+import FinancialROI from "../regional/FinancialROI";
+import BrandHeatmap from "../regional/BrandHeatmap";
+import StaffAnalytics from "../regional/StaffAnalytics";
+import ReportGenerator from "../regional/ReportGenerator";
+import OnboardingSimulator from "../regional/OnboardingSimulator";
 import Tooltip from "../Tooltip";
 import "./Dashboard.css";
 
@@ -36,6 +50,67 @@ function useLiveClock() {
   useEffect(() => { const id = setInterval(() => setT(new Date()), 1000); return () => clearInterval(id); }, []);
   return t;
 }
+
+/* ───────── Roles ───────── */
+const roles = [
+  { id: "worker", label: "Store Worker", icon: UserCircle, desc: "Floor scanning & restocking" },
+  { id: "manager", label: "Store Manager", icon: ChartBar, desc: "Single store operations" },
+  { id: "regional", label: "Regional Owner", icon: Buildings, desc: "Multi-store portfolio" },
+];
+
+/* ───────── Role Switcher ───────── */
+const RoleSwitcher = ({ currentRole, onSwitch }) => {
+  const [open, setOpen] = useState(false);
+  const ref = React.useRef(null);
+  const current = roles.find(r => r.id === currentRole) || roles[0];
+
+  useEffect(() => {
+    const handleClick = (e) => { if (ref.current && !ref.current.contains(e.target)) setOpen(false); };
+    document.addEventListener("mousedown", handleClick);
+    return () => document.removeEventListener("mousedown", handleClick);
+  }, []);
+
+  return (
+    <div className="role-switcher" ref={ref}>
+      <button className="role-trigger" onClick={() => setOpen(!open)}>
+        <div className="role-trigger-left">
+          <span className="role-trigger-icon"><current.icon size={18} weight="duotone" /></span>
+          <div className="role-trigger-text">
+            <strong>{current.label}</strong>
+            <span>{current.desc}</span>
+          </div>
+        </div>
+        <motion.span animate={{ rotate: open ? 180 : 0 }} transition={{ duration: 0.2 }} className="role-caret">
+          <CaretDown size={14} weight="bold" />
+        </motion.span>
+      </button>
+      <AnimatePresence>
+        {open && (
+          <motion.div className="role-dropdown"
+            initial={{ opacity: 0, y: 6, scale: 0.97 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 6, scale: 0.97 }}
+            transition={{ duration: 0.15, ease: "easeOut" }}
+          >
+            {roles.map((r) => (
+              <button key={r.id}
+                className={`role-option${r.id === currentRole ? " active" : ""}`}
+                onClick={() => { onSwitch(r.id); setOpen(false); }}
+              >
+                <span className="role-option-icon"><r.icon size={17} weight="duotone" /></span>
+                <div className="role-option-text">
+                  <strong>{r.label}</strong>
+                  <span>{r.desc}</span>
+                </div>
+                {r.id === currentRole && <span className="role-check"><Check size={13} weight="bold" /></span>}
+              </button>
+            ))}
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+};
 
 /* ───────── Config ───────── */
 const catConfig = {
@@ -180,8 +255,16 @@ const Dashboard = () => {
   const [scannerOpen, setScannerOpen] = useState(false);
   const [selectedShelf, setSelectedShelf] = useState(null);
   const [activeMode, setActiveMode] = useState(null); // null | 'photo' | 'video'
+  const [currentRole, setCurrentRole] = useState(() => sessionStorage.getItem("q100_role") || "worker");
   const [currentPage, setCurrentPageRaw] = useState(() => sessionStorage.getItem("q100_page") || "shift");
   const setCurrentPage = useCallback((page) => { sessionStorage.setItem("q100_page", page); setCurrentPageRaw(page); }, []);
+  const handleRoleSwitch = useCallback((role) => {
+    sessionStorage.setItem("q100_role", role);
+    setCurrentRole(role);
+    if (role === "worker") setCurrentPage("shift");
+    else if (role === "manager") setCurrentPage("heatmap");
+    else if (role === "regional") setCurrentPage("portfolio");
+  }, [setCurrentPage]);
   const clock = useLiveClock();
 
   const progress = Math.round((shiftData.scanned / shiftData.total) * 100);
@@ -218,18 +301,35 @@ const Dashboard = () => {
               <div className="sb-brand-icon"><Tooltip text="Q100 AI"><img src="/augle-logo.png" alt="Augle AI" className="sb-augle-logo" /></Tooltip></div>
               <div>
                 <span className="sb-eyebrow">Q100 AI</span>
-                <strong className="sb-title">Worker Console</strong>
+                <strong className="sb-title">
+                  {currentRole === "worker" ? "Worker Console" : currentRole === "manager" ? "Manager Dashboard" : "Regional HQ"}
+                </strong>
               </div>
             </div>
 
             <nav className="sb-nav">
-              {[
+              {(currentRole === "worker" ? [
                 { icon: <Tooltip text="Shift Start"><Sparkle size={18} weight="duotone" /></Tooltip>, label: "Shift Start", page: "shift" },
                 { icon: <Tooltip text="Shelf Scan"><Scan size={18} weight="duotone" /></Tooltip>, label: "Shelf Scan", page: "scan" },
                 { icon: <Tooltip text="Restock Alerts"><BellRinging size={18} weight="duotone" /></Tooltip>, label: "Restock Alerts", page: "alerts", matchPages: ["alerts", "report"] },
                 { icon: <Tooltip text="Shelf History"><Clock size={18} weight="duotone" /></Tooltip>, label: "Shelf History", page: "history" },
                 { icon: <Tooltip text="Shift Summary"><Trophy size={18} weight="duotone" /></Tooltip>, label: "Shift Summary", page: "summary" },
-              ].map((n) => {
+              ] : currentRole === "manager" ? [
+                { icon: <Tooltip text="Store Heatmap"><MapPin size={18} weight="duotone" /></Tooltip>, label: "Store Heatmap", page: "heatmap" },
+                { icon: <Tooltip text="AI Inspection"><Scan size={18} weight="duotone" /></Tooltip>, label: "AI Inspection", page: "inspection" },
+                { icon: <Tooltip text="Restock Dispatch"><Package size={18} weight="duotone" /></Tooltip>, label: "Restock Dispatch", page: "dispatch" },
+                { icon: <Tooltip text="Daily Report"><ChartBar size={18} weight="duotone" /></Tooltip>, label: "Daily Report", page: "daily-report" },
+                { icon: <Tooltip text="Planogram Gallery"><Grains size={18} weight="duotone" /></Tooltip>, label: "Planogram Gallery", page: "planograms" },
+                { icon: <Tooltip text="Live Floor Map"><MapPin size={18} weight="duotone" /></Tooltip>, label: "Live Floor Map", page: "floor-map" },
+              ] : [
+                { icon: <Tooltip text="Portfolio"><Buildings size={18} weight="duotone" /></Tooltip>, label: "Portfolio HQ", page: "portfolio" },
+                { icon: <Tooltip text="Store Compare"><ChartBar size={18} weight="duotone" /></Tooltip>, label: "Store Compare", page: "compare" },
+                { icon: <Tooltip text="Financial ROI"><Trophy size={18} weight="duotone" /></Tooltip>, label: "Financial ROI", page: "roi" },
+                { icon: <Tooltip text="Brand Standards"><Grains size={18} weight="duotone" /></Tooltip>, label: "Brand Standards", page: "brand-standards" },
+                { icon: <Tooltip text="Staff Analytics"><UserCircle size={18} weight="duotone" /></Tooltip>, label: "Staff Analytics", page: "staff" },
+                { icon: <Tooltip text="Reports"><Package size={18} weight="duotone" /></Tooltip>, label: "Report Generator", page: "reports" },
+                { icon: <Tooltip text="New Store"><MapPin size={18} weight="duotone" /></Tooltip>, label: "New Store Sim", page: "onboarding" },
+              ]).map((n) => {
                 const isActive = n.matchPages
                   ? n.matchPages.includes(currentPage)
                   : currentPage === n.page;
@@ -252,6 +352,8 @@ const Dashboard = () => {
               })}
             </nav>
 
+            <RoleSwitcher currentRole={currentRole} onSwitch={handleRoleSwitch} />
+
             <div className="sb-clock">
               <div className="sb-clock-ic"><Tooltip text="Current Time"><Clock size={17} weight="duotone" /></Tooltip></div>
               <div>
@@ -271,37 +373,171 @@ const Dashboard = () => {
                 initial={{ scale: 0 }} animate={{ scale: 1 }}
                 transition={{ type: "spring", stiffness: 200, delay: 0.1 }}
               >
-                {avatarLetter}
+                {currentRole === "worker" ? avatarLetter : currentRole === "manager" ? "M" : "R"}
               </motion.div>
               <div className="top-bar-text">
-                <div className="greeting-row">
-                  <span className="shift-badge">{shiftIcon(shiftData.shift)}</span>
-                  <h1>{shiftData.greeting}, <span className="name-accent">{shiftData.workerName}!</span></h1>
-                </div>
-                <p className="shift-sub">{shiftData.shift} &middot; {shiftData.store}</p>
+                {currentRole === "worker" ? (
+                  <>
+                    <div className="greeting-row">
+                      <span className="shift-badge">{shiftIcon(shiftData.shift)}</span>
+                      <h1>{shiftData.greeting}, <span className="name-accent">{shiftData.workerName}!</span></h1>
+                    </div>
+                    <p className="shift-sub">{shiftData.shift} &middot; {shiftData.store}</p>
+                  </>
+                ) : currentRole === "manager" ? (
+                  <>
+                    <div className="greeting-row">
+                      <h1>Store Dashboard</h1>
+                    </div>
+                    <p className="shift-sub">Q-Mart Kothrud, Pune &middot; Wed, 25 Mar 2026</p>
+                  </>
+                ) : (
+                  <>
+                    <div className="greeting-row">
+                      <h1>Regional Portfolio</h1>
+                    </div>
+                    <p className="shift-sub">Marathwada Retail Group &middot; 5 Stores</p>
+                  </>
+                )}
               </div>
             </div>
             <div className="top-bar-right">
-              <motion.div className="header-chip chip-streak" whileHover={{ y: -2 }}>
-                <span className="chip-icon streak-ic"><Tooltip text="Full-Shelf Streak"><Trophy size={15} weight="duotone" /></Tooltip></span>
-                <div>
-                  <strong>{shiftData.streakCount}</strong>
-                  <span>full-shelf scans today!</span>
-                </div>
-              </motion.div>
-              <motion.div className="header-chip chip-restock" whileHover={{ y: -2 }}>
-                <span className="chip-icon restock-ic"><Tooltip text="Restock Progress"><BellRinging size={15} weight="duotone" /></Tooltip></span>
-                <div>
-                  <strong>{shiftData.restockCompleted} of {shiftData.restockTotal}</strong>
-                  <span>restocks completed</span>
-                </div>
-              </motion.div>
+              {currentRole === "worker" ? (
+                <>
+                  <motion.div className="header-chip chip-streak" whileHover={{ y: -2 }}>
+                    <span className="chip-icon streak-ic"><Tooltip text="Full-Shelf Streak"><Trophy size={15} weight="duotone" /></Tooltip></span>
+                    <div>
+                      <strong>{shiftData.streakCount}</strong>
+                      <span>full-shelf scans today!</span>
+                    </div>
+                  </motion.div>
+                  <motion.div className="header-chip chip-restock" whileHover={{ y: -2 }}>
+                    <span className="chip-icon restock-ic"><Tooltip text="Restock Progress"><BellRinging size={15} weight="duotone" /></Tooltip></span>
+                    <div>
+                      <strong>{shiftData.restockCompleted} of {shiftData.restockTotal}</strong>
+                      <span>restocks completed</span>
+                    </div>
+                  </motion.div>
+                </>
+              ) : currentRole === "manager" ? (
+                <>
+                  <motion.div className="header-chip chip-streak" whileHover={{ y: -2 }}>
+                    <span className="chip-icon streak-ic"><Tooltip text="Shelf Compliance"><CheckCircle size={15} weight="duotone" /></Tooltip></span>
+                    <div>
+                      <strong>84.2%</strong>
+                      <span>shelf compliance</span>
+                    </div>
+                  </motion.div>
+                  <motion.div className="header-chip chip-restock" whileHover={{ y: -2 }}>
+                    <span className="chip-icon restock-ic"><Tooltip text="Lost Sales"><Lightning size={15} weight="duotone" /></Tooltip></span>
+                    <div>
+                      <strong>₹1,240/hr</strong>
+                      <span>est. lost sales</span>
+                    </div>
+                  </motion.div>
+                </>
+              ) : (
+                <>
+                  <motion.div className="header-chip chip-streak" whileHover={{ y: -2 }}>
+                    <span className="chip-icon streak-ic"><Tooltip text="Portfolio Compliance"><CheckCircle size={15} weight="duotone" /></Tooltip></span>
+                    <div>
+                      <strong>83.6%</strong>
+                      <span>portfolio compliance</span>
+                    </div>
+                  </motion.div>
+                  <motion.div className="header-chip chip-restock" whileHover={{ y: -2 }}>
+                    <span className="chip-icon restock-ic"><Tooltip text="Revenue Recovered"><Trophy size={15} weight="duotone" /></Tooltip></span>
+                    <div>
+                      <strong>₹12.7L/mo</strong>
+                      <span>revenue recovered</span>
+                    </div>
+                  </motion.div>
+                </>
+              )}
             </div>
           </header>
 
           {/* ════ INNER CONTENT ════ */}
           <AnimatePresence mode="wait">
-          {currentPage === "report" || currentPage === "alerts" ? (
+          {currentRole === "manager" && currentPage === "heatmap" ? (
+            <motion.div key="heatmap" style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}
+              initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }}
+              transition={{ type: 'spring', stiffness: 300, damping: 30 }}>
+              <StoreHeatmap />
+            </motion.div>
+          ) : currentRole === "manager" && currentPage === "inspection" ? (
+            <motion.div key="inspection" style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}
+              initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -30 }}
+              transition={{ type: 'spring', stiffness: 300, damping: 30 }}>
+              <ManagerInspection />
+            </motion.div>
+          ) : currentRole === "manager" && currentPage === "dispatch" ? (
+            <motion.div key="dispatch" style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}
+              initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -30 }}
+              transition={{ type: 'spring', stiffness: 300, damping: 30 }}>
+              <RestockDispatcher />
+            </motion.div>
+          ) : currentRole === "manager" && currentPage === "daily-report" ? (
+            <motion.div key="daily-report" style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}
+              initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }}
+              transition={{ type: 'spring', stiffness: 300, damping: 30 }}>
+              <DailyReport />
+            </motion.div>
+          ) : currentRole === "manager" && currentPage === "planograms" ? (
+            <motion.div key="planograms" style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}
+              initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }}
+              transition={{ type: 'spring', stiffness: 300, damping: 30 }}>
+              <PlanogramGallery />
+            </motion.div>
+          ) : currentRole === "manager" && currentPage === "floor-map" ? (
+            <motion.div key="floor-map" style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}
+              initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -30 }}
+              transition={{ type: 'spring', stiffness: 300, damping: 30 }}>
+              <LiveFloorMap />
+            </motion.div>
+          ) : currentRole === "regional" && currentPage === "portfolio" ? (
+            <motion.div key="portfolio" style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}
+              initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }}
+              transition={{ type: 'spring', stiffness: 300, damping: 30 }}>
+              <PortfolioHQ />
+            </motion.div>
+          ) : currentRole === "regional" && currentPage === "compare" ? (
+            <motion.div key="compare" style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}
+              initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -30 }}
+              transition={{ type: 'spring', stiffness: 300, damping: 30 }}>
+              <StoreCompare />
+            </motion.div>
+          ) : currentRole === "regional" && currentPage === "roi" ? (
+            <motion.div key="roi" style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}
+              initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }}
+              transition={{ type: 'spring', stiffness: 300, damping: 30 }}>
+              <FinancialROI />
+            </motion.div>
+          ) : currentRole === "regional" && currentPage === "brand-standards" ? (
+            <motion.div key="brand-standards" style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}
+              initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -30 }}
+              transition={{ type: 'spring', stiffness: 300, damping: 30 }}>
+              <BrandHeatmap />
+            </motion.div>
+          ) : currentRole === "regional" && currentPage === "staff" ? (
+            <motion.div key="staff" style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}
+              initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }}
+              transition={{ type: 'spring', stiffness: 300, damping: 30 }}>
+              <StaffAnalytics />
+            </motion.div>
+          ) : currentRole === "regional" && currentPage === "reports" ? (
+            <motion.div key="reports" style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}
+              initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }}
+              transition={{ type: 'spring', stiffness: 300, damping: 30 }}>
+              <ReportGenerator />
+            </motion.div>
+          ) : currentRole === "regional" && currentPage === "onboarding" ? (
+            <motion.div key="onboarding" style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}
+              initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -30 }}
+              transition={{ type: 'spring', stiffness: 300, damping: 30 }}>
+              <OnboardingSimulator />
+            </motion.div>
+          ) : currentPage === "report" || currentPage === "alerts" ? (
             <motion.div key="report" style={{flex:1,display:'flex',flexDirection:'column',overflow:'hidden'}}
               initial={{opacity:0,x:40}} animate={{opacity:1,x:0}} exit={{opacity:0,x:-40}}
               transition={{type:'spring',stiffness:300,damping:30}}>
@@ -460,7 +696,7 @@ const Dashboard = () => {
           </AnimatePresence>
 
           {/* FAB — outside AnimatePresence so it anchors to main-col */}
-          {currentPage === "shift" && (
+          {currentRole === "worker" && currentPage === "shift" && (
             <motion.button className="fab"
               initial={{ y: 60, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
@@ -479,13 +715,25 @@ const Dashboard = () => {
 
       {/* ════ MOBILE BOTTOM NAV ════ */}
       <nav className="mobile-nav">
-        {[
+        {(currentRole === "worker" ? [
           { icon: <Tooltip text="Shift Start"><Sparkle size={20} weight="duotone" /></Tooltip>, label: "Shift", page: "shift" },
           { icon: <Tooltip text="Shelf History"><Clock size={20} weight="duotone" /></Tooltip>, label: "History", page: "history" },
           { icon: <Tooltip text="Start Scan"><Scan size={22} weight="duotone" /></Tooltip>, label: "Scan", page: "scan", isFab: true },
           { icon: <Tooltip text="Restock Alerts"><BellRinging size={20} weight="duotone" /></Tooltip>, label: "Alerts", page: "alerts", matchPages: ["alerts", "report"] },
           { icon: <Tooltip text="Shift Summary"><Trophy size={20} weight="duotone" /></Tooltip>, label: "Summary", page: "summary" },
-        ].map((n) => {
+        ] : currentRole === "manager" ? [
+          { icon: <Tooltip text="Heatmap"><MapPin size={20} weight="duotone" /></Tooltip>, label: "Heatmap", page: "heatmap" },
+          { icon: <Tooltip text="Inspect"><Scan size={20} weight="duotone" /></Tooltip>, label: "Inspect", page: "inspection" },
+          { icon: <Tooltip text="Dispatch"><Package size={22} weight="duotone" /></Tooltip>, label: "Dispatch", page: "dispatch", isFab: true },
+          { icon: <Tooltip text="Report"><ChartBar size={20} weight="duotone" /></Tooltip>, label: "Report", page: "daily-report" },
+          { icon: <Tooltip text="Floor Map"><MapPin size={20} weight="duotone" /></Tooltip>, label: "Floor", page: "floor-map" },
+        ] : [
+          { icon: <Tooltip text="Portfolio"><Buildings size={20} weight="duotone" /></Tooltip>, label: "Portfolio", page: "portfolio" },
+          { icon: <Tooltip text="Compare"><ChartBar size={20} weight="duotone" /></Tooltip>, label: "Compare", page: "compare" },
+          { icon: <Tooltip text="ROI"><Trophy size={22} weight="duotone" /></Tooltip>, label: "ROI", page: "roi", isFab: true },
+          { icon: <Tooltip text="Brands"><Grains size={20} weight="duotone" /></Tooltip>, label: "Brands", page: "brand-standards" },
+          { icon: <Tooltip text="Staff"><UserCircle size={20} weight="duotone" /></Tooltip>, label: "Staff", page: "staff" },
+        ]).map((n) => {
           const isActive = n.matchPages
             ? n.matchPages.includes(currentPage)
             : currentPage === n.page;

@@ -27,7 +27,7 @@ export default function ShelfScanner({ shelf, onConfirm, onClose }) {
   const sections = shelf7Sections;
 
   // Live camera for QR scanning phase
-  const { videoRef, error: cameraError, hasCamera } = useCamera({
+  const { videoRef, error: cameraError, hasCamera, rotated } = useCamera({
     active: step === 'scanning',
     facingMode: 'environment',
   });
@@ -82,7 +82,7 @@ export default function ShelfScanner({ shelf, onConfirm, onClose }) {
                 autoPlay
                 playsInline
                 muted
-                className="scanner-camera-feed"
+                className={`scanner-camera-feed${rotated ? ' scanner-camera-rotated' : ''}`}
               />
               {!hasCamera && (
                 <div className="scanner-qr-ghost">

@@ -1,0 +1,103 @@
+/* Screen 2.4 — Daily Operations Report */
+.report-screen { display: flex; flex-direction: column; gap: 16px; padding: 20px 24px 24px; overflow-y: auto; flex: 1; }
+
+.report-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; }
+.report-header h2 { font-size: 1.15rem; font-weight: 800; color: #0f172a; margin: 0; }
+.report-date { font-size: .74rem; color: #64748b; font-weight: 600; }
+.report-actions { display: flex; gap: 8px; }
+.report-btn { display: flex; align-items: center; gap: 5px; padding: 8px 14px; border-radius: 9px; border: 1px solid #e2e8f0; background: #fff; font-size: .74rem; font-weight: 650; color: #475569; cursor: pointer; font-family: inherit; transition: all .12s; }
+.report-btn:hover { background: #f8fafc; border-color: #cbd5e1; }
+
+/* Metrics Strip */
+.report-metrics { display: grid; grid-template-columns: repeat(auto-fit, minmax(145px, 1fr)); gap: 10px; }
+.rm-card { display: flex; align-items: flex-start; gap: 10px; background: #fff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 14px; position: relative; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,.03); }
+.rm-icon { width: 36px; height: 36px; min-width: 36px; border-radius: 10px; display: grid; place-items: center; flex-shrink: 0; }
+.rm-body { flex: 1; min-width: 0; }
+.rm-label { font-size: .6rem; font-weight: 700; color: #94a3b8; text-transform: uppercase; letter-spacing: .06em; display: block; }
+.rm-value { font-size: 1.2rem; font-weight: 900; color: #0f172a; display: block; letter-spacing: -.02em; }
+.rm-sub { font-size: .62rem; color: #94a3b8; font-weight: 500; display: block; }
+.rm-trend { position: absolute; top: 10px; right: 10px; display: flex; align-items: center; gap: 2px; font-size: .6rem; font-weight: 800; padding: 2px 7px; border-radius: 5px; }
+.trend-up { background: #dcfce7; color: #16a34a; }
+.trend-down { background: #dcfce7; color: #16a34a; }
+
+/* Body */
+.report-body { display: grid; grid-template-columns: 1fr 380px; gap: 16px; }
+.report-right-col { display: flex; flex-direction: column; gap: 14px; }
+
+/* Cards */
+.report-card { background: #fff; border: 1px solid #e2e8f0; border-radius: 14px; padding: 18px 20px; box-shadow: 0 1px 3px rgba(0,0,0,.03); }
+.report-card h3 { display: flex; align-items: center; gap: 8px; font-size: .88rem; font-weight: 800; color: #0f172a; margin: 0 0 14px; }
+
+/* Top Saves */
+.saves-list { display: flex; flex-direction: column; gap: 8px; }
+.save-row { display: flex; align-items: center; gap: 14px; padding: 12px 14px; border-radius: 10px; background: #f8fafc; border: 1px solid #f1f5f9; transition: all .12s; }
+.save-row:hover { background: #f1f5f9; }
+.save-rank { font-size: 1.2rem; min-width: 28px; text-align: center; }
+.save-body { flex: 1; min-width: 0; }
+.save-body strong { font-size: .8rem; font-weight: 750; color: #0f172a; display: block; }
+.save-detail { font-size: .68rem; color: #64748b; font-weight: 500; display: block; }
+.save-times { font-size: .64rem; color: #94a3b8; font-weight: 600; display: block; margin-top: 2px; }
+.save-revenue { font-size: .88rem; font-weight: 900; color: #059669; white-space: nowrap; }
+
+/* Efficiency */
+.eff-card { }
+.eff-ring-row { display: flex; align-items: center; gap: 16px; }
+.eff-ring { position: relative; width: 80px; height: 80px; flex-shrink: 0; }
+.eff-ring svg { width: 100%; height: 100%; }
+.eff-ring strong { position: absolute; inset: 0; display: grid; place-items: center; font-size: 1rem; font-weight: 900; color: #0f172a; }
+.eff-text { display: flex; flex-direction: column; gap: 3px; }
+.eff-text span { font-size: .76rem; font-weight: 650; color: #334155; }
+.eff-prev { color: #16a34a; font-size: .68rem; }
+
+/* Zero Stock */
+.zero-list { display: flex; flex-direction: column; gap: 6px; }
+.zero-row { display: flex; align-items: center; justify-content: space-between; padding: 10px 12px; border-radius: 8px; background: #fef2f2; border: 1px solid #fecaca; }
+.zero-body strong { font-size: .76rem; font-weight: 700; color: #0f172a; display: block; }
+.zero-body span { font-size: .64rem; color: #64748b; }
+.zero-right { text-align: right; }
+.zero-status { font-size: .7rem; font-weight: 800; color: #dc2626; display: block; }
+.zero-supplier { font-size: .62rem; color: #94a3b8; font-weight: 500; }
+
+/* Staff */
+.staff-card { }
+.staff-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 8px; }
+.staff-row { display: flex; align-items: center; gap: 12px; padding: 10px 14px; border-radius: 10px; background: #f8fafc; border: 1px solid #f1f5f9; }
+.staff-row.staff-floor { border-left: 3px solid #6366f1; }
+.staff-row.staff-storeroom { border-left: 3px solid #f59e0b; }
+.staff-avatar { width: 32px; height: 32px; border-radius: 8px; background: linear-gradient(135deg, #6366f1, #8b5cf6); color: #fff; font-weight: 800; font-size: .76rem; display: grid; place-items: center; }
+.staff-body { flex: 1; min-width: 0; }
+.staff-body strong { font-size: .78rem; font-weight: 750; color: #0f172a; display: block; }
+.staff-role { font-size: .62rem; font-weight: 700; color: #94a3b8; text-transform: uppercase; letter-spacing: .06em; }
+.staff-stats { display: flex; gap: 8px; flex-wrap: wrap; }
+.staff-stats span { font-size: .64rem; font-weight: 700; color: #64748b; background: #e2e8f0; padding: 2px 8px; border-radius: 5px; }
+.staff-avg { background: #dbeafe !important; color: #1e40af !important; }
+
+@media (max-width: 1024px) {
+  .report-body { grid-template-columns: 1fr; }
+  .report-metrics { grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); }
+}
+
+@media (max-width: 768px) {
+  .report-screen { padding: 14px 16px 100px; }
+  .report-header { flex-direction: column; }
+  .report-actions { width: 100%; }
+  .report-btn { flex: 1; justify-content: center; }
+  .report-metrics { grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); }
+  .save-row { flex-wrap: wrap; }
+  .save-revenue { width: 100%; text-align: left; margin-top: 4px; }
+  .staff-grid { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 480px) {
+  .report-screen { padding: 12px 12px 100px; }
+  .report-metrics { grid-template-columns: 1fr 1fr; gap: 8px; }
+  .rm-card { padding: 10px; }
+  .rm-value { font-size: 1rem; }
+  .eff-ring-row { flex-direction: column; text-align: center; }
+  .zero-row { flex-direction: column; gap: 4px; }
+  .zero-right { text-align: left; }
+}
+
+/* Compliance Trend */
+.compliance-trend { padding: 8px 0; }
+.trend-chart { width: 100%; height: auto; max-height: 140px; }

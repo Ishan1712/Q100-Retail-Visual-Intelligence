@@ -189,6 +189,10 @@
   border-radius: 28px;
   z-index: 0;
 }
+.scanner-camera-feed.scanner-camera-rotated {
+  transform: rotate(-90deg) scale(1.35);
+  transform-origin: center center;
+}
 
 .scanner-camera-error {
   color: rgba(255,255,255,0.5);
@@ -412,7 +416,7 @@
 .scanner-plano-strip::-webkit-scrollbar-thumb { background: #e2e8f0; border-radius: 999px; }
 
 .scanner-thumb {
-  flex-shrink: 0; width: 96px;
+  flex-shrink: 0; width: 108px;
   border-radius: 12px; padding: 0;
   text-align: center;
   background: #fff;
@@ -444,11 +448,18 @@
   font-size: 0.65rem; font-weight: 600; color: #334155;
   line-height: 1.25; margin: 0;
   padding: 6px 6px 8px;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  min-height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .scanner-thumb-num {
   font-size: 0.55rem; font-weight: 600; color: #94a3b8;
   margin-bottom: 1px;
+  padding-top: 4px;
 }
 
 /* ── Mode Selection Buttons ── */
