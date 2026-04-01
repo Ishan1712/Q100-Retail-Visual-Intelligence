@@ -579,6 +579,19 @@
   .scanner-last-item { padding: 8px 10px; font-size: 11px; }
 }
 
+@media (max-width: 600px) {
+  .scanner-dark { padding: 36px 22px 22px; }
+  .scanner-viewfinder { width: 190px; height: 190px; border-radius: 22px; }
+  .scanner-corner { width: 38px; height: 38px; }
+  .scanner-title { font-size: 15px; }
+  .scanner-confirm-card { padding: 14px 16px 24px; }
+  .scanner-shelf-name { font-size: 20px; }
+  .scanner-thumb { width: 80px; }
+  .scanner-mode-btn { padding: 14px 16px; }
+  .scanner-mode-icon { width: 38px; height: 38px; }
+  .scanner-mode-title { font-size: 14px; }
+}
+
 @media (max-width: 480px) {
   .scanner-dark { padding: 32px 20px 20px; }
   .scanner-viewfinder { width: 180px; height: 180px; border-radius: 20px; }
@@ -609,10 +622,34 @@
 }
 
 @media (max-width: 360px) {
-  .scanner-viewfinder { width: 160px; height: 160px; }
-  .scanner-confirm-card { padding: 12px 12px 20px; }
-  .scanner-shelf-name { font-size: 18px; }
-  .scanner-thumb { width: 68px; }
+  .scanner-dark { padding: 24px 16px 16px; }
+  .scanner-viewfinder { width: 140px; height: 140px; border-radius: 18px; }
+  .scanner-corner { width: 32px; height: 32px; }
+  .scanner-title { font-size: 14px; margin-top: 12px; }
+  .scanner-countdown-wrap { margin-top: 8px; gap: 8px; }
+  .scanner-countdown-circle { width: 30px; height: 30px; }
+  .scanner-countdown-num { font-size: 12px; }
+  .scanner-countdown-text { font-size: 11px; }
+  .scanner-fallback { margin-top: 16px; font-size: 11px; padding: 6px 14px; }
+  .scanner-confirm-card { padding: 10px 10px 18px; max-height: 92vh; }
+  .scanner-card-handle { margin-bottom: 12px; }
+  .scanner-shelf-name { font-size: 16px; }
+  .scanner-shelf-meta { font-size: 11px; gap: 5px; }
+  .scanner-detect-badge { padding: 5px 12px; font-size: 0.58rem; }
+  .scanner-detect-time { font-size: 10px; }
+  .scanner-last-item { padding: 7px 8px; font-size: 10px; }
+  .scanner-plano-label { font-size: 0.6rem; margin: 14px 0 8px; }
+  .scanner-plano-strip { gap: 4px; }
+  .scanner-thumb { width: 62px; }
+  .scanner-thumb-color { height: 30px; font-size: 15px; }
+  .scanner-thumb-name { font-size: 0.5rem; padding: 3px 3px 5px; }
+  .scanner-thumb-num { font-size: 0.45rem; }
+  .scanner-modes { gap: 6px; margin-top: 16px; }
+  .scanner-mode-btn { padding: 10px 12px; border-radius: 10px; }
+  .scanner-mode-icon { width: 32px; height: 32px; border-radius: 8px; }
+  .scanner-mode-title { font-size: 12px; }
+  .scanner-mode-subtitle { font-size: 10px; }
+  .scanner-mode-speed { font-size: 9px; padding: 2px 8px; }
 }
 
 /* Landscape phones */

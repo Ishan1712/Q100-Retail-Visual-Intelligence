@@ -24,6 +24,7 @@ export default function PhotoMode({ shelf, onComplete, onClose }) {
   const [inputMode, setInputMode] = useState('capture');
   const [uploadedImage, setUploadedImage] = useState(null);
   const [uploadedFile, setUploadedFile] = useState(null);
+  const [capturedFrame, setCapturedFrame] = useState(null);
   const fileInputRef = useRef(null);
 
   // LLM state
@@ -105,6 +106,7 @@ export default function PhotoMode({ shelf, onComplete, onClose }) {
   const capture = useCallback(() => {
     const frame = takeSnapshot();
     if (!frame) return;
+    setCapturedFrame(frame);
     analyzeWithLLM(frame, null);
   }, [takeSnapshot, analyzeWithLLM]);
 
@@ -152,6 +154,7 @@ export default function PhotoMode({ shelf, onComplete, onClose }) {
   const next = () => {
     setUploadedImage(null);
     setUploadedFile(null);
+    setCapturedFrame(null);
     if (idx < sections.length - 1) setIdx(i => i + 1);
     else onComplete?.();
   };
@@ -304,6 +307,7 @@ export default function PhotoMode({ shelf, onComplete, onClose }) {
                           type="file"
                           ref={fileInputRef}
                           accept="image/*"
+                          capture="environment"
                           onChange={handleUpload}
                           style={{ display: 'none' }}
                         />
@@ -364,8 +368,8 @@ export default function PhotoMode({ shelf, onComplete, onClose }) {
                     </div>
                     <div className="pm-analyze-img-box">
                       <span className="pm-analyze-img-label">Inspection</span>
-                      {uploadedImage ? (
-                        <img src={uploadedImage} alt="Inspection" />
+                      {(uploadedImage || capturedFrame) ? (
+                        <img src={uploadedImage || capturedFrame} alt="Inspection" />
                       ) : (
                         <div className="pm-analyze-cam-placeholder">
                           <Camera size={24} weight="duotone" />
@@ -662,7 +666,7 @@ export default function PhotoMode({ shelf, onComplete, onClose }) {
               onClick={uploadedImage ? submitUpload : () => fileInputRef.current?.click()}
               className={`pm-capture-btn ${uploadedImage ? 'pm-capture-btn-upload-ready' : ''}`}
               whileTap={{ scale: 0.97 }}
-              disabled={isAnalyzing || (!uploadedImage && false) || (uploadedImage && !apiKey)}
+              disabled={isAnalyzing || (uploadedImage && !apiKey)}
             >
               <div className="pm-capture-btn-ring">
                 {isAnalyzing

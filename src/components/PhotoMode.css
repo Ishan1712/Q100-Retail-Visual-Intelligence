@@ -25,7 +25,7 @@
 }
 
 .pm-close {
-  width: 34px; height: 34px; min-width: 44px; min-height: 44px; border-radius: 10px;
+  width: 44px; height: 44px; border-radius: 10px;
   background: #f1f5f9; border: 1px solid #e2e8f0;
   display: flex; align-items: center; justify-content: center;
   cursor: pointer; color: #475569;
@@ -495,7 +495,7 @@
 
 /* ── Result: FAIL ── */
 .pm-result-fail {
-  padding: 0 16px 16px;
+  padding: 0 16px 20px;
 }
 
 .pm-fail-banner {
@@ -1150,9 +1150,28 @@
   .pm-capture-bar { padding: 10px 14px 14px; }
 }
 
+@media (max-width: 600px) {
+  .pm-header { padding: 9px 13px; }
+  .pm-header-shelf { font-size: 13px; }
+  .pm-stepper { padding: 11px 14px; }
+  .pm-step { width: 27px; height: 27px; font-size: 10px; }
+  .pm-step.active { width: 31px; height: 31px; }
+  .pm-step-line { width: 16px; }
+  .pm-sec-name { font-size: 14px; }
+  .pm-camera { margin: 0 14px 14px; height: 190px; }
+  .pm-analyze { margin: 0 14px 14px; height: 190px; }
+  .pm-plano { margin: 0 14px 10px; }
+  .pm-result-pass { margin: 0 14px 14px; }
+  .pm-result-fail { padding: 0 14px 14px; }
+  .pm-capture-bar { padding: 10px 14px 14px; }
+  .pm-compare-grid { gap: 10px; margin: 0 14px 10px; }
+  .pm-result-modern { margin: 0 14px 12px; }
+  .pm-issues-grid { grid-template-columns: 1fr 1fr; }
+}
+
 @media (max-width: 480px) {
   .pm-header { padding: 8px 12px; }
-  .pm-close { width: 34px; height: 34px; min-width: 44px; min-height: 44px; border-radius: 8px; }
+  .pm-close { width: 34px; height: 34px; border-radius: 8px; }
   .pm-header-badge { font-size: 0.52rem; }
   .pm-header-shelf { font-size: 12px; }
   .pm-stepper { padding: 10px 12px; }
@@ -1184,16 +1203,60 @@
   .pm-capture-bar { padding: 8px 12px 12px; }
   .pm-capture-btn { padding: 14px 0; font-size: 14px; border-radius: 12px; }
   .pm-capture-btn-ring { width: 28px; height: 28px; }
+  .pm-camera { box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+  .pm-ai-overlay { box-shadow: 0 2px 10px rgba(0,0,0,0.2); }
 }
 
 @media (max-width: 360px) {
+  .pm-header { padding: 6px 10px; }
+  .pm-header-badge { font-size: 0.48rem; padding: 2px 8px; }
+  .pm-header-shelf { font-size: 11px; }
+  .pm-header-progress { font-size: 11px; padding: 3px 8px; }
   .pm-step { width: 22px; height: 22px; font-size: 8px; }
   .pm-step.active { width: 26px; height: 26px; }
   .pm-step-line { width: 6px; margin: 0 2px; }
-  .pm-camera { height: 160px; }
-  .pm-analyze { height: 160px; }
+  .pm-stepper { padding: 8px 10px; }
+  .pm-sec-header { padding: 8px 10px 6px; }
+  .pm-sec-label { font-size: 0.5rem; }
+  .pm-sec-name { font-size: 12px; }
+  .pm-plano { margin: 0 10px 6px; }
+  .pm-camera { margin: 0 10px 10px; height: 150px; border-radius: 10px; }
+  .pm-analyze { margin: 0 10px 10px; height: 150px; border-radius: 10px; }
+  .pm-result-pass { margin: 0 10px 10px; padding: 20px 12px; }
+  .pm-result-pass h3 { font-size: 14px; }
+  .pm-result-fail { padding: 0 10px 10px; }
+  .pm-fail-banner { padding: 10px; gap: 8px; }
+  .pm-fail-banner h3 { font-size: 13px; }
+  .pm-fail-banner-icon { width: 30px; height: 30px; }
+  .pm-issue { padding: 10px; margin-bottom: 8px; }
+  .pm-issue-product { font-size: 12px; }
+  .pm-issue-detail { font-size: 10px; }
   .pm-issue-actions { flex-direction: column; }
-  .pm-disagree-btn { width: 100%; justify-content: center; }
+  .pm-action-btn { padding: 8px; font-size: 10px; }
+  .pm-disagree-btn { width: 100%; justify-content: center; padding: 7px 8px; font-size: 9px; }
+  .pm-next-btn { padding: 11px 0; font-size: 12px; margin-top: 8px; }
+  .pm-capture-bar { padding: 6px 10px 10px; }
+  .pm-capture-btn { padding: 12px 0; font-size: 13px; border-radius: 10px; }
+  .pm-capture-btn-ring { width: 24px; height: 24px; }
+  .pm-mode-toggle { margin: 0 10px 10px; padding: 4px; }
+  .pm-mode-tab { padding: 10px 0; font-size: 12px; }
+  .pm-master-ref { margin: 0 10px 10px; }
+  .pm-result-modern { margin: 0 10px 10px; }
+  .pm-hero-text h3 { font-size: 12px; }
+  .pm-hero-text p { font-size: 9px; }
+  .pm-stat-num { font-size: 15px; }
+  .pm-stat-chip { font-size: 8px; padding: 6px 0; }
+  .pm-issues-grid { grid-template-columns: 1fr 1fr; gap: 4px; }
+  .pm-issue-card-left h4 { font-size: 10px; }
+  .pm-issue-card-left p { font-size: 8px; }
+  .pm-issue-action-btn { width: 26px; height: 26px; }
+  .pm-reanalyze-btn { font-size: 11px; padding: 8px 0; }
+  .pm-llm-meta span { font-size: 9px; }
+  .pm-annotated-shelf-label { width: 60px; min-width: 60px; font-size: 8.5px; padding: 6px; }
+  .pm-annotated-product { font-size: 8.5px; padding: 2px 6px; }
+  .pm-shelf-pill { padding: 7px 10px; gap: 8px; }
+  .pm-shelf-pill-text strong { font-size: 10px; }
+  .pm-shelf-pill-text span { font-size: 9px; }
 }
 
 /* Landscape phones */
@@ -1487,7 +1550,9 @@
   gap: 14px;
   margin: 0 16px 10px;
   height: calc(100vh - 320px);
+  height: calc(100dvh - 320px);
   max-height: calc(100vh - 320px);
+  max-height: calc(100dvh - 320px);
   overflow: hidden;
 }
 
@@ -1741,7 +1806,32 @@
 
 /* ── Mobile: stack vertically ── */
 @media (max-width: 520px) {
-  .pm-compare-grid { grid-template-columns: 1fr; }
+  .pm-compare-grid {
+    grid-template-columns: 1fr;
+    height: auto;
+    max-height: none;
+    overflow: visible;
+    margin: 0 12px 10px;
+    gap: 10px;
+  }
+  .pm-compare-card { min-height: 220px; }
+  .pm-compare-card-header { padding: 6px 10px; font-size: 9.5px; }
+  .pm-compare-card-image { margin: 8px 10px; }
+  .pm-compare-card-tags { padding: 6px 10px; gap: 4px; }
+  .pm-compare-camera { margin: 8px 10px; min-height: 160px; }
+  .pm-compare-upload { margin: 8px 10px; }
+  .pm-mode-toggle-compact { padding: 6px 8px; }
+  .pm-mode-tab-sm { padding: 4px 12px; font-size: 10px; }
+}
+
+@media (max-width: 360px) {
+  .pm-compare-grid { margin: 0 10px 8px; gap: 8px; }
+  .pm-compare-card { min-height: 180px; }
+  .pm-compare-card-header { padding: 5px 8px; font-size: 9px; }
+  .pm-compare-card-image { margin: 6px 8px; }
+  .pm-compare-expand-btn { padding: 2px 6px; font-size: 9px; }
+  .pm-result-images { padding: 8px 8px 6px; gap: 4px; }
+  .pm-result-img-box img { height: 65px; }
 }
 
 /* ═══════════════════════════════════════

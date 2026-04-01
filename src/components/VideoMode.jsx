@@ -344,10 +344,10 @@ export default function VideoMode({ shelf, onComplete, onClose }) {
         {/* Hold progress indicator — single ring, no inner icon */}
         {rec && holdProgress > 0 && holdProgress < 100 && (
           <motion.div className="vm-hold-indicator" initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }}>
-            <svg width="72" height="72" viewBox="0 0 72 72">
-              <circle cx="36" cy="36" r="30" fill="none" stroke="rgba(255,255,255,0.1)" strokeWidth="5" />
-              <circle cx="36" cy="36" r="30" fill="none" stroke="#4ade80" strokeWidth="5"
-                strokeDasharray={188.5} strokeDashoffset={188.5 * (1 - holdProgress / 100)}
+            <svg width="56" height="56" viewBox="0 0 72 72">
+              <circle cx="36" cy="36" r="23" fill="none" stroke="rgba(255,255,255,0.1)" strokeWidth="5" />
+              <circle cx="36" cy="36" r="23" fill="none" stroke="#4ade80" strokeWidth="5"
+                strokeDasharray={2 * Math.PI * 23} strokeDashoffset={2 * Math.PI * 23 * (1 - holdProgress / 100)}
                 strokeLinecap="round" transform="rotate(-90 36 36)" />
             </svg>
             <span className="vm-hold-pct">{Math.round(holdProgress)}%</span>

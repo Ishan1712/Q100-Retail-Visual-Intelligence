@@ -368,7 +368,7 @@
   flex: 1;
   overflow-y: auto;
   overflow-x: hidden;
-  padding: 20px 28px 40px;
+  padding: 20px 28px 40px; /* base: at least 40px */
   display: flex;
   flex-direction: column;
   gap: 18px;
@@ -762,7 +762,7 @@
    ═══════════════════════ */
 
 @media (max-width: 1100px) {
-  .ah-body { padding-bottom: 80px; }
+  .ah-body { padding-bottom: 100px; }
 }
 
 @media (max-width: 768px) {
@@ -776,7 +776,7 @@
   }
 
   .ah-body {
-    padding: 16px 18px 84px;
+    padding: 16px 18px 100px;
     gap: 14px;
   }
 
@@ -823,6 +823,17 @@
   }
 }
 
+@media (max-width: 600px) {
+  .ah-header { padding: 0 16px; }
+  .ah-header-title { font-size: 0.9rem; }
+  .ah-segmented { margin: 10px 16px 0; }
+  .ah-body { padding: 14px 16px 100px; }
+  .ah-summary-row { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+  .ah-detail-grid { grid-template-columns: repeat(2, 1fr); }
+  .ah-tl-card { padding: 12px 14px; }
+  .ah-metric-card { padding: 14px 12px; }
+}
+
 @media (max-width: 480px) {
   .ah-header {
     padding: 0 14px;
@@ -856,7 +867,7 @@
   }
 
   .ah-body {
-    padding: 14px 14px 28px;
+    padding: 14px 14px 100px;
     gap: 12px;
   }
 
@@ -973,23 +984,36 @@
 
 @media (max-width: 360px) {
   .ah-header {
-    padding: 0 12px;
+    padding: 0 10px;
   }
 
   .ah-segmented {
-    margin: 10px 12px 0;
+    margin: 8px 10px 0;
+  }
+
+  .ah-seg-btn {
+    font-size: 0.58rem;
+    padding: 5px 8px;
   }
 
   .ah-body {
-    padding: 12px 12px 24px;
+    padding: 10px 10px 96px;
+    gap: 10px;
   }
 
   .ah-detail-grid {
     grid-template-columns: 1fr;
+    gap: 6px;
   }
 
   .ah-summary-row {
     grid-template-columns: 1fr;
+    gap: 6px;
+  }
+
+  .ah-summary-card {
+    padding: 12px;
+    gap: 8px;
   }
 
   .ah-summary-card:last-child {
@@ -997,13 +1021,63 @@
   }
 
   .ah-summary-icon {
+    width: 28px;
+    height: 28px;
+    border-radius: 7px;
+  }
+
+  .ah-summary-val {
+    font-size: 1.1rem;
+  }
+
+  .ah-summary-lbl {
+    font-size: 0.6rem;
+  }
+
+  .ah-tl-card {
+    padding: 10px 12px;
+    border-radius: 10px;
+  }
+
+  .ah-tl-emoji {
     width: 32px;
     height: 32px;
+    min-width: 32px;
     border-radius: 8px;
+    font-size: 14px;
+  }
+
+  .ah-tl-name {
+    font-size: 0.82rem;
   }
 
   .ah-tl-category {
     display: none;
+  }
+
+  .ah-tl-time {
+    font-size: 0.6rem;
+  }
+
+  .ah-tl-status {
+    font-size: 0.55rem;
+    padding: 3px 8px;
+  }
+
+  .ah-metric-card {
+    padding: 12px 10px;
+  }
+
+  .ah-metric-val {
+    font-size: 1.15rem;
+  }
+
+  .ah-metric-lbl {
+    font-size: 0.6rem;
+  }
+
+  .ah-chart-area {
+    height: 160px;
   }
 }
 

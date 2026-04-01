@@ -81,6 +81,7 @@ body {
   display: grid;
   grid-template-columns: var(--sidebar-w) 1fr;
   height: 100vh;
+  height: 100dvh;
   overflow: hidden;
   position: relative;
 }
@@ -92,6 +93,7 @@ body {
   background: linear-gradient(180deg, #0f1729 0%, #0a0f1f 100%);
   border-right: 1px solid rgba(255,255,255,0.06);
   height: 100vh;
+  height: 100dvh;
   overflow-y: auto; overflow-x: hidden;
   color: #94a3b8;
   position: relative;
@@ -249,7 +251,8 @@ body {
    ═══════════════════════ */
 .main-col {
   display: flex; flex-direction: column;
-  height: 100vh; overflow: hidden; min-width: 0;
+  height: 100vh;
+  height: 100dvh; overflow: hidden; min-width: 0;
   background: var(--canvas);
   position: relative;
   isolation: isolate;
@@ -819,7 +822,7 @@ body {
 
 /* ── Scan Buttons (status-aware) ── */
 .btn-scan {
-  height: 36px; padding: 0 14px;
+  height: 44px; padding: 0 14px;
   border-radius: 10px;
   border: none;
   font-weight: 700; font-size: 0.74rem;
@@ -1015,6 +1018,23 @@ body {
   .content-scroll { padding-bottom: 80px; }
 }
 
+/* Phablet */
+@media (max-width: 600px) {
+  .top-bar { padding: 0 16px; min-height: 56px; }
+  .greeting-row h1 { font-size: 0.95rem; }
+  .header-chip { padding: 5px 8px; font-size: 0.62rem; }
+  .content-scroll { padding: 14px 12px 90px; gap: 14px; }
+  .ring-wrap { width: 100px; height: 100px; }
+  .ring-svg { width: 100px; height: 100px; }
+  .ring-label strong { font-size: 1.1rem; }
+  .shelf-card { padding: 12px; }
+  .shelf-emoji { width: 36px; height: 36px; min-width: 36px; }
+  .shelf-name-row h4 { font-size: 0.88rem; }
+  .btn-scan { height: 32px; font-size: 0.7rem; }
+  .summary-card { padding: 14px; }
+  .sum-icon { width: 38px; height: 38px; min-width: 38px; }
+}
+
 /* Phone */
 @media (max-width: 480px) {
   .top-bar { padding: 10px 12px; }
@@ -1070,17 +1090,50 @@ body {
   .top-bar { padding: 8px 10px; }
   .avatar { width: 32px; height: 32px; min-width: 32px; font-size: 0.85rem; }
   .greeting-row h1 { font-size: 0.82rem; }
-  .top-bar-right { gap: 6px; }
-  .header-chip { padding: 4px 7px; font-size: 0.6rem; }
-  .chip-icon { width: 22px; height: 22px; }
-  .content-scroll { padding: 10px 8px 84px; gap: 12px; }
-  .ring-wrap { width: 96px; height: 96px; }
-  .ring-svg { width: 96px; height: 96px; }
-  .ring-label strong { font-size: 1.05rem; }
-  .shelf-left { gap: 10px; }
-  .shelf-emoji { width: 34px; height: 34px; min-width: 34px; }
-  .mobile-nav { height: 56px; }
-  .mobile-nav-fab .mobile-nav-icon { width: 40px; height: 40px; margin-top: -14px; }
+  .greeting-row { gap: 4px; }
+  .top-bar-right { gap: 5px; }
+  .header-chip { padding: 3px 6px; font-size: 0.55rem; gap: 4px; }
+  .chip-icon { width: 20px; height: 20px; border-radius: 6px; }
+  .chip-streak strong, .chip-restock strong { font-size: 0.72rem; }
+  .shift-badge { width: 22px; height: 22px; }
+  .shift-sub { font-size: 0.65rem; }
+  .stats-strip { height: 34px; min-height: 34px; }
+  .stat-val { font-size: 0.72rem; }
+  .content-scroll { padding: 8px 6px 90px; gap: 10px; }
+  .card { border-radius: 12px; }
+  .progress-card { padding: 12px; }
+  .card-top h2, .queue-header h2 { font-size: 0.88rem; }
+  .pct-badge { font-size: 0.72rem; padding: 3px 10px; }
+  .ring-wrap { width: 88px; height: 88px; }
+  .ring-svg { width: 88px; height: 88px; }
+  .ring-label strong { font-size: 1rem; }
+  .ring-label p { font-size: 0.6rem; }
+  .metric { padding: 6px 8px; gap: 8px; }
+  .metric-ic { width: 22px; height: 22px; min-width: 22px; border-radius: 6px; }
+  .metric-lbl { font-size: 0.54rem; }
+  .metric strong { font-size: 0.72rem; }
+  .summary-card { padding: 12px; gap: 8px; }
+  .sum-icon { width: 32px; height: 32px; min-width: 32px; border-radius: 8px; }
+  .sum-body h3 { font-size: 0.85rem; }
+  .sum-body p { font-size: 0.68rem; }
+  .q-pill { padding: 4px 8px; font-size: 0.6rem; }
+  .shelf-card { padding: 10px; border-radius: 10px; }
+  .shelf-left { gap: 8px; }
+  .shelf-emoji { width: 32px; height: 32px; min-width: 32px; border-radius: 8px; }
+  .shelf-name-row h4 { font-size: 0.8rem; }
+  .shelf-name-row { margin-bottom: 2px; gap: 5px; }
+  .shelf-cat { font-size: 0.7rem; }
+  .shelf-time, .shelf-note { font-size: 0.64rem; }
+  .badge-priority, .badge-done { height: 18px; padding: 0 6px; font-size: 0.5rem; }
+  .badge-status { padding: 3px 7px; font-size: 0.55rem; }
+  .btn-scan { height: 28px; padding: 0 8px; font-size: 0.62rem; border-radius: 7px; }
+  .dot { width: 7px; height: 7px; }
+  .offline-bar { padding: 8px 10px; border-radius: 10px; }
+  .offline-ic { width: 28px; height: 28px; min-width: 28px; border-radius: 7px; }
+  .offline-bar strong { font-size: 0.72rem; }
+  .offline-bar p { font-size: 0.62rem; }
+  .mobile-nav { height: 54px; }
+  .mobile-nav-fab .mobile-nav-icon { width: 38px; height: 38px; margin-top: -12px; }
 }
 
 /* Landscape phones */
