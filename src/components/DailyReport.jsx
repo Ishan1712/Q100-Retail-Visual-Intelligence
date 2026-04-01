@@ -8,7 +8,7 @@ import {
 import "./DailyReport.css";
 
 const metrics = [
-  { label: "Total Scans", value: "30", sub: "10 aisles × 3 cycles", icon: Scan, color: "#6366f1" },
+  { label: "Total Scans", value: "30", sub: "10 shelves × 3 cycles", icon: Scan, color: "#6366f1" },
   { label: "Compliance Rate", value: "88.4%", sub: "Up from 82.1% last Wed", icon: ChartBar, color: "#059669", trend: "+6.3%" },
   { label: "OOS Detected", value: "42", sub: "Across all scans", icon: Warning, color: "#ef4444" },
   { label: "Restocked", value: "38/42", sub: "90.5% completion", icon: Package, color: "#22c55e" },
@@ -18,11 +18,11 @@ const metrics = [
 ];
 
 const topSaves = [
-  { rank: "🥇", product: "Maggi 2-Min Noodles 70g", aisle: 10, detail: "Completely OOS on eye-level. 48 units/day.", caught: "8:22 AM", restocked: "8:35 AM", revenue: 8640 },
-  { rank: "🥈", product: "Surf Excel Quick Wash 1kg", aisle: 6, detail: "6 of 8 facings empty. High-velocity SKU.", caught: "9:42 AM", restocked: "10:04 AM", revenue: 6800 },
-  { rank: "🥉", product: "Parle-G 250g", aisle: 7, detail: "4 of 6 facings empty. Morning rush.", caught: "9:18 AM", restocked: "9:31 AM", revenue: 4400 },
-  { rank: "4", product: "Amul Butter 100g", aisle: 2, detail: "Low stock caught before complete OOS.", caught: "9:52 AM", restocked: "10:06 AM", revenue: 3200 },
-  { rank: "5", product: "Cadbury Dairy Milk 50g", aisle: 7, detail: "3 units OOS in impulse-buy position.", caught: "9:18 AM", restocked: "9:38 AM", revenue: 2880 },
+  { rank: "🥇", product: "Maggi 2-Min Noodles 70g", shelf: 10, detail: "Completely OOS on eye-level. 48 units/day.", caught: "8:22 AM", restocked: "8:35 AM", revenue: 8640 },
+  { rank: "🥈", product: "Surf Excel Quick Wash 1kg", shelf: 6, detail: "6 of 8 facings empty. High-velocity SKU.", caught: "9:42 AM", restocked: "10:04 AM", revenue: 6800 },
+  { rank: "🥉", product: "Parle-G 250g", shelf: 7, detail: "4 of 6 facings empty. Morning rush.", caught: "9:18 AM", restocked: "9:31 AM", revenue: 4400 },
+  { rank: "4", product: "Amul Butter 100g", shelf: 2, detail: "Low stock caught before complete OOS.", caught: "9:52 AM", restocked: "10:06 AM", revenue: 3200 },
+  { rank: "5", product: "Cadbury Dairy Milk 50g", shelf: 7, detail: "3 units OOS in impulse-buy position.", caught: "9:18 AM", restocked: "9:38 AM", revenue: 2880 },
 ];
 
 const zeroStock = [
@@ -33,9 +33,9 @@ const zeroStock = [
 ];
 
 const staff = [
-  { name: "Rahul M.", role: "Floor", scans: 10, catches: 14, avg: "20 min/aisle", icon: Scan },
-  { name: "Amit D.", role: "Floor", scans: 10, catches: 16, avg: "18 min/aisle", icon: Scan },
-  { name: "Vikram P.", role: "Floor", scans: 10, catches: 12, avg: "22 min/aisle", icon: Scan },
+  { name: "Rahul M.", role: "Floor", scans: 10, catches: 14, avg: "20 min/shelf", icon: Scan },
+  { name: "Amit D.", role: "Floor", scans: 10, catches: 16, avg: "18 min/shelf", icon: Scan },
+  { name: "Vikram P.", role: "Floor", scans: 10, catches: 12, avg: "22 min/shelf", icon: Scan },
   { name: "Suresh K.", role: "Storeroom", restocks: 16, avg: "12 min", icon: Package },
   { name: "Manoj T.", role: "Storeroom", restocks: 14, avg: "15 min", icon: Package },
   { name: "Deepa S.", role: "Storeroom", restocks: 8, avg: "16 min", icon: Package },
@@ -81,7 +81,7 @@ const DailyReport = () => (
               <span className="save-rank">{s.rank}</span>
               <div className="save-body">
                 <strong>{s.product}</strong>
-                <span className="save-detail">Aisle {s.aisle} — {s.detail}</span>
+                <span className="save-detail">Shelf {s.shelf} — {s.detail}</span>
                 <span className="save-times">Caught {s.caught} → Restocked {s.restocked}</span>
               </div>
               <span className="save-revenue">₹{s.revenue.toLocaleString("en-IN")}</span>
@@ -169,10 +169,12 @@ const DailyReport = () => (
       <div className="staff-grid">
         {staff.map((s, i) => (
           <div key={i} className={`staff-row staff-${s.role.toLowerCase()}`}>
-            <div className="staff-avatar">{s.name[0]}</div>
-            <div className="staff-body">
-              <strong>{s.name}</strong>
-              <span className="staff-role">{s.role}</span>
+            <div className="staff-top">
+              <div className="staff-avatar">{s.name[0]}</div>
+              <div className="staff-body">
+                <strong>{s.name}</strong>
+                <span className="staff-role">{s.role}</span>
+              </div>
             </div>
             <div className="staff-stats">
               {s.scans != null && <span>{s.scans} scans</span>}

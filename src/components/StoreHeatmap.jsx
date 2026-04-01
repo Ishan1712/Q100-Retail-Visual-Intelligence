@@ -3,9 +3,11 @@ import { motion, AnimatePresence } from "framer-motion";
 import {
   Warning, TrendUp, Clock, Package, CheckCircle,
   ArrowRight, Star, Lightning, CaretRight, Pulse,
-  ShoppingCart, Storefront, ArrowClockwise
+  ShoppingCart, Storefront, ArrowClockwise,
+  ShoppingBag, Snowflake, Grains, CookingPot, Coffee,
+  Broom, Cookie, FirstAid, Sparkle, BowlFood
 } from "@phosphor-icons/react";
-import { managerStore, managerAisles, managerAlerts, managerRestockFeed } from "../data";
+import { managerStore, managerShelves, managerAlerts, managerRestockFeed } from "../data";
 import Tooltip from "./Tooltip";
 import "./StoreHeatmap.css";
 
@@ -82,10 +84,10 @@ const RevenueTicker = ({ base, rate }) => {
 };
 
 /* ───── Store Floor Heatmap ───── */
-const FloorHeatmap = ({ aisles, hoveredAisle, setHoveredAisle }) => {
-  // Layout: 2 rows of 5 aisles each, with checkout at top and endcaps on sides
-  const leftAisles = aisles.filter(a => a.id <= 5);
-  const rightAisles = aisles.filter(a => a.id > 5);
+const FloorHeatmap = ({ shelves, hoveredShelf, setHoveredShelf }) => {
+  // Layout: 2 rows of 5 shelves each, with checkout at top and endcaps on sides
+  const leftShelves = shelves.filter(a => a.id <= 5);
+  const rightShelves = shelves.filter(a => a.id > 5);
 
   return (
     <div className="floor-map">
@@ -103,21 +105,21 @@ const FloorHeatmap = ({ aisles, hoveredAisle, setHoveredAisle }) => {
           <span>Checkout Zone</span>
         </div>
 
-        {/* Aisle grid */}
-        <div className="floor-aisles">
+        {/* Shelf grid */}
+        <div className="floor-shelves">
           <div className="floor-col">
-            {leftAisles.map(a => (
-              <AisleStrip key={a.id} aisle={a} isHovered={hoveredAisle === a.id}
-                onHover={() => setHoveredAisle(a.id)} onLeave={() => setHoveredAisle(null)} />
+            {leftShelves.map(a => (
+              <ShelfStrip key={a.id} shelf={a} isHovered={hoveredShelf === a.id}
+                onHover={() => setHoveredShelf(a.id)} onLeave={() => setHoveredShelf(null)} />
             ))}
           </div>
           <div className="floor-divider">
             <span>Main Aisle</span>
           </div>
           <div className="floor-col">
-            {rightAisles.map(a => (
-              <AisleStrip key={a.id} aisle={a} isHovered={hoveredAisle === a.id}
-                onHover={() => setHoveredAisle(a.id)} onLeave={() => setHoveredAisle(null)} />
+            {rightShelves.map(a => (
+              <ShelfStrip key={a.id} shelf={a} isHovered={hoveredShelf === a.id}
+                onHover={() => setHoveredShelf(a.id)} onLeave={() => setHoveredShelf(null)} />
             ))}
           </div>
         </div>
@@ -142,38 +144,58 @@ const FloorHeatmap = ({ aisles, hoveredAisle, setHoveredAisle }) => {
   );
 };
 
-/* ───── Aisle Strip ───── */
-const AisleStrip = ({ aisle, isHovered, onHover, onLeave }) => {
-  const cm = colorMap[aisle.color];
+/* ───── Shelf Icon Map ───── */
+const shelfIconMap = {
+  1: ShoppingCart,
+  2: Snowflake,
+  3: Grains,
+  4: CookingPot,
+  5: Coffee,
+  6: Broom,
+  7: Cookie,
+  8: FirstAid,
+  9: Sparkle,
+  10: BowlFood,
+};
+
+/* ───── Shelf Strip ───── */
+const ShelfStrip = ({ shelf, isHovered, onHover, onLeave }) => {
+  const cm = colorMap[shelf.color];
+  const Icon = shelfIconMap[shelf.id] || Package;
   return (
     <motion.div
-      className={`aisle-strip ${cm.cls}${aisle.vip ? " aisle-vip" : ""}${isHovered ? " aisle-hovered" : ""}`}
+      className={`shelf-strip ${cm.cls}${shelf.vip ? " shelf-vip" : ""}${isHovered ? " shelf-hovered" : ""}`}
       onMouseEnter={onHover} onMouseLeave={onLeave}
-      whileHover={{ scale: 1.02 }}
+      whileHover={{ scale: 1.03, y: -2 }}
+      whileTap={{ scale: 0.98 }}
       layout
     >
-      <div className="aisle-strip-left">
-        <span className="aisle-num">{aisle.id}</span>
-        <span className="aisle-icon">{aisle.icon}</span>
-        <span className="aisle-cat">{aisle.category}</span>
+      <div className="shelf-strip-left">
+        <span className="shelf-num">{shelf.id}</span>
+        <span className="shelf-icon-wrap"><Icon size={16} weight="duotone" /></span>
+        <span className="shelf-cat">{shelf.category}</span>
       </div>
-      <div className="aisle-strip-right">
-        <span className="aisle-pct">{aisle.compliance}%</span>
-        {aisle.vip && <Tooltip text={`VIP: ${aisle.vip.brand}`}><Star size={12} weight="fill" className="aisle-vip-star" /></Tooltip>}
+      <div className="shelf-strip-right">
+        {shelf.oosItems > 0 && <span className="shelf-oos-badge">{shelf.oosItems} OOS</span>}
+        <div className="shelf-mini-bar">
+          <div className="shelf-mini-fill" style={{ width: `${shelf.compliance}%`, background: shelf.compliance >= 90 ? '#22c55e' : shelf.compliance >= 80 ? '#34d399' : shelf.compliance >= 70 ? '#f59e0b' : '#ef4444' }} />
+        </div>
+        <span className="shelf-pct">{shelf.compliance}%</span>
+        {shelf.vip && <Tooltip text={`VIP: ${shelf.vip.brand}`}><Star size={12} weight="fill" className="shelf-vip-star" /></Tooltip>}
       </div>
 
       {/* Hover tooltip */}
       <AnimatePresence>
         {isHovered && (
-          <motion.div className="aisle-tooltip"
+          <motion.div className="shelf-tooltip"
             initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 6 }}
             transition={{ duration: 0.15 }}
           >
-            <div className="at-row"><strong>Aisle {aisle.id}</strong> — {aisle.category}</div>
-            <div className="at-row">Compliance: <strong>{aisle.compliance}%</strong></div>
-            <div className="at-row">OOS Items: <strong className="at-red">{aisle.oosItems}</strong></div>
-            <div className="at-row">Last Scan: <strong>{aisle.lastScan}</strong></div>
-            {aisle.vip && <div className="at-row at-vip"><Star size={11} weight="fill" /> VIP: {aisle.vip.brand} ({aisle.vip.type})</div>}
+            <div className="at-row"><strong>Shelf {shelf.id}</strong> — {shelf.category}</div>
+            <div className="at-row">Compliance: <strong>{shelf.compliance}%</strong></div>
+            <div className="at-row">OOS Items: <strong className="at-red">{shelf.oosItems}</strong></div>
+            <div className="at-row">Last Scan: <strong>{shelf.lastScan}</strong></div>
+            {shelf.vip && <div className="at-row at-vip"><Star size={11} weight="fill" /> VIP: {shelf.vip.brand} ({shelf.vip.type})</div>}
           </motion.div>
         )}
       </AnimatePresence>
@@ -193,7 +215,7 @@ const AlertCard = ({ alert, index }) => {
       <div className="alert-top">
         <div className="alert-badge-row">
           <span className={`alert-severity-dot ${alert.severity}`} />
-          <span className="alert-aisle">Aisle {alert.aisle}</span>
+          <span className="alert-shelf">Shelf {alert.shelf}</span>
           <span className="alert-cat">{alert.category}</span>
         </div>
         <div className="alert-loss">
@@ -252,11 +274,11 @@ const FeedItem = ({ item, index }) => (
    MAIN COMPONENT
    ═══════════════════════════ */
 const StoreHeatmap = () => {
-  const [hoveredAisle, setHoveredAisle] = useState(null);
+  const [hoveredShelf, setHoveredShelf] = useState(null);
   const store = managerStore;
-  const aisles = managerAisles;
-  const totalOOS = aisles.reduce((s, a) => s + a.oosItems, 0);
-  const vipAisles = aisles.filter(a => a.vip);
+  const shelves = managerShelves;
+  const totalOOS = shelves.reduce((s, a) => s + a.oosItems, 0);
+  const vipShelves = shelves.filter(a => a.vip);
 
   return (
     <div className="heatmap-screen">
@@ -283,8 +305,8 @@ const StoreHeatmap = () => {
 
         <div className="hero-stats">
           <div className="hero-stat">
-            <span className="hs-val">{store.totalAisles}</span>
-            <span className="hs-label">Aisles</span>
+            <span className="hs-val">{store.totalShelfs}</span>
+            <span className="hs-label">Shelfs</span>
           </div>
           <div className="hero-stat">
             <span className="hs-val hs-red">{totalOOS}</span>
@@ -303,20 +325,20 @@ const StoreHeatmap = () => {
       <div className="heatmap-body">
         {/* Left: Floor Heatmap */}
         <div className="heatmap-left">
-          <FloorHeatmap aisles={aisles} hoveredAisle={hoveredAisle} setHoveredAisle={setHoveredAisle} />
+          <FloorHeatmap shelves={shelves} hoveredShelf={hoveredShelf} setHoveredShelf={setHoveredShelf} />
 
-          {/* VIP Aisles */}
-          {vipAisles.length > 0 && (
+          {/* VIP Shelfs */}
+          {vipShelves.length > 0 && (
             <div className="vip-section">
               <div className="vip-header">
                 <Star size={15} weight="fill" />
-                <span>VIP Aisles — Brand Partner Displays</span>
+                <span>VIP Shelfs — Brand Partner Displays</span>
               </div>
               <div className="vip-cards">
-                {vipAisles.map(a => (
+                {vipShelves.map(a => (
                   <div key={a.id} className="vip-card">
                     <div className="vip-card-top">
-                      <span className="vip-aisle">Aisle {a.id}</span>
+                      <span className="vip-shelf">Shelf {a.id}</span>
                       <span className={`vip-compliance${a.vip.compliance === 100 ? " perfect" : ""}`}>
                         {a.vip.compliance ?? a.compliance}%
                         {a.vip.compliance === 100 && <CheckCircle size={12} weight="fill" />}

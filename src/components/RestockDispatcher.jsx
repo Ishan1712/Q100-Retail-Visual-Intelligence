@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { motion } from "framer-motion";
 import {
   Warning, CheckCircle, Clock, Package, User, ArrowRight,
@@ -7,193 +7,176 @@ import {
 import "./RestockDispatcher.css";
 
 /* ═══ Data ═══ */
-const pipeline = {
-  flagged: [
-    { id: "f1", product: "Surf Excel 1kg", qty: 5, aisle: 6, section: 2, shelf: "Eye-Level", flaggedAt: "10:08 AM", mins: 7 },
-    { id: "f2", product: "Vim Bar", qty: 4, aisle: 6, section: 3, shelf: "Lower", flaggedAt: "10:08 AM", mins: 7 },
-    { id: "f3", product: "Harpic 500ml", qty: 3, aisle: 6, section: 4, shelf: "Lower", flaggedAt: "10:08 AM", mins: 7 },
-    { id: "f4", product: "Mother Dairy Curd 400g", qty: 6, aisle: 2, section: 1, shelf: "Eye-Level", flaggedAt: "9:52 AM", mins: 23 },
-  ],
-  picked: [
-    { id: "p1", product: "Kurkure Multi Grain", qty: 6, aisle: 7, section: 3, shelf: "Eye-Level", flaggedAt: "9:18 AM", worker: "Suresh K.", pickedAt: "9:33 AM", eta: "2 mins", mins: 57 },
-    { id: "p2", product: "Amul Butter 100g", qty: 3, aisle: 2, section: 2, shelf: "Eye-Level", flaggedAt: "9:52 AM", worker: "Manoj T.", pickedAt: "10:06 AM", eta: "4 mins", mins: 23 },
-    { id: "p3", product: "Surf Excel 1kg", qty: 5, aisle: 6, section: 2, shelf: "Eye-Level", flaggedAt: "10:02 AM", worker: "Manoj T.", pickedAt: "10:10 AM", eta: "6 mins", mins: 13 },
-  ],
-  restocked: [
-    { id: "r1", product: "Parle-G 250g", qty: 4, aisle: 7, at: "9:31 AM", worker: "Suresh K." },
-    { id: "r2", product: "Dairy Milk 50g", qty: 3, aisle: 7, at: "9:38 AM", worker: "Manoj T." },
-    { id: "r3", product: "Tata Salt 1kg", qty: 6, aisle: 3, at: "8:45 AM", worker: "Suresh K." },
-    { id: "r4", product: "Maggi 2-Min", qty: 8, aisle: 10, at: "8:52 AM", worker: "Deepa S." },
-    { id: "r5", product: "Colgate MaxFresh", qty: 4, aisle: 9, at: "9:12 AM", worker: "Deepa S." },
-  ],
-  blocked: [
-    { id: "b1", product: "Amul Taaza 500ml", aisle: 2, reason: "Zero back-stock", lastDelivery: "Monday", dailySell: 18, lostSales: 630, suggestion: "Emergency order to Amul distributor. Lead time: 6 hours." },
-    { id: "b2", product: "Real Juice Mango 1L", aisle: 5, reason: "Supplier delay", lastDelivery: "Last Thursday", dailySell: 8, lostSales: 240, suggestion: "Expected Thursday. No action needed." },
-  ],
-};
+const tasks = [
+  { id: 1, product: "Surf Excel 1kg", qty: 5, shelf: "Aisle 6, Sec 2", status: "flagged", time: "10:08 AM", mins: 7 },
+  { id: 2, product: "Vim Bar", qty: 4, shelf: "Aisle 6, Sec 3", status: "flagged", time: "10:08 AM", mins: 7 },
+  { id: 3, product: "Harpic 500ml", qty: 3, shelf: "Aisle 6, Sec 4", status: "flagged", time: "10:08 AM", mins: 7 },
+  { id: 4, product: "Mother Dairy Curd 400g", qty: 6, shelf: "Aisle 2, Sec 1", status: "flagged", time: "9:52 AM", mins: 23 },
+  { id: 5, product: "Kurkure Multi Grain", qty: 6, shelf: "Aisle 7, Sec 3", status: "picked", time: "9:18 AM", mins: 57, worker: "Suresh K.", eta: "2 mins" },
+  { id: 6, product: "Amul Butter 100g", qty: 3, shelf: "Aisle 2, Sec 2", status: "picked", time: "9:52 AM", mins: 23, worker: "Manoj T.", eta: "4 mins" },
+  { id: 7, product: "Surf Excel 1kg", qty: 5, shelf: "Aisle 6, Sec 2", status: "picked", time: "10:02 AM", mins: 13, worker: "Manoj T.", eta: "6 mins" },
+  { id: 8, product: "Parle-G 250g", qty: 4, shelf: "Aisle 7", status: "done", time: "9:31 AM", worker: "Suresh K." },
+  { id: 9, product: "Dairy Milk 50g", qty: 3, shelf: "Aisle 7", status: "done", time: "9:38 AM", worker: "Manoj T." },
+  { id: 10, product: "Tata Salt 1kg", qty: 6, shelf: "Aisle 3", status: "done", time: "8:45 AM", worker: "Suresh K." },
+  { id: 11, product: "Maggi 2-Min", qty: 8, shelf: "Aisle 10", status: "done", time: "8:52 AM", worker: "Deepa S." },
+  { id: 12, product: "Colgate MaxFresh", qty: 4, shelf: "Aisle 9", status: "done", time: "9:12 AM", worker: "Deepa S." },
+];
+
+const blocked = [
+  { id: "b1", product: "Amul Taaza 500ml", shelf: "Aisle 2", reason: "Zero back-stock", dailySell: 18, lostSales: 630, suggestion: "Emergency order to Amul distributor. Lead time: 6 hours." },
+  { id: "b2", product: "Real Juice Mango 1L", shelf: "Aisle 5", reason: "Supplier delay", dailySell: 8, lostSales: 240, suggestion: "Expected Thursday. No action needed." },
+];
 
 const workers = [
   { id: 1, name: "Suresh K.", avatar: "S", task: "Kurkure Multi Grain × 6 → Aisle 7", load: 1, eta: "~2 mins", status: "busy" },
-  { id: 2, name: "Manoj T.", avatar: "M", task: "Surf Excel 1kg × 5 → Aisle 6 + Amul Butter → Aisle 2", load: 2, eta: "~6 mins", status: "busy" },
+  { id: 2, name: "Manoj T.", avatar: "M", task: "Surf Excel 1kg × 5 → Aisle 6", load: 2, eta: "~6 mins", status: "busy" },
   { id: 3, name: "Deepa S.", avatar: "D", task: null, load: 0, eta: "Available", status: "idle", idleSince: "10:02 AM", suggestion: "Pick Vim Bar + Harpic for Aisle 6" },
 ];
 
-const batchSuggestion = "Assign Aisle 6 restock bundle to Deepa: Vim Bar × 4, Harpic 500ml × 3. Suresh will finish Aisle 7 in 2 mins and can pick up Mother Dairy Curd for Aisle 2.";
+const batchSuggestion = "Assign Aisle 6 restock bundle to Deepa: Vim Bar × 4, Harpic × 3. Suresh finishes Aisle 7 in 2 mins — can pick Mother Dairy Curd for Aisle 2.";
 
-/* ═══ Kanban Card ═══ */
-const KanbanCard = ({ item, type }) => {
-  const slaClass = item.mins > 30 ? "sla-red" : item.mins > 15 ? "sla-amber" : "sla-ok";
-  return (
-    <motion.div className={`kanban-card kc-${type}`} whileHover={{ y: -2 }} layout>
-      <div className="kc-top">
-        <strong className="kc-product">{item.product}</strong>
-        {item.qty && <span className="kc-qty">×{item.qty}</span>}
-      </div>
-      <div className="kc-meta">
-        <span>Aisle {item.aisle}{item.section ? `, Sec ${item.section}` : ""}</span>
-        {item.shelf && <span>{item.shelf}</span>}
-      </div>
-      {type === "flagged" && (
-        <div className="kc-bottom">
-          <span className="kc-time"><Clock size={11} weight="duotone" /> {item.flaggedAt}</span>
-          <span className={`kc-sla ${slaClass}`}><Timer size={11} weight="fill" /> {item.mins}m</span>
-        </div>
-      )}
-      {type === "picked" && (
-        <div className="kc-bottom">
-          <span className="kc-worker"><User size={11} weight="duotone" /> {item.worker}</span>
-          <span className="kc-eta">ETA {item.eta}</span>
-          <span className={`kc-sla ${slaClass}`}><Timer size={11} weight="fill" /> {item.mins}m</span>
-        </div>
-      )}
-      {type === "restocked" && (
-        <div className="kc-bottom">
-          <span className="kc-worker"><User size={11} weight="duotone" /> {item.worker}</span>
-          <span className="kc-done-time"><CheckCircle size={11} weight="fill" /> {item.at}</span>
-        </div>
-      )}
-    </motion.div>
-  );
+const statusConfig = {
+  flagged: { label: "Awaiting Pickup", color: "#ef4444", bg: "#fef2f2", icon: Warning },
+  picked: { label: "In Transit", color: "#f59e0b", bg: "#fef3c7", icon: Package },
+  done: { label: "Restocked", color: "#16a34a", bg: "#dcfce7", icon: CheckCircle },
 };
 
-/* ═══ Blocked Card ═══ */
-const BlockedCard = ({ item }) => (
-  <motion.div className="kanban-card kc-blocked" whileHover={{ y: -2 }} layout>
-    <div className="kc-top">
-      <strong className="kc-product">{item.product}</strong>
-      <span className="kc-blocked-badge"><Prohibit size={11} weight="fill" /> {item.reason}</span>
-    </div>
-    <div className="kc-meta"><span>Aisle {item.aisle}</span><span>Daily sell: {item.dailySell} units</span></div>
-    <div className="kc-blocked-loss"><TrendDown size={12} weight="bold" /> Lost sales since OOS: ₹{item.lostSales}</div>
-    <div className="kc-suggestion"><Lightning size={11} weight="fill" /> {item.suggestion}</div>
-  </motion.div>
-);
+const slaColor = (m) => m > 30 ? "#ef4444" : m > 15 ? "#f59e0b" : "#16a34a";
 
 /* ═══ Main ═══ */
 const RestockDispatcher = () => {
+  const flaggedCount = tasks.filter(t => t.status === "flagged").length;
+  const pickedCount = tasks.filter(t => t.status === "picked").length;
+  const doneCount = tasks.filter(t => t.status === "done").length;
+
   return (
     <div className="dispatch-screen">
-      {/* SLA Summary */}
-      <div className="dispatch-sla-bar">
-        <div className="sla-stat">
-          <span className="sla-val">14 min</span>
-          <span className="sla-label">Avg Restock Time</span>
+      {/* KPI Strip */}
+      <div className="rd-kpi-strip">
+        <div className="rd-kpi">
+          <Timer size={18} weight="duotone" className="rd-kpi-icon" style={{ color: "#6366f1" }} />
+          <div><strong>14 min</strong><span>Avg Restock</span></div>
         </div>
-        <div className="sla-stat">
-          <span className="sla-val sla-green">0</span>
-          <span className="sla-label">SLA Breaches</span>
+        <div className="rd-kpi">
+          <CheckCircle size={18} weight="duotone" className="rd-kpi-icon" style={{ color: "#16a34a" }} />
+          <div><strong className="rd-green">0</strong><span>SLA Breaches</span></div>
         </div>
-        <div className="sla-stat">
-          <span className="sla-val">{pipeline.flagged.length + pipeline.picked.length + pipeline.restocked.length + pipeline.blocked.length}</span>
-          <span className="sla-label">Total Tasks Today</span>
+        <div className="rd-kpi">
+          <Package size={18} weight="duotone" className="rd-kpi-icon" style={{ color: "#f59e0b" }} />
+          <div><strong>{tasks.length + blocked.length}</strong><span>Total Tasks</span></div>
         </div>
-        <div className="sla-stat">
-          <span className="sla-val sla-green">{pipeline.restocked.length}</span>
-          <span className="sla-label">Completed</span>
+        <div className="rd-kpi">
+          <CheckCircle size={18} weight="fill" className="rd-kpi-icon" style={{ color: "#16a34a" }} />
+          <div><strong className="rd-green">{doneCount}</strong><span>Completed</span></div>
         </div>
       </div>
 
-      <div className="dispatch-body">
-        {/* Kanban Board */}
-        <div className="kanban-board">
-          {/* Flagged */}
-          <div className="kanban-col">
-            <div className="kanban-col-header flagged-header">
-              <Warning size={15} weight="fill" />
-              <span>Flagged</span>
-              <span className="kanban-count">{pipeline.flagged.length}</span>
-            </div>
-            <div className="kanban-cards">
-              {pipeline.flagged.map(item => <KanbanCard key={item.id} item={item} type="flagged" />)}
-            </div>
+      {/* Workers Row */}
+      <div className="rd-workers-row">
+        <h3><User size={15} weight="duotone" /> Storeroom Workers</h3>
+        <div className="rd-workers-grid">
+          {workers.map(w => (
+            <motion.div key={w.id} className={`rd-worker ${w.status}`} whileHover={{ y: -2 }}>
+              <div className="rd-worker-avatar">{w.avatar}</div>
+              <div className="rd-worker-info">
+                <strong>{w.name}</strong>
+                <span className="rd-worker-task">{w.task || "No active task"}</span>
+                <div className="rd-worker-meta">
+                  <span>Load: {w.load}</span>
+                  <span>{w.eta}</span>
+                  {w.idleSince && <span className="rd-idle-tag">Idle since {w.idleSince}</span>}
+                </div>
+              </div>
+              {w.suggestion && (
+                <div className="rd-worker-suggest"><Lightning size={11} weight="fill" /> {w.suggestion}</div>
+              )}
+            </motion.div>
+          ))}
+        </div>
+      </div>
+
+      {/* Main Content */}
+      <div className="rd-main">
+        {/* Task Pipeline */}
+        <div className="rd-pipeline">
+          <h3><ArrowRight size={15} weight="bold" /> Restock Pipeline</h3>
+
+          {/* Status summary tabs */}
+          <div className="rd-status-tabs">
+            <div className="rd-tab rd-tab-flagged"><Warning size={13} weight="fill" /> {flaggedCount} Awaiting</div>
+            <div className="rd-tab rd-tab-picked"><Package size={13} weight="fill" /> {pickedCount} In Transit</div>
+            <div className="rd-tab rd-tab-done"><CheckCircle size={13} weight="fill" /> {doneCount} Done</div>
           </div>
 
-          {/* Picked */}
-          <div className="kanban-col">
-            <div className="kanban-col-header picked-header">
-              <Package size={15} weight="fill" />
-              <span>Picked</span>
-              <span className="kanban-count">{pipeline.picked.length}</span>
-            </div>
-            <div className="kanban-cards">
-              {pipeline.picked.map(item => <KanbanCard key={item.id} item={item} type="picked" />)}
-            </div>
-          </div>
-
-          {/* Restocked */}
-          <div className="kanban-col">
-            <div className="kanban-col-header restocked-header">
-              <CheckCircle size={15} weight="fill" />
-              <span>Restocked</span>
-              <span className="kanban-count">{pipeline.restocked.length}</span>
-            </div>
-            <div className="kanban-cards">
-              {pipeline.restocked.map(item => <KanbanCard key={item.id} item={item} type="restocked" />)}
-            </div>
-          </div>
-
-          {/* Blocked */}
-          <div className="kanban-col">
-            <div className="kanban-col-header blocked-header">
-              <Prohibit size={15} weight="fill" />
-              <span>Blocked</span>
-              <span className="kanban-count">{pipeline.blocked.length}</span>
-            </div>
-            <div className="kanban-cards">
-              {pipeline.blocked.map(item => <BlockedCard key={item.id} item={item} />)}
-            </div>
+          {/* Task Table */}
+          <div className="rd-table-wrap">
+            <table className="rd-table">
+              <thead>
+                <tr>
+                  <th>Product</th>
+                  <th>Qty</th>
+                  <th>Location</th>
+                  <th>Status</th>
+                  <th>Worker</th>
+                  <th>Time</th>
+                </tr>
+              </thead>
+              <tbody>
+                {tasks.map(t => {
+                  const sc = statusConfig[t.status];
+                  return (
+                    <motion.tr key={t.id} initial={{ opacity: 0 }} animate={{ opacity: 1 }}
+                      className={`rd-row rd-row-${t.status}`}>
+                      <td className="rd-product">{t.product}</td>
+                      <td><span className="rd-qty">×{t.qty}</span></td>
+                      <td className="rd-shelf">{t.shelf}</td>
+                      <td>
+                        <span className="rd-status-pill" style={{ background: sc.bg, color: sc.color }}>
+                          <sc.icon size={11} weight="fill" /> {sc.label}
+                        </span>
+                      </td>
+                      <td className="rd-worker-name">{t.worker || "—"}</td>
+                      <td>
+                        <span className="rd-time">{t.time}</span>
+                        {t.mins && <span className="rd-sla" style={{ color: slaColor(t.mins) }}>{t.mins}m</span>}
+                        {t.eta && <span className="rd-eta">ETA {t.eta}</span>}
+                      </td>
+                    </motion.tr>
+                  );
+                })}
+              </tbody>
+            </table>
           </div>
         </div>
 
-        {/* Right Panel — Workers + Batch */}
-        <div className="dispatch-right">
-          {/* Workers */}
-          <div className="workers-panel">
-            <h3><User size={15} weight="duotone" /> Storeroom Workers</h3>
-            <div className="workers-list">
-              {workers.map(w => (
-                <div key={w.id} className={`worker-card wk-${w.status}`}>
-                  <div className="wk-avatar">{w.avatar}</div>
-                  <div className="wk-body">
-                    <strong>{w.name}</strong>
-                    <span className="wk-task">{w.task || "No active task"}</span>
-                    <div className="wk-stats">
-                      <span>Load: {w.load}</span>
-                      <span>{w.eta}</span>
-                      {w.idleSince && <span className="wk-idle">Idle since {w.idleSince}</span>}
-                    </div>
-                    {w.suggestion && <div className="wk-suggest"><Lightning size={11} weight="fill" /> {w.suggestion}</div>}
+        {/* Right: Blocked + AI */}
+        <div className="rd-sidebar">
+          {/* Blocked Items */}
+          <div className="rd-blocked-card">
+            <h3><Prohibit size={15} weight="fill" /> Blocked <span className="rd-blocked-count">{blocked.length}</span></h3>
+            <div className="rd-blocked-list">
+              {blocked.map(b => (
+                <div key={b.id} className="rd-blocked-item">
+                  <div className="rd-blocked-top">
+                    <strong>{b.product}</strong>
+                    <span className="rd-blocked-badge">{b.reason}</span>
                   </div>
+                  <div className="rd-blocked-meta">
+                    <span>{b.shelf}</span>
+                    <span>Daily: {b.dailySell} units</span>
+                  </div>
+                  <div className="rd-blocked-loss"><TrendDown size={12} weight="bold" /> ₹{b.lostSales} lost</div>
+                  <div className="rd-blocked-fix"><Lightning size={11} weight="fill" /> {b.suggestion}</div>
                 </div>
               ))}
             </div>
           </div>
 
-          {/* Batch Optimization */}
-          <div className="batch-panel">
-            <div className="batch-header"><ArrowsClockwise size={15} weight="duotone" /> AI Batch Optimization</div>
-            <p className="batch-text">{batchSuggestion}</p>
-            <button className="batch-btn"><CheckCircle size={14} weight="bold" /> Apply Suggestion</button>
+          {/* AI Suggestion */}
+          <div className="rd-ai-card">
+            <div className="rd-ai-header"><ArrowsClockwise size={15} weight="duotone" /> AI Batch Optimization</div>
+            <p className="rd-ai-text">{batchSuggestion}</p>
+            <button className="rd-ai-btn"><CheckCircle size={14} weight="bold" /> Apply Suggestion</button>
           </div>
         </div>
       </div>

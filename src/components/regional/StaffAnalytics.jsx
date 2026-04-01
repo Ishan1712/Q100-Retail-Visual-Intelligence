@@ -1,124 +1,185 @@
 import React from "react";
-import { User, Warning, TrendUp, Lightning, Scan, Package } from "@phosphor-icons/react";
+import { motion } from "framer-motion";
+import { User, Warning, TrendUp, Lightning, Star, Envelope, Timer } from "@phosphor-icons/react";
+import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid, ReferenceLine, Legend } from "recharts";
 import "./Regional.css";
 
-const summary = [
-  { label: "Floor Staff", value: "14", sub: "Across 5 stores" },
-  { label: "Storeroom Staff", value: "13", sub: "Across 5 stores" },
-  { label: "Avg Scans/Day", value: "30", sub: "Per store" },
-  { label: "Avg Restock SLA", value: "18.6m", sub: "Target: <20m" },
-  { label: "Coverage Velocity", value: "92%", sub: "Within 2hrs of open" },
+const kpis = [
+  { label: "Total Staff", value: "27", sub: "14 floor + 13 storeroom across 5 stores" },
+  { label: "Avg Restocks/Shift", value: "32", sub: "Industry avg: 18 — shows efficiency" },
+  { label: "Avg Restock Speed", value: "14 min", sub: "From empty shelf detected to product placed" },
+  { label: "Faster Training", value: "35%", sub: "New staff productive in 2 weeks vs 3 weeks before Q100" },
 ];
 
 const staffTable = [
-  { store: "Pune", floor: 3, storeroom: 3, vacancy: "0", sla: "14 min", bi: 0.9, biClass: "bi-healthy", biLabel: "Healthy", compliance: "88.4%" },
-  { store: "Mumbai", floor: 3, storeroom: 3, vacancy: "0", sla: "16 min", bi: 1.1, biClass: "bi-borderline", biLabel: "Borderline", compliance: "85.1%" },
-  { store: "Nashik", floor: 3, storeroom: 3, vacancy: "1 (store)", sla: "18 min", bi: 1.3, biClass: "bi-watch", biLabel: "Watch", compliance: "82.8%" },
-  { store: "Nagpur", floor: 3, storeroom: 2, vacancy: "1 (store)", sla: "21 min", bi: 1.6, biClass: "bi-bottleneck", biLabel: "Bottleneck", compliance: "80.2%" },
-  { store: "Aurangabad", floor: 2, storeroom: 2, vacancy: "1+1", sla: "24 min", bi: 1.8, biClass: "bi-critical", biLabel: "Critical", compliance: "78.6%" },
+  { store: "Q-Mart Kothrud, Pune", floor: 3, storeroom: 3, vacancy: "0%", restockSpeed: 12, emptyPerShift: 18, topIssue: "None — fully optimized", health: "good" },
+  { store: "Q-Mart Andheri, Mumbai", floor: 3, storeroom: 3, vacancy: "0%", restockSpeed: 15, emptyPerShift: 24, topIssue: "Beverage aisle slow", health: "good" },
+  { store: "Q-Mart Gangapur, Nashik", floor: 3, storeroom: 2, vacancy: "14%", restockSpeed: 18, emptyPerShift: 28, topIssue: "1 storeroom vacancy", health: "warn" },
+  { store: "Q-Mart Dharampeth, Nagpur", floor: 3, storeroom: 2, vacancy: "14%", restockSpeed: 22, emptyPerShift: 35, topIssue: "Slow dairy restocking", health: "warn" },
+  { store: "Q-Mart Sadar, Nagpur", floor: 2, storeroom: 2, vacancy: "28%", restockSpeed: 38, emptyPerShift: 42, topIssue: "Critical understaffing", health: "bad" },
+];
+
+const bottleneckAlerts = [
+  { store: "Q-Mart Sadar, Nagpur", issue: "Only 2 storeroom staff for 10 aisles. Restock takes 38 min avg.", impact: "₹85K/month lost sales from slow restocking", fix: "Hire 2 storeroom + 1 floor staff. Cost: ₹54K/mo. Projected revenue gain: ₹85K/mo." },
+  { store: "Q-Mart Dharampeth, Nagpur", issue: "Dairy section staffed by 1 person during peak hours (4-7 PM).", impact: "₹28K/month lost from dairy empty shelves", fix: "Cross-train 1 floor staff for dairy restocking during peak. No additional cost." },
+  { store: "Q-Mart Gangapur, Nashik", issue: "1 storeroom vacancy unfilled for 6 weeks.", impact: "₹18K/month lost from delayed restocking", fix: "Fill vacancy urgently. Cost: ₹18K/mo. Projected recovery: ₹18K/mo." },
 ];
 
 const topPerformers = [
-  { rank: 1, name: "Amit D.", store: "Pune", role: "Floor", stat: "16 catches/day, 18m/aisle" },
-  { rank: 2, name: "Rahul M.", store: "Pune", role: "Floor", stat: "14 catches/day, 20m/aisle" },
+  { rank: 1, name: "Amit D.", store: "Pune", role: "Floor", stat: "16 restocks/day, 12m avg speed" },
+  { rank: 2, name: "Priya N.", store: "Mumbai", role: "Floor", stat: "15 restocks/day, 14m avg speed" },
   { rank: 3, name: "Suresh K.", store: "Pune", role: "Storeroom", stat: "12m avg, 16 tasks/day" },
-  { rank: 4, name: "Priya N.", store: "Mumbai", role: "Floor", stat: "15 catches/day, 19m/aisle" },
-  { rank: 5, name: "Manoj T.", store: "Pune", role: "Storeroom", stat: "15m avg, 14 tasks/day" },
-  { rank: 6, name: "Kiran S.", store: "Mumbai", role: "Floor", stat: "13 catches/day, 21m/aisle" },
-  { rank: 7, name: "Deepa S.", store: "Pune", role: "Storeroom", stat: "16m avg, 8 tasks/day" },
-  { rank: 8, name: "Ravi P.", store: "Nashik", role: "Floor", stat: "12 catches/day, 20m/aisle" },
-  { rank: 9, name: "Sanjay M.", store: "Mumbai", role: "Storeroom", stat: "14m avg, 15 tasks/day" },
-  { rank: 10, name: "Neha K.", store: "Nagpur", role: "Floor", stat: "11 catches/day, 22m/aisle" },
+  { rank: 4, name: "Rahul M.", store: "Pune", role: "Floor", stat: "14 restocks/day, 13m avg speed" },
+  { rank: 5, name: "Kiran S.", store: "Mumbai", role: "Floor", stat: "13 restocks/day, 15m avg speed" },
+  { rank: 6, name: "Manoj T.", store: "Pune", role: "Storeroom", stat: "15m avg, 14 tasks/day" },
+  { rank: 7, name: "Sanjay M.", store: "Mumbai", role: "Storeroom", stat: "14m avg, 15 tasks/day" },
+  { rank: 8, name: "Deepa S.", store: "Pune", role: "Storeroom", stat: "16m avg, 8 tasks/day" },
+  { rank: 9, name: "Ravi P.", store: "Nashik", role: "Floor", stat: "12 restocks/day, 18m avg speed" },
+  { rank: 10, name: "Neha K.", store: "Nagpur", role: "Floor", stat: "11 restocks/day, 20m avg speed" },
 ];
 
-const riskItems = [
-  "Floor staff vacancy: 1 (only 2 scanners for 10 aisles — 2 cycles/day vs 3)",
-  "Storeroom vacancy: 1 (bottleneck index 1.8 — critical)",
-  "Restock SLA trending upward for 4 consecutive weeks",
-  "Zero-back-stock rate: 8.2% of SKUs (highest in chain)",
+const mostImproved = [
+  { name: "Ravi P.", store: "Nashik", improvement: "Restock speed improved from 24m to 18m (-25%)" },
+  { name: "Neha K.", store: "Nagpur", improvement: "Catches per day up from 7 to 11 (+57%)" },
 ];
 
-const StaffAnalytics = () => (
-  <div className="reg-screen">
-    {/* Summary */}
-    <div className="staff-summary">
-      {summary.map((s, i) => (
-        <div key={i} className="staff-sum-card">
-          <strong>{s.value}</strong>
-          <span>{s.label}</span>
-        </div>
-      ))}
-    </div>
+/* Restock SLA Trend — 30 day data (weekly aggregation) */
+const restockTrend = [
+  { week: "W1", Pune: 14, Mumbai: 17, Nashik: 20, Nagpur: 24, "Nagpur-S": 40 },
+  { week: "W2", Pune: 13, Mumbai: 16, Nashik: 19, Nagpur: 23, "Nagpur-S": 39 },
+  { week: "W3", Pune: 13, Mumbai: 16, Nashik: 18, Nagpur: 22, "Nagpur-S": 38 },
+  { week: "W4", Pune: 12, Mumbai: 15, Nashik: 18, Nagpur: 22, "Nagpur-S": 38 },
+];
 
-    <div className="reg-body">
-      {/* Left: Table + Risk */}
-      <div className="reg-left">
-        <div className="reg-card" style={{ overflowX: "auto" }}>
-          <h3><User size={16} weight="duotone" /> Store Staffing & Bottleneck Index</h3>
-          <table className="staff-table">
+const storeColors = { Pune: "#059669", Mumbai: "#6366f1", Nashik: "#f59e0b", Nagpur: "#fb923c", "Nagpur-S": "#ef4444" };
+
+const StaffAnalytics = () => {
+  const now = new Date();
+  const timestamp = now.toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" }) + ", " + now.toLocaleTimeString("en-IN", { hour: "2-digit", minute: "2-digit" });
+
+  return (
+    <div className="reg-screen">
+      <div className="owner-timestamp">Data as of: {timestamp}</div>
+
+      {/* KPI Cards */}
+      <div className="reg-kpi-strip">
+        {kpis.map((k, i) => (
+          <motion.div key={i} className="reg-kpi" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.05 }}>
+            <div className="reg-kpi-body" style={{ textAlign: "center", width: "100%" }}>
+              <span className="reg-kpi-label">{k.label}</span>
+              <strong>{k.value}</strong>
+              <span className="reg-kpi-sub">{k.sub}</span>
+            </div>
+          </motion.div>
+        ))}
+      </div>
+
+      {/* Workforce Table */}
+      <div className="reg-card reg-card-full">
+        <h3><User size={16} weight="duotone" /> Workforce Overview</h3>
+        <div style={{ overflowX: "auto" }}>
+          <table className="owner-table">
             <thead>
               <tr>
                 <th>Store</th>
-                <th>Floor</th>
-                <th>Store</th>
+                <th>Floor Staff</th>
+                <th>Storeroom Staff</th>
                 <th>Vacancy</th>
-                <th>SLA</th>
-                <th>Bottleneck</th>
-                <th>Compliance</th>
+                <th>Avg Restock Speed</th>
+                <th>Empty Shelves/Shift</th>
+                <th>Top Issue</th>
               </tr>
             </thead>
             <tbody>
               {staffTable.map((s, i) => (
-                <tr key={i}>
+                <tr key={i} className={s.health === "bad" ? "row-worst" : s.health === "good" && i === 0 ? "row-best" : ""}>
                   <td style={{ fontWeight: 750 }}>{s.store}</td>
                   <td>{s.floor}</td>
                   <td>{s.storeroom}</td>
-                  <td>{s.vacancy}</td>
-                  <td>{s.sla}</td>
-                  <td><span className={s.biClass}>{s.bi} ({s.biLabel})</span></td>
-                  <td style={{ fontWeight: 800 }}>{s.compliance}</td>
+                  <td><span className={s.vacancy === "0%" ? "pill-good" : parseInt(s.vacancy) >= 20 ? "pill-bad" : "pill-warn"}>{s.vacancy}</span></td>
+                  <td><span className={s.restockSpeed <= 15 ? "pill-good" : s.restockSpeed <= 20 ? "pill-warn" : "pill-bad"}>{s.restockSpeed} min</span></td>
+                  <td>{s.emptyPerShift}</td>
+                  <td style={{ fontSize: ".7rem", color: s.health === "bad" ? "#dc2626" : "#64748b" }}>{s.topIssue}</td>
                 </tr>
               ))}
             </tbody>
           </table>
-          <div style={{ fontSize: ".68rem", color: "#64748b", marginTop: 10, lineHeight: 1.5, fontWeight: 500 }}>
-            <strong>Bottleneck Index:</strong> OOS detections/hr ÷ restocks/hr. Above 1.5 = storeroom can't keep up. Aurangabad detects 8.4 OOS/hr but only restocks 4.7/hr (1.8:1).
+        </div>
+      </div>
+
+      <div className="reg-body">
+        {/* Staff Leaderboard */}
+        <div className="reg-left">
+          <div className="reg-card">
+            <h3><Star size={16} weight="fill" /> Staff Leaderboard — Top 10</h3>
+            <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+              {topPerformers.map(p => (
+                <div key={p.rank} className="top-performer">
+                  <span className="tp-rank">#{p.rank}</span>
+                  <span className="tp-avatar">{p.name[0]}</span>
+                  <div className="tp-info">
+                    <strong>{p.name}</strong>
+                    <span>{p.store} · {p.role}</span>
+                  </div>
+                  <span className="tp-stat">{p.stat}</span>
+                </div>
+              ))}
+            </div>
+            {/* Most Improved */}
+            <div style={{ marginTop: 12, padding: "10px 12px", background: "#ecfdf5", borderRadius: 10, border: "1px solid #a7f3d0" }}>
+              <div style={{ fontSize: ".74rem", fontWeight: 800, color: "#065f46", marginBottom: 6 }}>Most Improved This Month</div>
+              {mostImproved.map((m, i) => (
+                <div key={i} style={{ fontSize: ".72rem", color: "#047857", fontWeight: 500, padding: "3px 0" }}>
+                  <strong>{m.name}</strong> ({m.store}) — {m.improvement}
+                </div>
+              ))}
+            </div>
           </div>
         </div>
 
-        {/* Risk Radar */}
-        <div className="risk-card">
-          <h4><Warning size={14} weight="fill" /> Risk Radar — Aurangabad</h4>
-          {riskItems.map((r, i) => (
-            <div key={i} className="risk-item">• {r}</div>
-          ))}
-          <div className="risk-recommendation">
-            <Lightning size={12} weight="fill" /> <strong>Recommendation:</strong> Hire 1 floor + 1 storeroom worker. Cost: ₹36,000/mo. Est. compliance lift: +6 pts to ~84.6%. Revenue gain: ₹72,000/mo. ROI: 2.0:1 on hire.
+        {/* Bottleneck Alerts — right side */}
+        <div className="reg-right">
+          <div className="reg-card" style={{ display: "flex", flexDirection: "column" }}>
+            <h3 style={{ color: "#dc2626" }}><Warning size={16} weight="fill" /> Bottleneck Alerts</h3>
+            <div style={{ display: "flex", flexDirection: "column", gap: 10, flex: 1, justifyContent: "space-between" }}>
+              {bottleneckAlerts.map((b, i) => (
+                <div key={i} className="redflag-card" style={{ display: "flex", flexDirection: "column", gap: 6, flex: 1 }}>
+                  <div className="redflag-header">{b.store}</div>
+                  <p className="redflag-text" style={{ margin: 0 }}>{b.issue}</p>
+                  <div style={{ fontSize: ".72rem", fontWeight: 700, color: "#ef4444" }}>Revenue impact: {b.impact}</div>
+                  <div className="risk-recommendation" style={{ margin: 0 }}>
+                    <Lightning size={12} weight="fill" /> <strong>Fix:</strong> {b.fix}
+                  </div>
+                  <button className="owner-action-btn red" style={{ alignSelf: "flex-start", marginTop: "auto" }}><Envelope size={13} weight="bold" /> Assign</button>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </div>
 
-      {/* Right: Top 10 */}
-      <div className="reg-right">
-        <div className="reg-card">
-          <h3><TrendUp size={16} weight="fill" /> Top 10 Chain Performers</h3>
-          <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
-            {topPerformers.map(p => (
-              <div key={p.rank} className="top-performer">
-                <span className="tp-rank">#{p.rank}</span>
-                <span className="tp-avatar">{p.name[0]}</span>
-                <div className="tp-info">
-                  <strong>{p.name}</strong>
-                  <span>{p.store} · {p.role}</span>
-                </div>
-                <span className="tp-stat">{p.stat}</span>
-              </div>
+      {/* Restock SLA Trend — full width */}
+      <div className="reg-card reg-card-full">
+        <h3><Timer size={16} weight="duotone" /> Restock Speed Trend — Last 30 Days</h3>
+        <ResponsiveContainer width="100%" height={280}>
+          <LineChart data={restockTrend} margin={{ left: 0, right: 10, top: 10 }}>
+            <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
+            <XAxis dataKey="week" tick={{ fontSize: 11 }} />
+            <YAxis tick={{ fontSize: 11 }} domain={[0, 45]} label={{ value: "Minutes", angle: -90, position: "insideLeft", fontSize: 10, fill: "#94a3b8" }} />
+            <Tooltip formatter={(v) => `${v} min`} />
+            <ReferenceLine y={15} stroke="#059669" strokeDasharray="4 4" label={{ value: "Target: 15 min", fontSize: 10, fill: "#059669", position: "right" }} />
+            {Object.entries(storeColors).map(([name, color]) => (
+              <Line key={name} type="monotone" dataKey={name} stroke={color} strokeWidth={2} dot={{ r: 3 }} />
             ))}
-          </div>
+            <Legend />
+          </LineChart>
+        </ResponsiveContainer>
+        <div className="owner-insight-bar" style={{ marginTop: 10 }}>
+          Pune &amp; Mumbai below target. Nagpur-S significantly above — needs urgent staffing fix.
         </div>
       </div>
     </div>
-  </div>
-);
+  );
+};
 
 export default StaffAnalytics;
