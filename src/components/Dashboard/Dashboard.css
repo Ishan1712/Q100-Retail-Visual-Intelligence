@@ -1291,6 +1291,7 @@ body {
   .fab { display: none; }
   .content-scroll { padding-bottom: 84px; }
   .stats-row { grid-template-columns: 1fr; }
+  .stats-cards { grid-template-columns: repeat(5, 1fr); }
   .summary-col { flex-direction: row; }
   .summary-card { flex: 1; }
   .shelf-list { grid-template-columns: 1fr; }

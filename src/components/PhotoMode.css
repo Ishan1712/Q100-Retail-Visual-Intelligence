@@ -1841,12 +1841,15 @@
 
 @media (max-width: 360px) {
   .pm-compare-grid { margin: 0 10px 8px; gap: 8px; }
-  .pm-compare-card { min-height: 180px; }
+  .pm-compare-card { min-height: 160px; }
   .pm-compare-card-header { padding: 5px 8px; font-size: 9px; }
   .pm-compare-card-image { margin: 6px 8px; }
   .pm-compare-expand-btn { padding: 2px 6px; font-size: 9px; }
+  .pm-compare-camera { min-height: 130px; }
   .pm-result-images { padding: 8px 8px 6px; gap: 4px; }
   .pm-result-img-box img { height: 65px; }
+  .pm-compare-upload-empty { min-height: 45px; }
+  .pm-compare-upload-empty p { font-size: 10px; }
 }
 
 /* ═══════════════════════════════════════
