@@ -1,5 +1,5 @@
 /* Screen 2.2 — AI Inspection Detail */
-.inspection-screen { display: flex; flex-direction: column; gap: 16px; padding: 20px 24px 24px; overflow-y: auto; flex: 1; }
+.inspection-screen { display: flex; flex-direction: column; gap: 16px; padding: 20px 24px 24px; overflow-y: auto; overflow-x: hidden; flex: 1; }
 
 /* Tabs */
 .insp-tabs { display: flex; gap: 8px; }
@@ -29,11 +29,11 @@
 .insp-img-wrap { position: relative; height: 240px; overflow: hidden; }
 .insp-img { width: 100%; height: 100%; object-fit: cover; }
 .insp-divider { display: flex; align-items: center; justify-content: center; color: #94a3b8; }
-.insp-after-overlay { position: absolute; inset: 0; background: rgba(22,163,74,.12); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; color: #16a34a; font-weight: 700; font-size: .82rem; }
+.insp-after-overlay { position: absolute; inset: 0; background: rgba(22,163,74,.12); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; color: #16a34a; font-weight: 700; font-size: .82rem; overflow: hidden; }
 
 /* Annotations */
-.anno-layer { position: absolute; inset: 0; }
-.anno-box { position: absolute; border-radius: 4px; display: flex; flex-direction: column; align-items: flex-start; justify-content: flex-end; padding: 4px 6px; }
+.anno-layer { position: absolute; inset: 0; overflow: hidden; }
+.anno-box { position: absolute; border-radius: 4px; display: flex; flex-direction: column; align-items: flex-start; justify-content: flex-end; padding: 4px 6px; overflow: hidden; }
 .anno-oos { border: 2px solid #ef4444; background: rgba(239,68,68,.08); }
 .anno-misplaced { border: 2px dashed #f59e0b; background: rgba(245,158,11,.08); }
 .anno-ok { border: 2px solid #22c55e; background: rgba(34,197,94,.06); }
@@ -53,7 +53,7 @@
 /* Business Impact */
 .insp-impact { background: linear-gradient(135deg, #fef2f2, #fff1f2); border: 1px solid rgba(239,68,68,.15); border-radius: 14px; padding: 16px 20px; }
 .impact-header { display: flex; align-items: center; gap: 8px; font-size: .8rem; font-weight: 800; color: #dc2626; margin-bottom: 12px; }
-.impact-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+.impact-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; overflow: hidden; }
 .impact-item { padding: 10px 14px; background: #fff; border-radius: 10px; border: 1px solid #fecaca; }
 .impact-label { display: block; font-size: .62rem; font-weight: 700; color: #94a3b8; text-transform: uppercase; letter-spacing: .06em; margin-bottom: 4px; }
 .impact-item strong { font-size: .82rem; font-weight: 800; color: #dc2626; }

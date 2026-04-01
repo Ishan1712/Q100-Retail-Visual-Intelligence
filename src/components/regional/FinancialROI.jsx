@@ -1,26 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { CurrencyInr, TrendUp, CheckCircle, Warning, Lightning, ChartBar, Timer, Coins } from "@phosphor-icons/react";
-import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell } from "recharts";
+import { CurrencyInr, TrendUp, CheckCircle, Warning, Lightning, ChartBar, Timer, Coins, ArrowUp } from "@phosphor-icons/react";
+import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell, LineChart, Line, CartesianGrid, ReferenceLine, Legend } from "recharts";
 import "./Regional.css";
-
-const waterfallData = [
-  { name: "OOS Prevention", value: 840000, color: "#059669" },
-  { name: "Penalty Avoided", value: 240000, color: "#6366f1" },
-  { name: "Labour Savings", value: 110000, color: "#f59e0b" },
-  { name: "Shrinkage", value: 65000, color: "#8b5cf6" },
-  { name: "Q100 Cost", value: -225000, color: "#ef4444" },
-  { name: "Net Benefit", value: 1030000, color: "#059669" },
-];
-
-const brandPartners = [
-  { name: "Hindustan Unilever (HUL)", contracted: 85, current: 86.2, threshold: "Below 80% = ₹50K/qtr", status: "safe" },
-  { name: "PepsiCo (Lay's, Kurkure)", contracted: 85, current: 82.8, threshold: "Below 80% = ₹40K/qtr", status: "risk" },
-  { name: "ITC (Sunfeast, Bingo)", contracted: 85, current: 84.1, threshold: "Below 80% = ₹35K/qtr", status: "risk" },
-  { name: "Nestlé (Maggi, KitKat)", contracted: 85, current: 88.4, threshold: "Below 80% = ₹45K/qtr", status: "safe" },
-  { name: "Britannia", contracted: 85, current: 87.6, threshold: "Below 80% = ₹30K/qtr", status: "safe" },
-  { name: "Mondelez (Cadbury)", contracted: 85, current: 83.9, threshold: "Below 80% = ₹35K/qtr", status: "risk" },
-];
 
 const AnimCounter = ({ target }) => {
   const [val, setVal] = useState(0);
@@ -36,124 +18,211 @@ const AnimCounter = ({ target }) => {
   return <>{val.toLocaleString("en-IN")}</>;
 };
 
-const FinancialROI = () => (
-  <div className="reg-screen">
-    {/* ROI Hero */}
-    <div className="roi-hero">
-      <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
-        <div className="roi-coins-stack">
-          {[0, 1, 2, 3, 4].map(i => (
-            <motion.div key={i} className="roi-coin"
-              initial={{ y: 20, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              transition={{ delay: 0.3 + i * 0.12, type: "spring", stiffness: 200 }}>
-              <CurrencyInr size={14} weight="bold" />
-            </motion.div>
-          ))}
-        </div>
-        <div>
-          <motion.div className="roi-ratio"
-            initial={{ scale: 0.5, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            transition={{ delay: 0.2, type: "spring", stiffness: 160 }}>
-            5.58:1
-          </motion.div>
-          <div className="roi-ratio-sub">For every ₹1 spent on Q100, you recover ₹5.58</div>
-        </div>
-      </div>
-      <div style={{ flex: 1 }} />
-      <div style={{ textAlign: "right" }}>
-        <div style={{ fontSize: ".68rem", opacity: .7, fontWeight: 600 }}>MONTHLY SUBSCRIPTION</div>
-        <div style={{ fontSize: "1.3rem", fontWeight: 900 }}>₹2,25,000</div>
-        <div style={{ fontSize: ".68rem", opacity: .7 }}>₹45,000 × 5 stores</div>
-      </div>
-    </div>
+const waterfallData = [
+  { name: "Empty Shelf Recovery", value: 2.1, color: "#059669" },
+  { name: "Reduced Customer Walkouts", value: 1.2, color: "#2563eb" },
+  { name: "Better Product Placement", value: 0.6, color: "#8b5cf6" },
+  { name: "Reduced Shrinkage/Expiry", value: 0.3, color: "#f59e0b" },
+];
 
-    <div className="roi-body">
-      {/* Left: Waterfall + Counter */}
-      <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
-        {/* Animated Counter */}
-        <div className="reg-card" style={{ textAlign: "center", background: "linear-gradient(135deg, #ecfdf5, #d1fae5)", borderColor: "#a7f3d0" }}>
-          <div style={{ fontSize: ".66rem", fontWeight: 700, color: "#047857", textTransform: "uppercase", letterSpacing: ".08em" }}>Estimated Lost Sales Prevented This Month</div>
-          <div style={{ fontSize: "2.4rem", fontWeight: 900, color: "#059669", letterSpacing: "-.03em" }}>
-            ₹<AnimCounter target={840000} />
+const revenueGrowth = [
+  { month: "Oct '25", withQ100: 0, withoutQ100: 0, label: "" },
+  { month: "Nov", withQ100: 0, withoutQ100: 0 },
+  { month: "Dec", withQ100: 0, withoutQ100: 0 },
+  { month: "Jan '26", withQ100: 0, withoutQ100: 0, label: "Q100 Deployed" },
+  { month: "Feb", withQ100: 1.8, withoutQ100: 0 },
+  { month: "Mar", withQ100: 3.6, withoutQ100: 0 },
+  { month: "Apr", withQ100: 4.2, withoutQ100: 0 },
+  { month: "May", withQ100: 4.8, withoutQ100: 0 },
+  { month: "Jun", withQ100: 5.2, withoutQ100: 0 },
+  { month: "Jul", withQ100: 5.6, withoutQ100: 0 },
+  { month: "Aug", withQ100: 5.9, withoutQ100: 0 },
+  { month: "Sep", withQ100: 6.2, withoutQ100: 0 },
+].map((d, i) => ({
+  ...d,
+  cumWithQ100: i <= 3 ? 0 : [0, 0, 0, 0, 1.8, 5.4, 9.6, 14.4, 19.6, 25.2, 31.1, 37.3][i],
+  cumWithout: 0,
+}));
+
+const storeBreakdown = [
+  { store: "Q-Mart Kothrud, Pune", before: 38, after: 42.8, uplift: 4.8, pct: 12.6, empty: 18, restock: 12 },
+  { store: "Q-Mart Andheri, Mumbai", before: 52, after: 56.1, uplift: 4.1, pct: 7.9, empty: 24, restock: 15 },
+  { store: "Q-Mart Gangapur, Nashik", before: 28, after: 31.2, uplift: 3.2, pct: 11.4, empty: 28, restock: 18 },
+  { store: "Q-Mart Dharampeth, Nagpur", before: 32, after: 35.6, uplift: 3.6, pct: 11.3, empty: 35, restock: 22 },
+  { store: "Q-Mart Sadar, Nagpur", before: 18, after: 19.8, uplift: 1.8, pct: 10.0, empty: 42, restock: 38 },
+];
+
+const fmcgPartners = [
+  { name: "Hindustan Unilever", compliance: 94, income: "₹2.8L/quarter" },
+  { name: "PepsiCo", compliance: 91, income: "₹1.6L/quarter" },
+  { name: "ITC", compliance: 88, income: "₹1.2L/quarter" },
+  { name: "Britannia", compliance: 92, income: "₹0.9L/quarter" },
+];
+
+const FinancialROI = () => {
+  const now = new Date();
+  const timestamp = now.toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" }) + ", " + now.toLocaleTimeString("en-IN", { hour: "2-digit", minute: "2-digit" });
+
+  return (
+    <div className="reg-screen">
+      <div className="owner-timestamp">Data as of: {timestamp}</div>
+
+      {/* Hero Banner */}
+      <motion.div className="roi-hero-owner" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}>
+        <div className="roi-hero-main">
+          <div className="roi-hero-big">₹4.2L<span>/month</span></div>
+          <div className="roi-hero-sub">Your stores earn ₹4.2L more every month because shelves stay stocked</div>
+          <div className="roi-hero-cumulative">Since Q100: <strong>₹25.2L</strong> total additional revenue</div>
+        </div>
+        <div className="roi-hero-compare">
+          <div className="roi-compare-item">
+            <span className="roi-compare-label">Q100 Subscription</span>
+            <strong className="roi-compare-val">₹72K/mo</strong>
+          </div>
+          <div className="roi-compare-item">
+            <span className="roi-compare-label">Additional Revenue</span>
+            <strong className="roi-compare-val green">₹4.2L/mo</strong>
+          </div>
+          <div className="roi-compare-item highlight">
+            <span className="roi-compare-label">Net Gain</span>
+            <strong className="roi-compare-val green" style={{ fontSize: "1.4rem" }}>₹3.48L/mo</strong>
           </div>
         </div>
+      </motion.div>
 
-        {/* Waterfall */}
-        <div className="reg-card">
-          <h3><ChartBar size={16} weight="duotone" /> Monthly ROI Breakdown</h3>
-          <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
-            {waterfallData.map((d, i) => (
-              <div key={i} className="waterfall-item">
-                <span className="wf-label">{d.name}</span>
-                <div style={{ flex: 1, height: 8, background: "#f1f5f9", borderRadius: 4, overflow: "hidden" }}>
-                  <div style={{ width: `${Math.abs(d.value) / 12550 * 100}%`, height: "100%", background: d.color, borderRadius: 4 }} />
-                </div>
-                <span className={`wf-value ${d.value >= 0 ? "wf-positive" : "wf-negative"}${d.name === "Net Benefit" ? " wf-total" : ""}`}>
-                  {d.value < 0 ? "(" : ""}₹{Math.abs(d.value / 100000).toFixed(1)}L{d.value < 0 ? ")" : ""}
-                </span>
+      {/* KPI Cards */}
+      <div className="reg-kpi-strip">
+        <motion.div className="reg-kpi" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
+          <div className="reg-kpi-icon" style={{ background: "#eff6ff", color: "#2563eb" }}><Timer size={18} weight="duotone" /></div>
+          <div className="reg-kpi-body">
+            <span className="reg-kpi-label">Payback Period</span>
+            <strong>21 Days</strong>
+            <span className="reg-kpi-sub">Q100 paid for itself in 3 weeks</span>
+          </div>
+        </motion.div>
+        <motion.div className="reg-kpi" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }}>
+          <div className="reg-kpi-icon" style={{ background: "#ecfdf5", color: "#059669" }}><CheckCircle size={18} weight="duotone" /></div>
+          <div className="reg-kpi-body">
+            <span className="reg-kpi-label">Empty Shelves Fixed</span>
+            <strong>4,410/mo</strong>
+            <span className="reg-kpi-sub">That's 147 per day across all stores</span>
+          </div>
+        </motion.div>
+        <motion.div className="reg-kpi" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
+          <div className="reg-kpi-icon" style={{ background: "#ecfdf5", color: "#059669" }}><TrendUp size={18} weight="duotone" /></div>
+          <div className="reg-kpi-body">
+            <span className="reg-kpi-label">Sales Uplift</span>
+            <strong>+12%</strong>
+            <span className="reg-kpi-sub">Average increase since Q100</span>
+          </div>
+        </motion.div>
+        <motion.div className="reg-kpi" style={{ background: "linear-gradient(135deg, #ecfdf5, #d1fae5)", borderColor: "#a7f3d0" }} initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.25 }}>
+          <div className="reg-kpi-icon" style={{ background: "#059669", color: "#fff" }}><CurrencyInr size={18} weight="bold" /></div>
+          <div className="reg-kpi-body">
+            <span className="reg-kpi-label">Annual Revenue Projection</span>
+            <strong style={{ color: "#059669", fontSize: "1.4rem" }}>₹50.4L</strong>
+            <span className="reg-kpi-sub">Projected additional revenue this year</span>
+          </div>
+        </motion.div>
+      </div>
+
+      {/* How Revenue Increased — Waterfall */}
+      <div className="reg-card reg-card-full">
+        <h3><ChartBar size={16} weight="duotone" /> How Revenue Increased — Monthly Breakdown</h3>
+        <div className="owner-breakdown-bars">
+          {waterfallData.map((b, i) => (
+            <div key={i} className="owner-bar-row">
+              <span className="owner-bar-label">{b.name}</span>
+              <div className="owner-bar-track">
+                <motion.div className="owner-bar-fill" style={{ background: b.color }}
+                  initial={{ width: 0 }} animate={{ width: `${(b.value / 2.1) * 100}%` }}
+                  transition={{ delay: 0.2 + i * 0.1, duration: 0.6 }} />
               </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Payback + Projection */}
-        <div className="payback-timeline">
-          <Timer size={20} weight="duotone" />
-          <div>
-            <strong>Break-even: Day 18 (Week 3)</strong>
-            <span> · In profit since. Annual projection: <strong>₹1.53 Cr</strong> by FY 2027</span>
+              <span className="owner-bar-value">₹{b.value}L</span>
+            </div>
+          ))}
+          <div className="owner-bar-row" style={{ borderTop: "2px solid #e2e8f0", paddingTop: 8, marginTop: 4 }}>
+            <span className="owner-bar-label" style={{ fontWeight: 800, color: "#0f172a" }}>Total Additional Revenue</span>
+            <div style={{ flex: 1 }} />
+            <span className="owner-bar-value" style={{ fontWeight: 900, fontSize: ".88rem", color: "#059669" }}>₹4.2L/mo</span>
           </div>
         </div>
       </div>
 
-      {/* Right: Brand Partners */}
-      <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
-        <div className="reg-card">
-          <h3><Coins size={16} weight="duotone" /> Planogram Compliance by Brand Partner</h3>
-          <table className="brand-table">
+      {/* Revenue Growth Chart */}
+      <div className="reg-card reg-card-full">
+        <h3><TrendUp size={16} weight="fill" /> Revenue Growth — With vs Without Q100</h3>
+        <ResponsiveContainer width="100%" height={280}>
+          <LineChart data={revenueGrowth} margin={{ left: 10, right: 20, top: 10 }}>
+            <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
+            <XAxis dataKey="month" tick={{ fontSize: 10 }} />
+            <YAxis tick={{ fontSize: 10 }} label={{ value: "₹L/month extra", angle: -90, position: "insideLeft", fontSize: 10, fill: "#94a3b8" }} />
+            <Tooltip formatter={(v) => `₹${v}L`} />
+            <ReferenceLine x="Jan '26" stroke="#6366f1" strokeDasharray="4 4" label={{ value: "Q100 Deployed", fontSize: 10, fill: "#6366f1", position: "top" }} />
+            <Line type="monotone" dataKey="withQ100" name="With Q100" stroke="#059669" strokeWidth={3} dot={{ r: 3 }} />
+            <Line type="monotone" dataKey="withoutQ100" name="Without Q100" stroke="#94a3b8" strokeWidth={2} strokeDasharray="5 5" dot={false} />
+            <Legend />
+          </LineChart>
+        </ResponsiveContainer>
+      </div>
+
+      {/* Per-Store Revenue Breakdown */}
+      <div className="reg-card reg-card-full">
+        <h3><CurrencyInr size={16} weight="bold" /> Per-Store Revenue Breakdown</h3>
+        <div style={{ overflowX: "auto" }}>
+          <table className="owner-table">
             <thead>
               <tr>
-                <th>FMCG Partner</th>
-                <th>Target</th>
-                <th>Current</th>
-                <th>Penalty</th>
-                <th>Status</th>
+                <th>Store</th>
+                <th>Monthly Sales Before</th>
+                <th>Monthly Sales After</th>
+                <th>Sales Uplift</th>
+                <th>Empty Shelves/Day</th>
               </tr>
             </thead>
             <tbody>
-              {brandPartners.map((b, i) => (
+              {storeBreakdown.map((s, i) => (
                 <tr key={i}>
-                  <td style={{ fontWeight: 700 }}>{b.name}</td>
-                  <td>{b.contracted}%</td>
-                  <td style={{ fontWeight: 800 }}>{b.current}%</td>
-                  <td style={{ fontSize: ".66rem", color: "#94a3b8" }}>{b.threshold}</td>
-                  <td>
-                    <span className={`status-${b.status}`}>
-                      {b.status === "safe" ? "✅ Safe" : "⚠️ At Risk"}
-                    </span>
-                  </td>
+                  <td style={{ fontWeight: 750 }}>{s.store}</td>
+                  <td>₹{s.before}L</td>
+                  <td style={{ fontWeight: 800 }}>₹{s.after}L</td>
+                  <td style={{ color: "#059669", fontWeight: 800 }}>+₹{s.uplift}L (+{s.pct}%)</td>
+                  <td>{s.empty} <span style={{ fontSize: ".64rem", color: "#94a3b8" }}>(avg {s.restock} min restock)</span></td>
                 </tr>
               ))}
             </tbody>
           </table>
         </div>
+      </div>
 
-        <div className="reg-card">
-          <h3><Lightning size={16} weight="fill" /> Additional Impact</h3>
-          <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-            <div style={{ padding: "10px 12px", background: "#f8fafc", borderRadius: 8, fontSize: ".74rem", color: "#334155", fontWeight: 500, lineHeight: 1.5 }}>
-              Product returns due to wrong-shelf placement down <strong>34%</strong> since Q100 deployment.
-            </div>
-            <div style={{ padding: "10px 12px", background: "#fef3c7", borderRadius: 8, fontSize: ".74rem", color: "#92400e", fontWeight: 500, lineHeight: 1.5 }}>
-              Trade marketing income at risk: <strong>₹2.4L/quarter</strong> if compliance stays below 85% chain-wide. Currently at 83.6%.
-            </div>
-          </div>
+      {/* FMCG Partner Compliance */}
+      <div className="reg-card reg-card-full">
+        <h3><Coins size={16} weight="duotone" /> FMCG Partner Compliance — Trade Marketing Income</h3>
+        <div style={{ overflowX: "auto" }}>
+          <table className="owner-table">
+            <thead>
+              <tr>
+                <th>Brand Partner</th>
+                <th>Product Placement Accuracy</th>
+                <th>Trade Marketing Income Protected</th>
+              </tr>
+            </thead>
+            <tbody>
+              {fmcgPartners.map((p, i) => (
+                <tr key={i}>
+                  <td style={{ fontWeight: 750 }}>{p.name}</td>
+                  <td>
+                    <span className={p.compliance >= 92 ? "pill-good" : "pill-warn"}>{p.compliance}%</span>
+                  </td>
+                  <td style={{ fontWeight: 700, color: "#059669" }}>{p.income}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
       </div>
     </div>
-  </div>
-);
+  );
+};
 
 export default FinancialROI;

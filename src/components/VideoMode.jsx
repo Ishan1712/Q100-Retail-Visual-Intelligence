@@ -5,23 +5,20 @@ import {
   ShieldCheck, Package, MapPin, ArrowsLeftRight, Clock, Scan,
   Lightning, CircleNotch
 } from '@phosphor-icons/react';
-import { shelf7Sections } from '../data';
+import { allShelfSections } from '../data';
 import SectionIcon, { SectionIconRaw } from './SectionIcon';
 import useCamera from '../hooks/useCamera';
 import Tooltip from './Tooltip';
 import './VideoMode.css';
 
-// Capture triggers — hold starts 2s before each time, sequential order guaranteed
-const timeline = [
-  { time: 5, si: 0 }, { time: 15, si: 1 }, { time: 25, si: 2 },
-  { time: 35, si: 3 }, { time: 45, si: 4 }, { time: 55, si: 5 },
-];
-const colors = ['#10b981', '#0d9488', '#f59e0b', '#ef4444', '#6366f1', '#ec4899'];
+const colors = ['#10b981', '#0d9488', '#f59e0b', '#ef4444', '#6366f1', '#ec4899', '#8b5cf6', '#06b6d4'];
 const fmt = s => `${String(Math.floor(s / 60)).padStart(2, '0')}:${String(s % 60).padStart(2, '0')}`;
 
 export default function VideoMode({ shelf, onComplete, onClose }) {
-  const secs = shelf7Sections;
   const displayShelf = shelf || { id: 7, name: 'Shelf 7', category: 'Snacks & Biscuits' };
+  const secs = allShelfSections[displayShelf.id] || allShelfSections[7];
+  // Build timeline dynamically based on number of sections
+  const timeline = secs.map((_, i) => ({ time: 5 + i * 10, si: i }));
   const [rec, setRec] = useState(false);
   const [elapsed, setElapsed] = useState(0);
   const [caps, setCaps] = useState([]);
@@ -226,7 +223,7 @@ export default function VideoMode({ shelf, onComplete, onClose }) {
               const status = !cap ? 'missed' : sec.result === 'pass' ? 'pass' : 'fail';
               return (
                 <motion.div key={i} className={`vr-sec-row ${status}`} initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 + i * 0.04 }}>
-                  <div className="vr-sec-icon" style={{ background: cap ? `${colors[i]}12` : undefined }}><SectionIconRaw icon={sec.icon} size={18} /></div>
+                  <div className="vr-sec-icon" style={{ background: cap ? `${colors[i % colors.length]}12` : undefined }}><SectionIconRaw icon={sec.icon} size={18} /></div>
                   <div className="vr-sec-info"><p className="vr-sec-name">{sec.name}</p><p className="vr-sec-id">Section {sec.id}</p></div>
                   <div className={`vr-sec-status ${status}`}>
                     {status === 'pass' && <><CheckCircle size={14} weight="fill" /> Clear</>}
@@ -388,7 +385,7 @@ export default function VideoMode({ shelf, onComplete, onClose }) {
             const isPending = cap && !isDone;
             return (
               <div key={i} className={`vm-strip-item ${cap ? 'captured' : 'empty'} ${isPass ? 'pass' : ''} ${isFail ? 'fail' : ''}`}>
-                <div className="vm-strip-icon" style={cap ? { background: `${colors[i]}20`, borderColor: `${colors[i]}40` } : undefined}>
+                <div className="vm-strip-icon" style={cap ? { background: `${colors[i % colors.length]}20`, borderColor: `${colors[i % colors.length]}40` } : undefined}>
                   <SectionIconRaw icon={sec.icon} size={16} />
                 </div>
                 <p className="vm-strip-name">{sec.name.split(' ')[0]}</p>

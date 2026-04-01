@@ -6,7 +6,7 @@ import {
   ArrowsLeftRight, ShieldCheck, Scan, Eye, Cube, UploadSimple, Image, Trash,
   Key, SpinnerGap, CaretDown, CaretUp, Bell, DownloadSimple, WhatsappLogo, Check
 } from '@phosphor-icons/react';
-import { shelf7Sections } from '../data';
+import { allShelfSections } from '../data';
 import SectionIcon from './SectionIcon';
 import useCamera from '../hooks/useCamera';
 import Tooltip from './Tooltip';
@@ -16,7 +16,8 @@ import './PhotoMode.css';
 const shelfLabels = { top: 'Top Shelf', eyeLevel: 'Eye-Level', lower: 'Lower Shelf' };
 
 export default function PhotoMode({ shelf, onComplete, onClose }) {
-  const sections = shelf7Sections;
+  const displayShelf = shelf || { id: 7, name: "Shelf 7", category: "Snacks & Biscuits" };
+  const sections = allShelfSections[displayShelf.id] || allShelfSections[7];
   const [idx, setIdx] = useState(0);
   const [states, setStates] = useState(sections.map(() => ({ status: 'pending' })));
   const [showPlan, setShowPlan] = useState(false);

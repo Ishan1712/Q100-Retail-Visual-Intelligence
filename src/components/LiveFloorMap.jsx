@@ -4,7 +4,7 @@ import {
   User, Package, Warning, Scan, ShoppingCart, Storefront,
   MapPin, ArrowRight
 } from "@phosphor-icons/react";
-import { managerAisles } from "../data";
+import { managerShelves } from "../data";
 import "./LiveFloorMap.css";
 
 const colorMap = {
@@ -12,15 +12,15 @@ const colorMap = {
 };
 
 const floorWorkers = [
-  { id: "w1", name: "Rahul", avatar: "R", aisleId: 6, action: "Scanning", color: "#6366f1" },
-  { id: "w2", name: "Amit", avatar: "A", aisleId: 10, action: "Scanning", color: "#8b5cf6" },
-  { id: "w3", name: "Vikram", avatar: "V", aisleId: 2, action: "Re-scanning", color: "#a78bfa" },
+  { id: "w1", name: "Rahul", avatar: "R", shelfId: 6, action: "Scanning", color: "#6366f1" },
+  { id: "w2", name: "Amit", avatar: "A", shelfId: 10, action: "Scanning", color: "#8b5cf6" },
+  { id: "w3", name: "Vikram", avatar: "V", shelfId: 2, action: "Re-scanning", color: "#a78bfa" },
 ];
 
 const storeroomWorkers = [
-  { id: "s1", name: "Suresh", avatar: "S", targetAisle: 7, item: "Kurkure Multi Grain", status: "En route", color: "#f59e0b" },
-  { id: "s2", name: "Manoj", avatar: "M", targetAisle: 6, item: "Surf Excel 1kg", status: "Placing", color: "#fb923c" },
-  { id: "s3", name: "Deepa", avatar: "D", targetAisle: null, item: "Vim Bar + Harpic", status: "Picking", color: "#fbbf24" },
+  { id: "s1", name: "Suresh", avatar: "S", targetShelf: 7, item: "Kurkure Multi Grain", status: "En route", color: "#f59e0b" },
+  { id: "s2", name: "Manoj", avatar: "M", targetShelf: 6, item: "Surf Excel 1kg", status: "Placing", color: "#fb923c" },
+  { id: "s3", name: "Deepa", avatar: "D", targetShelf: null, item: "Vim Bar + Harpic", status: "Picking", color: "#fbbf24" },
 ];
 
 const stockLevels = [
@@ -30,30 +30,30 @@ const stockLevels = [
   { category: "Beverages", level: 91, color: "#22c55e" },
 ];
 
-const bottleneckAlert = "Aisle 2 (Dairy) at 71% compliance and dropping. Vikram re-scanning — but 2 items have zero back-stock. Compliance ceiling: 82% until Thursday's delivery.";
+const bottleneckAlert = "Shelf 2 (Dairy) at 71% compliance and dropping. Vikram re-scanning — but 2 items have zero back-stock. Compliance ceiling: 82% until Thursday's delivery.";
 
 const LiveFloorMap = () => {
-  const [hoveredAisle, setHoveredAisle] = useState(null);
-  const leftAisles = managerAisles.filter(a => a.id <= 5);
-  const rightAisles = managerAisles.filter(a => a.id > 5);
+  const [hoveredShelf, setHoveredShelf] = useState(null);
+  const leftShelves = managerShelves.filter(a => a.id <= 5);
+  const rightShelves = managerShelves.filter(a => a.id > 5);
 
-  const getWorkersAtAisle = (aisleId) => {
-    const fw = floorWorkers.filter(w => w.aisleId === aisleId);
-    const sw = storeroomWorkers.filter(w => w.targetAisle === aisleId);
+  const getWorkersAtShelf = (shelfId) => {
+    const fw = floorWorkers.filter(w => w.shelfId === shelfId);
+    const sw = storeroomWorkers.filter(w => w.targetShelf === shelfId);
     return { fw, sw };
   };
 
-  const renderAisle = (a) => {
-    const { fw, sw } = getWorkersAtAisle(a.id);
-    const isHovered = hoveredAisle === a.id;
+  const renderShelf = (a) => {
+    const { fw, sw } = getWorkersAtShelf(a.id);
+    const isHovered = hoveredShelf === a.id;
     const isBottleneck = a.compliance < 75;
     return (
       <motion.div key={a.id}
-        className={`lfm-aisle lfm-${a.color}${isBottleneck ? " lfm-bottleneck" : ""}${isHovered ? " lfm-hovered" : ""}`}
-        onMouseEnter={() => setHoveredAisle(a.id)} onMouseLeave={() => setHoveredAisle(null)}
+        className={`lfm-shelf lfm-${a.color}${isBottleneck ? " lfm-bottleneck" : ""}${isHovered ? " lfm-hovered" : ""}`}
+        onMouseEnter={() => setHoveredShelf(a.id)} onMouseLeave={() => setHoveredShelf(null)}
         whileHover={{ scale: 1.02 }}
       >
-        <div className="lfm-aisle-info">
+        <div className="lfm-shelf-info">
           <span className="lfm-num">{a.id}</span>
           <span className="lfm-cat">{a.category}</span>
           <span className="lfm-pct">{a.compliance}%</span>
@@ -78,7 +78,7 @@ const LiveFloorMap = () => {
         <AnimatePresence>
           {isHovered && (
             <motion.div className="lfm-popover" initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 6 }}>
-              <strong>Aisle {a.id} — {a.category}</strong>
+              <strong>Shelf {a.id} — {a.category}</strong>
               <div className="lfm-pop-row">Compliance: <strong>{a.compliance}%</strong></div>
               <div className="lfm-pop-row">OOS: <strong style={{ color: "#ef4444" }}>{a.oosItems} items</strong></div>
               <div className="lfm-pop-row">Last scan: <strong>{a.lastScan}</strong></div>
@@ -110,21 +110,21 @@ const LiveFloorMap = () => {
         <div className="lfm-floor">
           <div className="lfm-entrance"><Storefront size={13} /> ENTRANCE</div>
           <div className="lfm-checkout"><ShoppingCart size={13} /> Checkout Zone</div>
-          <div className="lfm-aisles-grid">
-            <div className="lfm-col">{leftAisles.map(renderAisle)}</div>
-            <div className="lfm-main-aisle"><span>Main Aisle</span></div>
-            <div className="lfm-col">{rightAisles.map(renderAisle)}</div>
+          <div className="lfm-shelves-grid">
+            <div className="lfm-col">{leftShelves.map(renderShelf)}</div>
+            <div className="lfm-main-shelf"><span>Main Shelf</span></div>
+            <div className="lfm-col">{rightShelves.map(renderShelf)}</div>
           </div>
           <div className="lfm-storeroom">
             <Package size={13} /> Storeroom
-            {storeroomWorkers.filter(w => !w.targetAisle).map(w => (
+            {storeroomWorkers.filter(w => !w.targetShelf).map(w => (
               <span key={w.id} className="lfm-sr-worker" style={{ background: w.color }}>{w.avatar}</span>
             ))}
           </div>
 
           {/* Route lines (CSS-based) */}
-          {storeroomWorkers.filter(w => w.targetAisle).map(w => (
-            <div key={w.id} className="lfm-route" title={`${w.name}: ${w.item} → Aisle ${w.targetAisle}`}>
+          {storeroomWorkers.filter(w => w.targetShelf).map(w => (
+            <div key={w.id} className="lfm-route" title={`${w.name}: ${w.item} → Shelf ${w.targetShelf}`}>
               <span className="lfm-route-label">{w.name}: {w.item}</span>
             </div>
           ))}
@@ -163,7 +163,7 @@ const LiveFloorMap = () => {
                   <span className="lfm-wk-av" style={{ background: w.color }}>{w.avatar}</span>
                   <div className="lfm-wk-info">
                     <strong>{w.name}</strong>
-                    <span>{w.action || w.status}{w.item ? `: ${w.item}` : ""}{w.aisleId ? ` — Aisle ${w.aisleId}` : w.targetAisle ? ` → Aisle ${w.targetAisle}` : " (Storeroom)"}</span>
+                    <span>{w.action || w.status}{w.item ? `: ${w.item}` : ""}{w.shelfId ? ` — Shelf ${w.shelfId}` : w.targetShelf ? ` → Shelf ${w.targetShelf}` : " (Storeroom)"}</span>
                   </div>
                 </div>
               ))}

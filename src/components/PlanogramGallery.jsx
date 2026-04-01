@@ -20,11 +20,11 @@ const shelfData = [
       { date: "20 Mar 2026", note: "Coca-Cola end-cap refresh — replaced Thumbs Up with Coca-Cola Zero Sugar" },
     ]
   },
-  { id: 6,  cat: "Household & Cleaning",  icon: "🧴", sections: 5, updated: "5 Feb 2026",  points: 30, compliance: 78.4, img: "/shelves/shelf6-household/section1-detergents-master.jpg" },
+  { id: 6,  cat: "Household & Cleaning",  icon: "🧴", sections: 5, updated: "5 Feb 2026",  points: 30, compliance: 78.4, img: "/shelves/shelf3-staples/shelf3S1(master).png" },
   { id: 7,  cat: "Snacks & Biscuits",    icon: "🍪", sections: 6, updated: "12 Jan 2026",  points: 36, compliance: 82.7, img: "/shelves/shelf7-snacks/shelf7S1(master).png" },
-  { id: 8,  cat: "Baby & Health",        icon: "🩺", sections: 4, updated: "12 Jan 2026",  points: 20, compliance: 92.8, img: "/shelves/shelf8-baby/section1-diapers-master.jpg" },
-  { id: 9,  cat: "Personal Care",        icon: "🧼", sections: 5, updated: "5 Feb 2026",   points: 28, compliance: 87.1, img: "/shelves/shelf9-personal/section1-shampoo-master.jpg" },
-  { id: 10, cat: "Breakfast & Cereals",  icon: "🥣", sections: 4, updated: "1 Mar 2026",   points: 26, compliance: 85.6, img: "/shelves/shelf10-breakfast/section1-cereals-master.jpg" },
+  { id: 8,  cat: "Baby & Health",        icon: "🩺", sections: 4, updated: "12 Jan 2026",  points: 20, compliance: 92.8, img: "/shelves/shelf2-dairy/shelf2S3(master).png" },
+  { id: 9,  cat: "Personal Care",        icon: "🧼", sections: 5, updated: "5 Feb 2026",   points: 28, compliance: 87.1, img: "/shelves/shelf1-checkout/shelf1S2(master).png" },
+  { id: 10, cat: "Breakfast & Cereals",  icon: "🥣", sections: 4, updated: "1 Mar 2026",   points: 26, compliance: 85.6, img: "/shelves/shelf3-staples/shelf3S2(master).png" },
 ];
 
 const compColor = (c) => c >= 90 ? "#16a34a" : c >= 80 ? "#059669" : c >= 70 ? "#f59e0b" : "#ef4444";

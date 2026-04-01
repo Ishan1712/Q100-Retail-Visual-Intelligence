@@ -1,5 +1,5 @@
 /* Screen 2.6 — Live Store Floor Map */
-.lfm-screen { display: flex; flex-direction: column; gap: 16px; padding: 20px 24px 24px; overflow-y: auto; flex: 1; }
+.lfm-screen { display: flex; flex-direction: column; gap: 16px; padding: 20px 24px 24px; overflow-y: auto; overflow-x: hidden; flex: 1; }
 .lfm-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
 .lfm-header h2 { font-size: 1.1rem; font-weight: 800; color: #0f172a; margin: 0; }
 .lfm-sub { font-size: .74rem; color: #64748b; font-weight: 500; }
@@ -7,50 +7,50 @@
 .lfm-leg { display: flex; align-items: center; gap: 5px; font-size: .66rem; font-weight: 650; color: #64748b; }
 .lfm-leg-dot { width: 8px; height: 8px; border-radius: 50%; }
 
-.lfm-body { display: grid; grid-template-columns: 1fr 300px; gap: 18px; flex: 1; min-height: 0; }
+.lfm-body { display: grid; grid-template-columns: 1fr minmax(0, 300px); gap: 18px; flex: 1; min-height: 0; overflow: hidden; }
 
 /* Floor */
 .lfm-floor { background: #fff; border: 1px solid #e2e8f0; border-radius: 16px; padding: 20px; display: flex; flex-direction: column; gap: 8px; position: relative; box-shadow: 0 1px 3px rgba(0,0,0,.04); }
 .lfm-entrance { text-align: center; font-size: .62rem; font-weight: 800; color: #94a3b8; letter-spacing: .18em; text-transform: uppercase; padding: 6px; border: 1px dashed #cbd5e1; border-radius: 8px; background: #f8fafc; display: flex; align-items: center; justify-content: center; gap: 6px; }
 .lfm-checkout { display: flex; align-items: center; justify-content: center; gap: 6px; font-size: .68rem; font-weight: 700; color: #64748b; padding: 8px; border-radius: 10px; background: #eef2ff; border: 1px solid #e0e7ff; }
-.lfm-aisles-grid { display: grid; grid-template-columns: 1fr 40px 1fr; gap: 0; flex: 1; }
+.lfm-shelves-grid { display: grid; grid-template-columns: 1fr 40px 1fr; gap: 0; flex: 1; }
 .lfm-col { display: flex; flex-direction: column; gap: 5px; }
-.lfm-main-aisle { display: flex; align-items: center; justify-content: center; }
-.lfm-main-aisle span { writing-mode: vertical-rl; font-size: .58rem; font-weight: 700; color: #cbd5e1; letter-spacing: .1em; text-transform: uppercase; }
+.lfm-main-shelf { display: flex; align-items: center; justify-content: center; }
+.lfm-main-shelf span { writing-mode: vertical-rl; font-size: .58rem; font-weight: 700; color: #cbd5e1; letter-spacing: .1em; text-transform: uppercase; }
 .lfm-storeroom { display: flex; align-items: center; justify-content: center; gap: 8px; font-size: .68rem; font-weight: 700; color: #64748b; padding: 10px; border-radius: 10px; background: #fef3c7; border: 1px solid #fde68a; }
 .lfm-sr-worker { width: 22px; height: 22px; border-radius: 6px; color: #fff; font-size: .6rem; font-weight: 800; display: grid; place-items: center; }
 
-/* Aisle */
-.lfm-aisle { padding: 8px 10px; border-radius: 10px; cursor: pointer; position: relative; transition: all .15s; border: 2px solid transparent; }
-.lfm-aisle.lfm-hovered { z-index: 10; }
-.lfm-aisle.lfm-darkgreen  { background: linear-gradient(135deg, #dcfce7, #d1fae5); }
-.lfm-aisle.lfm-lightgreen { background: linear-gradient(135deg, #ecfdf5, #d1fae5); }
-.lfm-aisle.lfm-amber       { background: linear-gradient(135deg, #fef3c7, #fde68a); }
-.lfm-aisle.lfm-red          { background: linear-gradient(135deg, #fef2f2, #fecaca); }
-.lfm-aisle.lfm-grey         { background: linear-gradient(135deg, #f8fafc, #f1f5f9); }
-.lfm-aisle.lfm-bottleneck { border-color: rgba(239,68,68,.3); animation: bottleneckPulse 2s ease infinite; }
+/* Shelf */
+.lfm-shelf { padding: 8px 10px; border-radius: 10px; cursor: pointer; position: relative; transition: all .15s; border: 2px solid transparent; overflow: visible; }
+.lfm-shelf.lfm-hovered { z-index: 10; }
+.lfm-shelf.lfm-darkgreen  { background: linear-gradient(135deg, #dcfce7, #d1fae5); }
+.lfm-shelf.lfm-lightgreen { background: linear-gradient(135deg, #ecfdf5, #d1fae5); }
+.lfm-shelf.lfm-amber       { background: linear-gradient(135deg, #fef3c7, #fde68a); }
+.lfm-shelf.lfm-red          { background: linear-gradient(135deg, #fef2f2, #fecaca); }
+.lfm-shelf.lfm-grey         { background: linear-gradient(135deg, #f8fafc, #f1f5f9); }
+.lfm-shelf.lfm-bottleneck { border-color: rgba(239,68,68,.3); animation: bottleneckPulse 2s ease infinite; }
 @keyframes bottleneckPulse { 0%,100% { box-shadow: 0 0 0 0 rgba(239,68,68,0); } 50% { box-shadow: 0 0 0 4px rgba(239,68,68,.1); } }
-.lfm-aisle-info { display: flex; align-items: center; gap: 6px; }
+.lfm-shelf-info { display: flex; align-items: center; gap: 6px; }
 .lfm-num { width: 22px; height: 22px; border-radius: 6px; font-size: .68rem; font-weight: 800; display: grid; place-items: center; background: rgba(0,0,0,.06); color: #0f172a; }
 .lfm-cat { font-size: .68rem; font-weight: 650; color: #334155; flex: 1; }
 .lfm-pct { font-size: .72rem; font-weight: 800; color: #0f172a; }
 
-/* Workers on aisle */
+/* Workers on shelf */
 .lfm-workers-row { display: flex; gap: 4px; margin-top: 4px; flex-wrap: wrap; }
 .lfm-worker { display: flex; align-items: center; gap: 3px; padding: 2px 6px; border-radius: 5px; border: 1.5px solid; background: rgba(255,255,255,.8); }
 .lfm-wk-avatar { width: 16px; height: 16px; border-radius: 4px; color: #fff; font-size: .5rem; font-weight: 800; display: grid; place-items: center; }
 .lfm-wk-label { font-size: .56rem; font-weight: 700; color: #334155; display: flex; align-items: center; gap: 2px; }
-.lfm-bottleneck-badge { position: absolute; top: -6px; right: 6px; font-size: .54rem; font-weight: 800; color: #dc2626; background: #fef2f2; border: 1px solid #fecaca; padding: 1px 6px; border-radius: 4px; display: flex; align-items: center; gap: 3px; }
+.lfm-bottleneck-badge { position: absolute; top: 2px; right: 6px; font-size: .54rem; font-weight: 800; color: #dc2626; background: #fef2f2; border: 1px solid #fecaca; padding: 1px 6px; border-radius: 4px; display: flex; align-items: center; gap: 3px; z-index: 5; }
 
 /* Popover */
-.lfm-popover { position: absolute; bottom: calc(100% + 8px); left: 50%; transform: translateX(-50%); background: #0f172a; color: #e2e8f0; border-radius: 10px; padding: 10px 14px; z-index: 50; min-width: 220px; box-shadow: 0 8px 32px rgba(0,0,0,.3); pointer-events: none; }
+.lfm-popover { position: absolute; bottom: calc(100% + 8px); left: 50%; transform: translateX(-50%); background: #0f172a; color: #e2e8f0; border-radius: 10px; padding: 10px 14px; z-index: 50; min-width: 220px; max-width: 280px; box-shadow: 0 8px 32px rgba(0,0,0,.3); pointer-events: none; word-wrap: break-word; overflow-wrap: break-word; }
 .lfm-popover::after { content: ''; position: absolute; bottom: -5px; left: 50%; transform: translateX(-50%) rotate(45deg); width: 10px; height: 10px; background: #0f172a; }
 .lfm-popover strong { font-size: .76rem; display: block; margin-bottom: 4px; }
 .lfm-pop-row { font-size: .68rem; color: #94a3b8; padding: 2px 0; display: flex; align-items: center; gap: 4px; }
 .lfm-pop-row strong { display: inline; font-size: inherit; margin: 0; color: #f1f5f9; }
 
 /* Route indicator */
-.lfm-route { display: none; /* Visual indicator via worker dots on aisles */ }
+.lfm-route { display: none; /* Visual indicator via worker dots on shelves */ }
 .lfm-route-label { display: none; }
 
 /* Side Panel */
@@ -87,8 +87,8 @@
 
 @media (max-width: 768px) {
   .lfm-screen { padding: 14px 16px 100px; }
-  .lfm-aisles-grid { grid-template-columns: 1fr; }
-  .lfm-main-aisle { display: none; }
+  .lfm-shelves-grid { grid-template-columns: 1fr; }
+  .lfm-main-shelf { display: none; }
   .lfm-side { flex-direction: column; }
   .lfm-header { flex-direction: column; gap: 8px; }
   .lfm-legend { flex-wrap: wrap; }
@@ -98,7 +98,7 @@
 @media (max-width: 480px) {
   .lfm-screen { padding: 12px 12px 100px; }
   .lfm-floor { padding: 14px; }
-  .lfm-aisle { padding: 6px 8px; }
+  .lfm-shelf { padding: 6px 8px; }
   .lfm-cat { font-size: .62rem; }
   .lfm-workers-row { gap: 3px; }
   .lfm-worker { padding: 1px 4px; }

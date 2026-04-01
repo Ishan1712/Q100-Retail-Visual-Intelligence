@@ -18,6 +18,7 @@
   flex: 1;
   height: 100%;
   overflow: hidden;
+  overflow-x: hidden;
   background: #f8fafc;
 }
 
@@ -245,8 +246,8 @@
 
 .ah-scan-thumb-badge {
   position: absolute;
-  bottom: -4px;
-  right: -4px;
+  bottom: -2px;
+  right: -2px;
   width: 14px;
   height: 14px;
   border-radius: 50%;
@@ -255,6 +256,7 @@
   justify-content: center;
   background: #fff;
   box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  z-index: 2;
 }
 
 .ah-scan-thumb.pass .ah-scan-thumb-badge { color: #16a34a; }
@@ -391,17 +393,17 @@
 .ah-summary-row {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 14px;
+  gap: 10px;
 }
 
 .ah-summary-card {
   display: flex;
   align-items: center;
-  gap: 14px;
-  padding: 18px;
+  gap: 12px;
+  padding: 14px;
   background: #fff;
   border: 1px solid #e2e8f0;
-  border-radius: 14px;
+  border-radius: 12px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
   transition: box-shadow 0.2s ease, transform 0.2s ease;
 }
@@ -486,20 +488,20 @@
 
 /* ── Timeline list ── */
 .ah-timeline {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
 }
 
 /* Timeline card */
 .ah-tl-card {
   display: flex;
   align-items: center;
-  gap: 14px;
-  padding: 16px 18px;
+  gap: 12px;
+  padding: 12px 14px;
   background: #fff;
   border: 1px solid #e2e8f0;
-  border-radius: 14px;
+  border-radius: 12px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
   cursor: pointer;
   transition: all 0.2s ease;
@@ -512,9 +514,13 @@
 }
 
 .ah-tl-card.ah-tl-expanded {
+  grid-column: 1 / -1;
   background: #fff;
   box-shadow: 0 6px 24px rgba(0, 0, 0, 0.08);
   border-color: #cbd5e1;
+  position: relative;
+  z-index: 5;
+  overflow: hidden;
 }
 
 /* Category icon */
@@ -619,8 +625,9 @@
 
 .ah-detail-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 10px;
+  overflow: hidden;
 }
 
 .ah-detail-cell {
@@ -698,7 +705,7 @@
 /* Metric cards */
 .ah-metrics-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 14px;
 }
 
@@ -830,6 +837,7 @@
   .ah-body { padding: 14px 16px 100px; }
   .ah-summary-row { grid-template-columns: repeat(2, 1fr); gap: 8px; }
   .ah-detail-grid { grid-template-columns: repeat(2, 1fr); }
+  .ah-timeline { grid-template-columns: 1fr; }
   .ah-tl-card { padding: 12px 14px; }
   .ah-metric-card { padding: 14px 12px; }
 }

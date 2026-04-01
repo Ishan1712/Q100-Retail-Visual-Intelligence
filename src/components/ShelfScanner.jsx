@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
-  QrCode, Keyboard, Camera, VideoCamera, CaretRight, SquaresFour,
+  Keyboard, Camera, VideoCamera, CaretRight, SquaresFour,
   X, Scan, Clock, UserCircle, Warning, CheckCircle, Lightning
 } from '@phosphor-icons/react';
-import { shelf7Sections } from '../data';
+import { allShelfSections } from '../data';
 import { SectionIconRaw } from './SectionIcon';
-import useCamera from '../hooks/useCamera';
 import Tooltip from './Tooltip';
 import './ShelfScanner.css';
 
@@ -17,6 +16,8 @@ const sectionColors = [
   'linear-gradient(135deg,#ef4444,#dc2626)',
   'linear-gradient(135deg,#6366f1,#4f46e5)',
   'linear-gradient(135deg,#ec4899,#db2777)',
+  'linear-gradient(135deg,#8b5cf6,#7c3aed)',
+  'linear-gradient(135deg,#06b6d4,#0891b2)',
 ];
 
 export default function ShelfScanner({ shelf, onConfirm, onClose }) {
@@ -24,13 +25,7 @@ export default function ShelfScanner({ shelf, onConfirm, onClose }) {
   const [countdown, setCountdown] = useState(3);
   const [showFlash, setShowFlash] = useState(false);
   const displayShelf = shelf || { id: 7, name: "Shelf 7", category: "Snacks & Biscuits" };
-  const sections = shelf7Sections;
-
-  // Live camera for QR scanning phase
-  const { videoRef, error: cameraError, hasCamera, rotated } = useCamera({
-    active: step === 'scanning',
-    facingMode: 'environment',
-  });
+  const sections = allShelfSections[displayShelf.id] || allShelfSections[7];
 
   useEffect(() => {
     if (step !== 'scanning') return;
@@ -76,21 +71,14 @@ export default function ShelfScanner({ shelf, onConfirm, onClose }) {
             <motion.div className="scanner-viewfinder"
               initial={{ scale: 0.85, opacity: 0 }} animate={{ scale: 1, opacity: 1 }}
               transition={{ type: 'spring', stiffness: 180, damping: 20 }}>
-              {/* Live camera feed */}
-              <video
-                ref={videoRef}
-                autoPlay
-                playsInline
-                muted
-                className={`scanner-camera-feed${rotated ? ' scanner-camera-rotated' : ''}`}
-              />
-              {!hasCamera && (
-                <div className="scanner-qr-ghost">
-                  {cameraError
-                    ? <span className="scanner-camera-error">{cameraError}</span>
-                    : <QrCode size={90} weight="duotone" />}
-                </div>
-              )}
+              {/* Dummy shelf sticker */}
+              <motion.div className="scanner-sticker"
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: 0.5, type: 'spring', stiffness: 200 }}>
+                <div className="scanner-sticker-line" />
+                <span className="scanner-sticker-num">{displayShelf.id || 7}</span>
+              </motion.div>
               {['tl', 'tr', 'bl', 'br'].map((pos, i) => (
                 <motion.div key={pos} className={`scanner-corner ${pos}`}
                   animate={{ opacity: [0.3, 1, 0.3] }}
@@ -101,7 +89,7 @@ export default function ShelfScanner({ shelf, onConfirm, onClose }) {
                 transition={{ duration: 2.5, repeat: Infinity, ease: 'easeInOut' }} />
             </motion.div>
 
-            <h2 className="scanner-title">Align QR Code at Shelf End</h2>
+            <h2 className="scanner-title">Align Shelf Label with Frame</h2>
 
             <div className="scanner-countdown-wrap">
               <div className="scanner-countdown-circle">
@@ -195,7 +183,7 @@ export default function ShelfScanner({ shelf, onConfirm, onClose }) {
                       initial={{ opacity: 0, y: 16, scale: 0.95 }}
                       animate={{ opacity: 1, y: 0, scale: 1 }}
                       transition={{ delay: 0.4 + i * 0.06, type: 'spring', stiffness: 200 }}>
-                      <div className="scanner-thumb-color" style={{ background: sectionColors[i] }}>
+                      <div className="scanner-thumb-color" style={{ background: sectionColors[i % sectionColors.length] }}>
                         <SectionIconRaw icon={sec.icon} size={20} color="#fff" />
                       </div>
                       <div>

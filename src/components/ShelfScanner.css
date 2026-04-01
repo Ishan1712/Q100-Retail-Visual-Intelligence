@@ -4,9 +4,10 @@
    ═══════════════════════════════════════ */
 
 .scanner-overlay {
-  position: fixed; inset: 0; z-index: 50;
+  position: fixed; inset: 0; z-index: 9990;
   display: flex; flex-direction: column;
   -webkit-font-smoothing: antialiased;
+  background: #000;
 }
 
 /* ═══════════════════════
@@ -128,11 +129,12 @@
 
 /* ── Viewfinder ── */
 .scanner-viewfinder {
-  width: 240px; height: 240px;
+  width: 260px; height: 260px;
   border-radius: 28px;
-  border: 1px solid rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.08);
   position: relative; overflow: hidden;
-  background: rgba(255,255,255,0.015);
+  background: rgba(15,23,42,0.6);
+  display: flex; align-items: center; justify-content: center;
   box-shadow:
     0 0 80px rgba(16,185,129,0.06),
     0 0 40px rgba(16,185,129,0.04),
@@ -209,6 +211,34 @@
   z-index: 1;
 }
 
+/* ── Shelf Number Sticker ── */
+.scanner-sticker {
+  position: relative;
+  z-index: 3;
+  background: #fff;
+  border-radius: 12px;
+  padding: 20px 44px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.2), 0 0 0 1px rgba(255,255,255,0.1);
+  display: flex; align-items: center; justify-content: center;
+  min-width: 130px;
+  overflow: hidden;
+}
+.scanner-sticker-num {
+  font-size: 3.8rem;
+  font-weight: 900;
+  color: #0f172a;
+  letter-spacing: -0.04em;
+  line-height: 1;
+  font-style: italic;
+}
+.scanner-sticker-line {
+  position: absolute;
+  left: 0; right: 0;
+  top: 50%;
+  height: 1.5px;
+  background: linear-gradient(90deg, transparent, rgba(59,130,246,0.45), transparent);
+}
+
 .scanner-title {
   margin-top: 24px; font-size: 18px; font-weight: 700;
   letter-spacing: -0.01em;
@@ -259,7 +289,7 @@
 
 /* Dark top section */
 .scanner-confirm-dark-top {
-  position: absolute; top: 0; left: 0; right: 0; height: 14%;
+  position: absolute; top: 0; left: 0; right: 0; height: 8%;
   background: linear-gradient(180deg, #030712 0%, #0a1128 60%, #111827 100%);
   overflow: hidden;
 }
@@ -314,9 +344,9 @@
 .scanner-confirm-card {
   background: #fff;
   border-radius: 24px 24px 0 0;
-  padding: 20px 24px 28px;
+  padding: 16px 24px 20px;
   display: flex; flex-direction: column;
-  max-height: 88vh; overflow-y: auto;
+  max-height: 94vh; overflow-y: auto;
   box-shadow: 0 -12px 40px rgba(0,0,0,0.12);
   position: relative;
   z-index: 2;
@@ -327,7 +357,7 @@
   width: 36px; height: 3px;
   border-radius: 2px;
   background: #e2e8f0;
-  margin: 0 auto 20px;
+  margin: 0 auto 12px;
 }
 
 /* Detection badge */
@@ -404,7 +434,7 @@
 .scanner-plano-label {
   font-size: 0.7rem; font-weight: 700; color: #94a3b8;
   text-transform: uppercase; letter-spacing: 0.06em;
-  margin: 18px 0 10px;
+  margin: 12px 0 8px;
 }
 
 .scanner-plano-strip {
@@ -464,12 +494,12 @@
 
 /* ── Mode Selection Buttons ── */
 .scanner-modes {
-  margin-top: 20px;
-  display: flex; flex-direction: column; gap: 10px;
+  margin-top: 12px;
+  display: flex; flex-direction: row; gap: 10px;
 }
 
 .scanner-mode-btn {
-  width: 100%; padding: 0;
+  flex: 1; padding: 0;
   border-radius: 16px;
   display: flex; align-items: center; justify-content: space-between;
   border: none; cursor: pointer;
@@ -501,7 +531,7 @@
 .scanner-mode-photo {
   background: linear-gradient(135deg, #064e3b 0%, #047857 40%, #10b981 100%);
   box-shadow: 0 4px 16px rgba(4,120,87,0.25);
-  padding: 16px 18px;
+  padding: 10px 14px;
 }
 .scanner-mode-photo:hover {
   box-shadow: 0 10px 36px rgba(4,120,87,0.4);
@@ -511,7 +541,7 @@
 .scanner-mode-video {
   background: linear-gradient(135deg, #581c87 0%, #7c3aed 40%, #a78bfa 100%);
   box-shadow: 0 4px 16px rgba(124,58,237,0.2);
-  padding: 16px 18px;
+  padding: 10px 14px;
 }
 .scanner-mode-video:hover {
   box-shadow: 0 10px 36px rgba(124,58,237,0.4);
@@ -519,12 +549,17 @@
 }
 
 .scanner-mode-inner {
-  display: flex; align-items: center; gap: 16px;
+  display: flex; flex-direction: row; align-items: center; gap: 10px;
   position: relative; z-index: 1;
+  width: 100%; text-align: left;
+}
+
+.scanner-mode-arrow {
+  display: none;
 }
 
 .scanner-mode-icon {
-  width: 46px; height: 46px; border-radius: 12px;
+  width: 36px; height: 36px; border-radius: 10px;
   display: flex; align-items: center; justify-content: center;
   background: rgba(255,255,255,0.12);
   border: 1px solid rgba(255,255,255,0.1);
@@ -537,12 +572,12 @@
 }
 
 .scanner-mode-title {
-  display: block; font-size: 16px; font-weight: 800;
+  display: block; font-size: 14px; font-weight: 800;
   letter-spacing: -0.01em;
 }
 .scanner-mode-subtitle {
-  display: block; margin-top: 3px;
-  font-size: 13px; opacity: 0.65; font-weight: 500;
+  display: block; margin-top: 2px;
+  font-size: 11px; opacity: 0.65; font-weight: 500;
 }
 
 .scanner-mode-speed {
