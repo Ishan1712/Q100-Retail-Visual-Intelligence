@@ -88,7 +88,7 @@ export default function ShelfScanner({ shelf, onConfirm, onClose }) {
                 <div className="scanner-qr-ghost">
                   {cameraError
                     ? <span className="scanner-camera-error">{cameraError}</span>
-                    : <QrCode size={130} weight="duotone" />}
+                    : <QrCode size={90} weight="duotone" />}
                 </div>
               )}
               {['tl', 'tr', 'bl', 'br'].map((pos, i) => (
@@ -97,7 +97,7 @@ export default function ShelfScanner({ shelf, onConfirm, onClose }) {
                   transition={{ repeat: Infinity, duration: 2.2, delay: i * 0.15 }} />
               ))}
               <motion.div className="scanner-scanline"
-                animate={{ top: [0, 236, 0] }}
+                animate={{ top: ["0%", "95%", "0%"] }}
                 transition={{ duration: 2.5, repeat: Infinity, ease: 'easeInOut' }} />
             </motion.div>
 

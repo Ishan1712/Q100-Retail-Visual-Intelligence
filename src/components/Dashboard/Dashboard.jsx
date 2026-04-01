@@ -252,12 +252,6 @@ const Dashboard = () => {
               })}
             </nav>
 
-            <div className="sb-card">
-              <span className="sb-card-label">Shift Focus</span>
-              <strong>Every shelf. Every hour.</strong>
-              <p>Priority shelves rise to the top so empty shelves are caught before sales are lost.</p>
-            </div>
-
             <div className="sb-clock">
               <div className="sb-clock-ic"><Tooltip text="Current Time"><Clock size={17} weight="duotone" /></Tooltip></div>
               <div>
