@@ -296,9 +296,12 @@
   padding: 20px 24px;
   display: flex; flex-direction: column; gap: 18px;
   overflow-y: auto;
-  flex: 1;
-  min-height: 0;
+  scrollbar-width: thin;
+  scrollbar-color: #cbd5e1 transparent;
 }
+.pg-modal-body::-webkit-scrollbar { width: 5px; }
+.pg-modal-body::-webkit-scrollbar-track { background: transparent; }
+.pg-modal-body::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 999px; }
 
 /* ── Form Fields ── */
 .pg-field label {
@@ -432,60 +435,34 @@
 
 /* ═══ Modal Responsive ═══ */
 @media (max-width: 600px) {
-  .pg-modal-overlay {
-    padding: 0;
-    align-items: flex-end;
-  }
+  .pg-modal-overlay { padding: 16px 12px; }
   .pg-modal {
-    border-radius: 16px 16px 0 0;
-    max-height: 85vh;
-    width: 100%;
+    border-radius: 14px;
+    max-height: 80vh;
     max-width: 100%;
   }
-  .pg-modal-header { padding: 14px 16px 10px; }
-  .pg-modal-header h3 { font-size: .88rem; }
-  .pg-modal-header span { font-size: .64rem; }
-  .pg-modal-icon { width: 34px; height: 34px; border-radius: 9px; }
-  .pg-modal-close { width: 32px; height: 32px; border-radius: 8px; }
-  .pg-modal-body {
-    padding: 14px 16px;
-    gap: 14px;
-    overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
-  }
-  .pg-field label { font-size: .64rem; margin-bottom: 6px; }
-  .pg-field input[type="text"] { padding: 10px 12px; font-size: .82rem; border-radius: 8px; }
-  .pg-field textarea { padding: 10px 12px; font-size: .78rem; border-radius: 8px; max-height: 60px; }
-  .pg-icon-grid { gap: 5px; }
-  .pg-icon-opt { width: 36px; height: 36px; border-radius: 8px; }
-  .pg-upload-empty { padding: 18px 14px; border-radius: 10px; }
-  .pg-upload-empty span { font-size: .72rem; }
-  .pg-upload-preview { height: 100px; border-radius: 10px; }
-  .pg-modal-footer { padding: 10px 16px; }
-  .pg-modal-cancel { padding: 8px 14px; font-size: .74rem; border-radius: 8px; }
-  .pg-modal-submit { padding: 8px 16px; font-size: .74rem; border-radius: 8px; }
+  .pg-modal-header { padding: 12px 14px 10px; }
+  .pg-modal-header h3 { font-size: .86rem; }
+  .pg-modal-header span { font-size: .62rem; }
+  .pg-modal-icon { width: 32px; height: 32px; border-radius: 9px; }
+  .pg-modal-close { width: 30px; height: 30px; border-radius: 8px; }
+  .pg-modal-body { padding: 12px 14px; gap: 12px; }
+  .pg-field label { font-size: .6rem; margin-bottom: 4px; }
+  .pg-field input[type="text"] { padding: 8px 10px; font-size: .78rem; border-radius: 8px; }
+  .pg-field textarea { padding: 8px 10px; font-size: .74rem; border-radius: 8px; max-height: 50px; }
+  .pg-icon-grid { gap: 4px; }
+  .pg-icon-opt { width: 34px; height: 34px; border-radius: 7px; }
+  .pg-upload-empty { padding: 14px 12px; border-radius: 8px; }
+  .pg-upload-empty svg { width: 22px; height: 22px; }
+  .pg-upload-empty span { font-size: .68rem; }
+  .pg-upload-hint { font-size: .58rem !important; }
+  .pg-upload-preview { height: 80px; border-radius: 8px; }
+  .pg-modal-footer { padding: 10px 14px; }
+  .pg-modal-cancel { padding: 7px 12px; font-size: .72rem; border-radius: 8px; }
+  .pg-modal-submit { padding: 7px 14px; font-size: .72rem; border-radius: 8px; }
   .pg-add-shelf-btn { padding: 8px 14px; font-size: .7rem; }
   .pds-add-content { padding: 14px; }
   .pds-add-icon { width: 40px; height: 40px; border-radius: 10px; }
   .pds-add-label { font-size: .76rem; }
   .pd-add-section-card { min-height: 160px; }
-}
-
-@media (max-width: 360px) {
-  .pg-modal { max-height: 80vh; }
-  .pg-modal-header { padding: 12px 12px 8px; }
-  .pg-modal-header h3 { font-size: .82rem; }
-  .pg-modal-header span { font-size: .6rem; }
-  .pg-modal-icon { width: 30px; height: 30px; border-radius: 8px; }
-  .pg-modal-close { width: 28px; height: 28px; border-radius: 7px; }
-  .pg-modal-body { padding: 12px; gap: 10px; }
-  .pg-icon-opt { width: 32px; height: 32px; border-radius: 7px; }
-  .pg-icon-grid { gap: 4px; }
-  .pg-upload-empty { padding: 14px 10px; }
-  .pg-upload-preview { height: 90px; }
-  .pg-modal-footer { padding: 10px 12px; }
-  .pd-add-section-card { min-height: 130px; }
-  .pds-add-icon { width: 36px; height: 36px; }
-  .pds-add-label { font-size: .7rem; }
-  .pds-add-sub { font-size: .58rem; }
 }
