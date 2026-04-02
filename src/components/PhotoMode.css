@@ -407,7 +407,7 @@
 /* ── Processing / Analyzing ── */
 .pm-analyze {
   margin: 0 16px 16px;
-  min-height: 220px;
+  min-height: 280px;
   flex: 1;
   border-radius: 16px;
   background: #0f172a;
@@ -1159,7 +1159,7 @@
   .pm-plano-shelf-label { width: 66px; font-size: 0.55rem; }
   .pm-plano-tag { font-size: 0.6rem; }
   .pm-camera { margin: 0 14px 14px; height: 200px; }
-  .pm-analyze { margin: 0 14px 14px; height: 200px; }
+  .pm-analyze { margin: 0 14px 14px; min-height: 260px; }
   .pm-result-pass { margin: 0 14px 14px; }
   .pm-result-fail { padding: 0 14px 14px; }
   .pm-capture-bar { padding: 10px 14px 14px; }
@@ -1174,7 +1174,7 @@
   .pm-step-line { width: 16px; }
   .pm-sec-name { font-size: 14px; }
   .pm-camera { margin: 0 14px 14px; height: 190px; }
-  .pm-analyze { margin: 0 14px 14px; height: 190px; }
+  .pm-analyze { margin: 0 14px 14px; min-height: 250px; }
   .pm-plano { margin: 0 14px 10px; }
   .pm-result-pass { margin: 0 14px 14px; }
   .pm-result-fail { padding: 0 14px 14px; }
@@ -1203,7 +1203,7 @@
   .pm-plano-items { padding: 6px; gap: 3px; }
   .pm-plano-tag { font-size: 0.56rem; padding: 2px 6px; overflow: hidden; text-overflow: ellipsis; }
   .pm-camera { margin: 0 12px 12px; height: 180px; border-radius: 12px; }
-  .pm-analyze { margin: 0 12px 12px; height: 180px; border-radius: 12px; }
+  .pm-analyze { margin: 0 12px 12px; min-height: 240px; border-radius: 12px; }
   .pm-result-pass { margin: 0 12px 12px; padding: 28px 16px; border-radius: 12px; }
   .pm-result-pass h3 { font-size: 16px; }
   .pm-result-fail { padding: 0 12px 12px; }
@@ -1241,7 +1241,7 @@
   .pm-sec-name { font-size: 12px; }
   .pm-plano { margin: 0 10px 6px; }
   .pm-camera { margin: 0 10px 10px; height: 150px; border-radius: 10px; }
-  .pm-analyze { margin: 0 10px 10px; height: 150px; border-radius: 10px; }
+  .pm-analyze { margin: 0 10px 10px; min-height: 220px; border-radius: 10px; }
   .pm-result-pass { margin: 0 10px 10px; padding: 20px 12px; }
   .pm-result-pass h3 { font-size: 14px; }
   .pm-result-fail { padding: 0 10px 10px; }
@@ -1287,7 +1287,7 @@
 /* Landscape phones */
 @media (max-height: 500px) and (orientation: landscape) {
   .pm-camera { height: 140px; }
-  .pm-analyze { height: 140px; }
+  .pm-analyze { min-height: 200px; }
   .pm-result-pass { padding: 18px 16px; }
   .pm-stepper { padding: 6px 12px; }
   .pm-capture-bar { padding: 6px 12px 8px; }
@@ -1425,9 +1425,9 @@
   position: relative;
 }
 .pm-analyze-img-box img {
-  width: 100%; height: 100px; object-fit: contain;
+  width: 100%; height: 130px; object-fit: contain;
   display: block;
-  min-height: 60px;
+  min-height: 80px;
 }
 .pm-analyze-img-label {
   display: block;
@@ -1447,7 +1447,7 @@
   flex-shrink: 0;
 }
 .pm-analyze-cam-placeholder {
-  height: 100px;
+  height: 130px;
   display: flex; align-items: center; justify-content: center;
   color: #94a3b8;
 }
