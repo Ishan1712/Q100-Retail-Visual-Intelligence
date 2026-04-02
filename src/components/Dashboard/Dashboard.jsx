@@ -5,7 +5,7 @@ import {
   Scan, Storefront, Sparkle, Fire, CaretRight, Clock,
   CheckCircle, Lightning, Crosshair, Check, CaretDown, UserCircle,
   Grains, Wine, Cookie, Drop, Flask, Broom, Baby, BowlSteam, ShoppingCart, Package,
-  ChartBar, Buildings, MapPin, SignOut
+  ChartBar, Buildings, MapPin, SignOut, CurrencyInr
 } from "@phosphor-icons/react";
 import { shiftData, shelves } from "../../data";
 import ShelfScanner from "../ShelfScanner";
@@ -356,11 +356,10 @@ const Dashboard = () => {
                 { icon: <Tooltip text="AI Inspection"><Scan size={18} weight="duotone" /></Tooltip>, label: "AI Inspection", page: "inspection" },
                 { icon: <Tooltip text="Restock Dispatch"><Package size={18} weight="duotone" /></Tooltip>, label: "Restock Dispatch", page: "dispatch" },
                 { icon: <Tooltip text="Daily Report"><ChartBar size={18} weight="duotone" /></Tooltip>, label: "Daily Report", page: "daily-report" },
-                { icon: <Tooltip text="Product Intelligence"><Package size={18} weight="duotone" /></Tooltip>, label: "Product Intelligence", page: "brand-standards" },
               ] : [
                 { icon: <Tooltip text="Store Dashboard"><Buildings size={18} weight="duotone" /></Tooltip>, label: "Store Dashboard", page: "portfolio" },
                 { icon: <Tooltip text="Store Performance"><ChartBar size={18} weight="duotone" /></Tooltip>, label: "Store Performance", page: "compare" },
-                { icon: <Tooltip text="Product Intelligence"><Package size={18} weight="duotone" /></Tooltip>, label: "Product Intelligence", page: "brand-standards" },
+                { icon: <Tooltip text="Revenue Intelligence"><CurrencyInr size={18} weight="duotone" /></Tooltip>, label: "Revenue Intelligence", page: "brand-standards" },
                 { icon: <Tooltip text="Staff Analytics"><UserCircle size={18} weight="duotone" /></Tooltip>, label: "Staff Analytics", page: "staff" },
                 { icon: <Tooltip text="Reports"><Grains size={18} weight="duotone" /></Tooltip>, label: "Reports", page: "reports" },
               ]).map((n) => {
@@ -542,12 +541,6 @@ const Dashboard = () => {
               initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }}
               transition={{ type: 'spring', stiffness: 300, damping: 30 }}>
               <PlanogramGallery />
-            </motion.div>
-          ) : currentRole === "manager" && currentPage === "brand-standards" ? (
-            <motion.div key="mgr-brand-standards" style={{ flex: 1, display: 'flex', flexDirection: 'column', minHeight: 0, overflow: 'hidden' }}
-              initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -30 }}
-              transition={{ type: 'spring', stiffness: 300, damping: 30 }}>
-              <BrandHeatmap role="manager" />
             </motion.div>
           ) : currentRole === "regional" && currentPage === "portfolio" ? (
             <motion.div key="portfolio" style={{ flex: 1, display: 'flex', flexDirection: 'column', minHeight: 0, overflow: 'hidden' }}
@@ -764,14 +757,13 @@ const Dashboard = () => {
         ] : currentRole === "manager" ? [
           { icon: <Tooltip text="Planograms"><Grains size={20} weight="duotone" /></Tooltip>, label: "Planogram", page: "planograms" },
           { icon: <Tooltip text="Heatmap"><MapPin size={20} weight="duotone" /></Tooltip>, label: "Heatmap", page: "heatmap" },
-          { icon: <Tooltip text="Inspect"><Scan size={20} weight="duotone" /></Tooltip>, label: "Inspect", page: "inspection" },
+          { icon: <Tooltip text="Inspect"><Scan size={22} weight="duotone" /></Tooltip>, label: "Inspect", page: "inspection", isFab: true },
           { icon: <Tooltip text="Dispatch"><Package size={20} weight="duotone" /></Tooltip>, label: "Dispatch", page: "dispatch" },
-          { icon: <Tooltip text="Products"><Package size={20} weight="duotone" /></Tooltip>, label: "Products", page: "brand-standards" },
           { icon: <Tooltip text="Report"><ChartBar size={20} weight="duotone" /></Tooltip>, label: "Report", page: "daily-report" },
         ] : [
           { icon: <Tooltip text="Dashboard"><Buildings size={20} weight="duotone" /></Tooltip>, label: "Dashboard", page: "portfolio" },
           { icon: <Tooltip text="Stores"><ChartBar size={20} weight="duotone" /></Tooltip>, label: "Stores", page: "compare" },
-          { icon: <Tooltip text="Products"><Package size={22} weight="duotone" /></Tooltip>, label: "Products", page: "brand-standards", isFab: true },
+          { icon: <Tooltip text="Revenue Intelligence"><CurrencyInr size={22} weight="duotone" /></Tooltip>, label: "Revenue", page: "brand-standards", isFab: true },
           { icon: <Tooltip text="Staff"><UserCircle size={20} weight="duotone" /></Tooltip>, label: "Staff", page: "staff" },
           { icon: <Tooltip text="Reports"><Grains size={20} weight="duotone" /></Tooltip>, label: "Reports", page: "reports" },
         ]).map((n) => {

@@ -419,13 +419,13 @@ const ManagerInspection = ({ onDispatchRestock, initialShelf }) => {
                 managerShelves.forEach(sh => {
                   (allShelfSections[sh.id] || []).forEach(sec => { total += (sec.issues || []).length; });
                 });
-                return `${total} restock items found across all shelves`;
+                return `${total} restock items`;
               })()}
             </span>
           </div>
           <button className="insp-dispatch-btn" onClick={handleDispatchRestock}>
             <PaperPlaneTilt size={16} weight="fill" />
-            Dispatch to Restock
+            Dispatch All
           </button>
         </motion.div>
       )}

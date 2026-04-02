@@ -76,9 +76,16 @@ const StoreCompare = () => {
         <div className="reg-card">
           <h3>Performance Radar — All Stores</h3>
           <ResponsiveContainer width="100%" height={320}>
-            <RadarChart data={radarData}>
+            <RadarChart data={radarData} outerRadius="65%">
               <PolarGrid stroke="#e2e8f0" />
-              <PolarAngleAxis dataKey="metric" tick={{ fontSize: 10, fontWeight: 600 }} />
+              <PolarAngleAxis dataKey="metric" tick={({ payload, x, y, cx, cy, ...rest }) => {
+                const short = { "Daily Sales": "Sales", "Shelf Availability": "Shelf Avail.", "Restock Speed": "Restock Spd", "Customer Footfall": "Cust. Footfall", "Staff Efficiency": "Staff Eff.", "Product Freshness": "Freshness" };
+                const label = window.innerWidth < 500 ? (short[payload.value] || payload.value) : payload.value;
+                const dx = x > cx ? 4 : x < cx ? -4 : 0;
+                const dy = y > cy ? 8 : y < cy ? -4 : 0;
+                const anchor = x > cx + 5 ? "start" : x < cx - 5 ? "end" : "middle";
+                return <text x={x + dx} y={y + dy} textAnchor={anchor} fontSize={window.innerWidth < 400 ? 8 : 10} fontWeight={600} fill="#475569">{label}</text>;
+              }} />
               <PolarRadiusAxis domain={[0, 100]} tick={{ fontSize: 9 }} />
               {Object.entries(storeColors).map(([name, color]) => (
                 <Radar key={name} name={name} dataKey={name} stroke={color} fill={color} fillOpacity={0.06} strokeWidth={2} />
