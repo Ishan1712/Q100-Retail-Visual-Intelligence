@@ -334,24 +334,6 @@ const PlanogramGallery = () => {
                   <input type="text" placeholder="e.g. Frozen Foods, Pet Care..." value={newShelfCat} onChange={e => setNewShelfCat(e.target.value)} />
                 </div>
                 <div className="pg-field">
-                  <label><Hash size={13} /> Shelf Icon</label>
-                  <div className="pg-icon-grid">
-                    {iconPickerOptions.map(key => {
-                      const entry = iconRegistry[key];
-                      if (!entry) return null;
-                      const { Icon, bg, color, border } = entry;
-                      return (
-                        <button key={key} className={`pg-icon-opt${newShelfIcon === key ? " active" : ""}`}
-                          onClick={() => setNewShelfIcon(key)}
-                          style={newShelfIcon === key ? { background: bg, borderColor: color } : {}}
-                        >
-                          <Icon size={20} weight="duotone" color={newShelfIcon === key ? color : "#64748b"} />
-                        </button>
-                      );
-                    })}
-                  </div>
-                </div>
-                <div className="pg-field">
                   <label><Image size={13} /> Cover Image</label>
                   <div className="pg-upload-area">
                     {newShelfImgPreview ? (
@@ -404,10 +386,6 @@ const PlanogramGallery = () => {
                 <div className="pg-field">
                   <label><Tag size={13} /> Section Name</label>
                   <input type="text" placeholder="e.g. Top Shelf, Eye Level, Promo Bay..." value={newSecName} onChange={e => setNewSecName(e.target.value)} />
-                </div>
-                <div className="pg-field">
-                  <label><TextAa size={13} /> Description</label>
-                  <textarea placeholder="e.g. Contains premium snacks and branded items on eye-level shelf..." value={newSecDesc} onChange={e => setNewSecDesc(e.target.value)} rows={3} />
                 </div>
                 <div className="pg-field">
                   <label><Image size={13} /> Master Image</label>
