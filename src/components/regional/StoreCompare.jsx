@@ -71,8 +71,8 @@ const StoreCompare = () => {
         </div>
       </div>
 
-      {/* Radar Chart */}
-      <div className="radar-section">
+      {/* Radar + Quick Stats */}
+      <div className="reg-charts-row">
         <div className="reg-card">
           <h3>Performance Radar — All Stores</h3>
           <ResponsiveContainer width="100%" height={320}>
@@ -94,6 +94,28 @@ const StoreCompare = () => {
           </div>
         </div>
 
+        {/* Store Quick Stats */}
+        <div className="reg-card">
+          <h3><Star size={16} weight="fill" /> Store Highlights</h3>
+          <div className="sc-highlights">
+            {[
+              { store: "Q-Mart Kothrud, Pune", metric: "Shelf Availability", value: "95%", color: "#059669", trend: "up" },
+              { store: "Q-Mart Andheri, Mumbai", metric: "Shelf Availability", value: "90%", color: "#6366f1", trend: "up" },
+              { store: "Q-Mart Gangapur, Nashik", metric: "Shelf Availability", value: "84%", color: "#f59e0b", trend: "flat" },
+              { store: "Q-Mart Dharampeth, Nagpur", metric: "Shelf Availability", value: "80%", color: "#fb923c", trend: "up" },
+              { store: "Q-Mart Sadar, Nagpur", metric: "Shelf Availability", value: "68%", color: "#ef4444", trend: "down" },
+            ].map((s, i) => (
+              <div key={i} className="sc-highlight-row">
+                <span className="sc-highlight-dot" style={{ background: s.color }} />
+                <div className="sc-highlight-info">
+                  <strong>{s.store}</strong>
+                  <span>{s.metric}</span>
+                </div>
+                <span className={`sc-highlight-value ${s.trend === "down" ? "sc-val-bad" : s.trend === "up" ? "sc-val-good" : "sc-val-flat"}`}>{s.value}</span>
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
 
       {/* Daily Reports — Line & Bar Charts */}

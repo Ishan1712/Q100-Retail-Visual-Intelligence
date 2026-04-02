@@ -2,33 +2,6 @@ import React, { useState } from "react";
 import { Warning, TrendUp, TrendDown, Minus, Eye, EyeSlash, Envelope, Package, Storefront, Crown, Star, CaretDown, CaretUp } from "@phosphor-icons/react";
 import "./Regional.css";
 
-/* ── Product Performance Data ── */
-const topSelling = [
-  { rank: 1, product: "Parle-G 250g", category: "Biscuits", units: 340, revenue: 5100, stock: "in" },
-  { rank: 2, product: "Amul Taza 500ml", category: "Dairy", units: 280, revenue: 7000, stock: "in" },
-  { rank: 3, product: "Maggi 2-Min Noodles", category: "Noodles", units: 260, revenue: 3120, stock: "low" },
-  { rank: 4, product: "Tata Salt 1kg", category: "Staples", units: 220, revenue: 4400, stock: "in" },
-  { rank: 5, product: "Surf Excel 1kg", category: "Household", units: 195, revenue: 5850, stock: "in" },
-  { rank: 6, product: "Britannia Good Day", category: "Biscuits", units: 180, revenue: 3600, stock: "in" },
-  { rank: 7, product: "Lay's Classic 52g", category: "Snacks", units: 175, revenue: 3500, stock: "low" },
-  { rank: 8, product: "Colgate MaxFresh", category: "Personal Care", units: 165, revenue: 4950, stock: "in" },
-  { rank: 9, product: "Fortune Oil 1L", category: "Cooking", units: 155, revenue: 6200, stock: "in" },
-  { rank: 10, product: "Thums Up 750ml", category: "Beverages", units: 150, revenue: 6000, stock: "in" },
-];
-
-const slowMoving = [
-  { rank: 1, product: "Organic Quinoa 500g", category: "Health", units: 2, daysOnShelf: 45, action: "Consider removing" },
-  { rank: 2, product: "Premium Dark Chocolate", category: "Confectionery", units: 3, daysOnShelf: 38, action: "Move to lower shelf" },
-  { rank: 3, product: "Almond Butter 200g", category: "Health", units: 3, daysOnShelf: 36, action: "Reduce order quantity" },
-  { rank: 4, product: "Chia Seeds 250g", category: "Health", units: 4, daysOnShelf: 32, action: "Bundle with popular items" },
-  { rank: 5, product: "Flax Seed Oil 500ml", category: "Health", units: 4, daysOnShelf: 30, action: "Consider removing" },
-  { rank: 6, product: "Gluten-Free Pasta", category: "Health", units: 5, daysOnShelf: 28, action: "Reduce facings" },
-  { rank: 7, product: "Artisan Granola 400g", category: "Breakfast", units: 5, daysOnShelf: 26, action: "Discount & clear" },
-  { rank: 8, product: "Coconut Aminos 250ml", category: "Health", units: 6, daysOnShelf: 24, action: "Move to endcap" },
-  { rank: 9, product: "Truffle Oil 100ml", category: "Cooking", units: 6, daysOnShelf: 22, action: "Reduce order quantity" },
-  { rank: 10, product: "Matcha Powder 100g", category: "Beverages", units: 7, daysOnShelf: 20, action: "Reduce facings" },
-];
-
 /* ── Heatmap: Sales by Category × Store ── */
 const categories = ["Dairy", "Staples", "Beverages", "Snacks", "Personal Care", "Household"];
 const storeNames = ["Q-Mart Pune", "Q-Mart Mumbai", "Q-Mart Nashik", "Q-Mart Nagpur", "Q-Mart Nagpur-S"];
@@ -148,59 +121,7 @@ const BrandHeatmap = ({ role }) => {
         </span>
       </div>
 
-      {!isManager ? (
-        /* ── Regional Owner: Top Selling & Slow Moving — Side by Side ── */
-        <div className="reg-body">
-          <div className="reg-left">
-            <div className="reg-card" style={{ display: "flex", flexDirection: "column" }}>
-              <h3 style={{ color: "#059669" }}><TrendUp size={16} weight="fill" /> Top 10 Best Selling Products</h3>
-              <div className="reg-table-scroll">
-                <table className="owner-table compact">
-                  <thead>
-                    <tr><th>#</th><th>Product</th><th>Category</th><th>Units/Day</th><th>₹/Day</th><th>Stock</th></tr>
-                  </thead>
-                  <tbody>
-                    {topSelling.map(p => (
-                      <tr key={p.rank}>
-                        <td style={{ fontWeight: 800 }}>{p.rank}</td>
-                        <td style={{ fontWeight: 700 }}>{p.product}</td>
-                        <td style={{ color: "#64748b" }}>{p.category}</td>
-                        <td style={{ fontWeight: 700 }}>{p.units}</td>
-                        <td style={{ fontWeight: 700, color: "#059669" }}>₹{p.revenue.toLocaleString()}</td>
-                        <td>{p.stock === "in" ? <span className="pill-good">In Stock</span> : <span className="pill-warn">Low</span>}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
-          <div className="reg-right">
-            <div className="reg-card">
-              <h3 style={{ color: "#f59e0b" }}><Package size={16} weight="fill" /> Top 10 Slowest Moving Products</h3>
-              <div className="reg-table-scroll">
-                <table className="owner-table compact">
-                  <thead>
-                    <tr><th>#</th><th>Product</th><th>Category</th><th>Units/Day</th><th>Days on Shelf</th><th>Action</th></tr>
-                  </thead>
-                  <tbody>
-                    {slowMoving.map(p => (
-                      <tr key={p.rank}>
-                        <td style={{ fontWeight: 800 }}>{p.rank}</td>
-                        <td style={{ fontWeight: 700 }}>{p.product}</td>
-                        <td style={{ color: "#64748b" }}>{p.category}</td>
-                        <td style={{ fontWeight: 700 }}>{p.units}</td>
-                        <td><span className="pill-bad">{p.daysOnShelf} days</span></td>
-                        <td style={{ fontSize: ".66rem", color: "#f59e0b", fontWeight: 700 }}>{p.action}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
-        </div>
-      ) : (
+      {isManager && (
         <>
           {/* ── Store Manager: Top Sale Stores ── */}
           <div className="reg-card reg-card-full">
