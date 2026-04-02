@@ -144,23 +144,23 @@ const slideIn = { hidden: { opacity: 0, x: -24 }, visible: { opacity: 1, x: 0, t
 
 /* ───────── Progress Ring ───────── */
 const ProgressRing = ({ progress, scanned, total }) => {
-  const r = 52, circ = 2 * Math.PI * r;
+  const r = 56, circ = 2 * Math.PI * r;
   const sv = useSpring(circ, { stiffness: 50, damping: 14 });
   const ac = useAnimatedCounter(scanned, 1400);
   useEffect(() => { sv.set(circ - (progress / 100) * circ); }, [progress, circ, sv]);
   const off = useTransform(sv, v => v);
   return (
     <div className="ring-wrap">
-      <svg viewBox="0 0 130 130" className="ring-svg">
+      <svg viewBox="0 0 140 140" className="ring-svg">
         <defs>
           <linearGradient id="rg" x1="0%" y1="0%" x2="100%" y2="100%">
             <stop offset="0%" stopColor="#10b981"/>
             <stop offset="100%" stopColor="#059669"/>
           </linearGradient>
         </defs>
-        <circle cx="65" cy="65" r={r} fill="none" stroke="#e2e8e4" strokeWidth="9"/>
-        <motion.circle cx="65" cy="65" r={r} fill="none"
-          stroke="url(#rg)" strokeWidth="9" strokeLinecap="round"
+        <circle cx="70" cy="70" r={r} fill="none" stroke="#e2e8e4" strokeWidth="8"/>
+        <motion.circle cx="70" cy="70" r={r} fill="none"
+          stroke="url(#rg)" strokeWidth="8" strokeLinecap="round"
           strokeDasharray={circ} style={{ strokeDashoffset: off }}
           filter="drop-shadow(0 0 6px rgba(5,150,105,0.25))"
         />

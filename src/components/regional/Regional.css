@@ -58,7 +58,7 @@
 .trend-icon.trend-flat { color: #94a3b8; }
 
 /* Body Layout */
-.reg-body { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; align-items: stretch; }
+.reg-body { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 16px; align-items: stretch; }
 .reg-charts-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
 
 /* Scrollable table wrapper */
@@ -272,9 +272,9 @@
 .owner-timestamp { font-size: .64rem; font-weight: 600; color: #94a3b8; text-align: right; margin-bottom: 0; }
 
 /* Owner Table */
-.owner-table { width: 100%; border-collapse: collapse; min-width: 580px; }
+.owner-table { width: 100%; border-collapse: collapse; }
 .owner-table th { text-align: left; font-size: .62rem; font-weight: 700; color: #94a3b8; text-transform: uppercase; letter-spacing: .06em; padding: 8px 10px; border-bottom: 1px solid #e2e8f0; white-space: nowrap; }
-.owner-table td { padding: 10px; font-size: .74rem; font-weight: 600; color: #334155; border-bottom: 1px solid #f1f5f9; white-space: nowrap; }
+.owner-table td { padding: 10px; font-size: .74rem; font-weight: 600; color: #334155; border-bottom: 1px solid #f1f5f9; }
 .owner-table.compact th { padding: 6px 8px; }
 .owner-table.compact td { padding: 7px 8px; font-size: .7rem; }
 .reg-left .owner-table { height: 100%; }
@@ -383,6 +383,10 @@
   .owner-bar-label { min-width: 0; font-size: .62rem; }
   .roi-hero-compare { gap: 6px; }
   .roi-compare-item { padding: 8px 12px; }
+  .owner-table th { padding: 6px 8px; font-size: .56rem; }
+  .owner-table td { padding: 7px 8px; font-size: .66rem; }
+  .owner-table.compact th { padding: 5px 6px; font-size: .54rem; }
+  .owner-table.compact td { padding: 6px 6px; font-size: .64rem; }
 }
 
 @media (max-width: 480px) {
@@ -410,6 +414,10 @@
   .roi-compare-item { padding: 6px 10px; }
   .roi-compare-label { font-size: .58rem; }
   .roi-compare-val { font-size: .88rem; }
+  .owner-table th { padding: 5px 6px; font-size: .52rem; }
+  .owner-table td { padding: 6px 6px; font-size: .62rem; }
+  .owner-table.compact th { padding: 4px 5px; font-size: .5rem; }
+  .owner-table.compact td { padding: 5px 5px; font-size: .6rem; }
 }
 
 @media (max-width: 360px) {

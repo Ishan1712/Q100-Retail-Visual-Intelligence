@@ -859,13 +859,13 @@ body {
 
 /* Ring */
 .ring-wrap {
-  width: 144px; height: 144px;
+  width: 155px; height: 155px;
   position: relative;
   display: grid; place-items: center;
   margin: 0 auto;
 }
 .ring-svg {
-  width: 144px; height: 144px;
+  width: 155px; height: 155px;
   transform: rotate(-90deg);
   position: absolute; inset: 0;
   filter: drop-shadow(0 0 8px rgba(5,150,105,0.2));
@@ -1453,8 +1453,8 @@ body {
   .shelf-name-row h4 { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .shelf-right { flex-shrink: 0; gap: 8px; flex-direction: column; align-items: flex-end; }
   .content-scroll { padding-bottom: 80px; }
-  .ring-wrap { width: 120px; height: 120px; }
-  .ring-svg { width: 120px; height: 120px; }
+  .ring-wrap { width: 130px; height: 130px; }
+  .ring-svg { width: 130px; height: 130px; }
   .top-bar-right { overflow-x: auto; }
 }
 
@@ -1464,8 +1464,8 @@ body {
   .greeting-row h1 { font-size: 0.95rem; }
   .header-chip { padding: 5px 8px; font-size: 0.62rem; }
   .content-scroll { padding: 14px 12px 90px; gap: 14px; }
-  .ring-wrap { width: 100px; height: 100px; }
-  .ring-svg { width: 100px; height: 100px; }
+  .ring-wrap { width: 115px; height: 115px; }
+  .ring-svg { width: 115px; height: 115px; }
   .ring-label strong { font-size: 1.1rem; }
   .shelf-card { padding: 12px; }
   .shelf-emoji { width: 36px; height: 36px; min-width: 36px; }
@@ -1500,14 +1500,14 @@ body {
   .card { border-radius: 14px; }
   .progress-card { padding: 16px; }
   .progress-card-shimmer { display: none; }
-  .progress-body { grid-template-columns: 110px 1fr; gap: 12px; }
+  .progress-body { grid-template-columns: 120px 1fr; gap: 12px; }
   .card-top { margin-bottom: 12px; }
   .card-top h2, .queue-header h2 { font-size: 0.95rem; }
   .label-upper { font-size: 0.58rem; }
   .pct-badge { font-size: 0.8rem; padding: 5px 14px; }
   .pct-badge-sub { font-size: 0.5rem; }
-  .ring-wrap { width: 105px; height: 105px; }
-  .ring-svg { width: 105px; height: 105px; }
+  .ring-wrap { width: 118px; height: 118px; }
+  .ring-svg { width: 118px; height: 118px; }
   .ring-label strong { font-size: 1.2rem; }
   .ring-label strong span { font-size: 0.75rem; }
   .ring-label p { font-size: 0.55rem; margin-top: 1px; }
@@ -1569,13 +1569,13 @@ body {
   .content-scroll { padding: 8px 6px 90px; gap: 10px; }
   .card { border-radius: 12px; }
   .progress-card { padding: 10px; }
-  .progress-body { grid-template-columns: 90px 1fr; gap: 8px; }
+  .progress-body { grid-template-columns: 105px 1fr; gap: 8px; }
   .card-top { margin-bottom: 8px; }
   .card-top h2, .queue-header h2 { font-size: 0.88rem; }
   .pct-badge { font-size: 0.68rem; padding: 3px 10px; }
   .pct-badge-sub { font-size: 0.46rem; }
-  .ring-wrap { width: 85px; height: 85px; }
-  .ring-svg { width: 85px; height: 85px; }
+  .ring-wrap { width: 100px; height: 100px; }
+  .ring-svg { width: 100px; height: 100px; }
   .ring-label strong { font-size: 1rem; }
   .ring-label strong span { font-size: 0.65rem; }
   .ring-label p { font-size: 0.48rem; margin-top: 0; }
@@ -1626,8 +1626,8 @@ body {
   .content-scroll { padding-bottom: 60px; }
   .top-bar { min-height: 48px; padding: 8px 16px; }
   .stats-cards { grid-template-columns: repeat(5, 1fr); gap: 4px; }
-  .ring-wrap { width: 90px; height: 90px; }
-  .ring-svg { width: 90px; height: 90px; }
+  .ring-wrap { width: 105px; height: 105px; }
+  .ring-svg { width: 105px; height: 105px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
