@@ -1,10 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   ArrowsLeftRight, Eye, EyeSlash, Warning, CheckCircle, TrendUp,
   Clock, Package, ShieldCheck, CurrencyInr, CaretLeft, CaretRight,
   X, ArrowRight, Grains, Wine, Cookie, Drop, Flask, Broom, Baby,
-  BowlSteam, ShoppingCart, Scan
+  BowlSteam, ShoppingCart, Scan, PaperPlaneTilt
 } from "@phosphor-icons/react";
 import { managerShelves, allShelfSections } from "../data";
 import "./ManagerInspection.css";
@@ -65,7 +65,7 @@ function buildAllSections(shelfId) {
       id: sec.id,
       sectionName: sec.name,
       isPass,
-      title: isPass ? "Compliant" : (isOOS && isMisplaced ? "OOS + Misplacement" : isOOS ? "Out-of-Stock" : "Misplacement"),
+      title: isPass ? "Pass" : (isOOS && isMisplaced ? "OOS + Misplaced" : isOOS ? "OOS" : "Misplaced"),
       shelf: shelfId, section: sec.id,
       worker: "Rahul M.", capturedAt: "9:18 AM",
       masterImage: sec.masterImage,
@@ -84,8 +84,11 @@ function buildAllSections(shelfId) {
         facings: iss.facingsExpected ? `${iss.facingsFound || 0}/${iss.facingsExpected}` : undefined,
         lossPerHour: iss.type === "oos" ? (Math.floor(Math.random() * 80) + 40) : 9,
         status: "Restocked",
-        icon: "📦",
+        icon: iss.type === "oos" ? (iss.facingsFound === 0 ? "🚫" : "⚠️") : "↔️",
         note: iss.type === "misplaced" ? `Move to ${iss.correctLocation}` : undefined,
+        detail: iss.detail,
+        shelfPosition: iss.shelf === "top" ? "Top Shelf" : iss.shelf === "eyeLevel" ? "Eye Level" : iss.shelf === "lower" ? "Lower Shelf" : iss.shelf,
+        qtyNeeded: iss.qtyNeeded,
       })),
       businessImpact: isMisplaced ? {
         lostSales: `₹${totalLoss}/hr`,
@@ -117,17 +120,55 @@ const AnnotationOverlay = ({ annotations, showGreen }) => (
 );
 
 /* ═══ Main Component ═══ */
-const ManagerInspection = () => {
-  const [selectedShelf, setSelectedShelf] = useState(1);
+const ManagerInspection = ({ onDispatchRestock, initialShelf }) => {
+  const [selectedShelf, setSelectedShelf] = useState(initialShelf || 1);
   const [activeIdx, setActiveIdx] = useState(0);
   const [showAfter, setShowAfter] = useState(false);
   const [showGreen, setShowGreen] = useState(false);
+
+  useEffect(() => {
+    if (initialShelf) { setSelectedShelf(initialShelf); setActiveIdx(0); }
+  }, [initialShelf]);
 
   const allSections = buildAllSections(selectedShelf);
   const shelfInfo = managerShelves.find(s => s.id === selectedShelf);
   const s = allSections.length > 0 ? allSections[activeIdx] : null;
   const failCount = allSections.filter(sec => !sec.isPass).length;
   const passCount = allSections.filter(sec => sec.isPass).length;
+
+  /* Collect all restock items across ALL shelves */
+  const handleDispatchRestock = () => {
+    if (!onDispatchRestock) return;
+    const restockItems = [];
+    let idCounter = 1;
+    const now = new Date();
+    const timeStr = now.toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit", hour12: true });
+
+    managerShelves.forEach((sh) => {
+      const sections = allShelfSections[sh.id] || [];
+      sections.forEach((sec) => {
+        (sec.issues || []).forEach((iss) => {
+          restockItems.push({
+            id: `analysis-${idCounter++}`,
+            product: iss.product,
+            qty: iss.qtyNeeded || (iss.facingsExpected ? iss.facingsExpected - (iss.facingsFound || 0) : 2),
+            shelf: `Shelf ${sh.id}, Sec ${sec.id}`,
+            shelfCategory: sh.category,
+            sectionName: sec.name,
+            status: "flagged",
+            time: timeStr,
+            mins: 0,
+            type: iss.type === "oos" ? "OOS" : "Misplacement",
+            severity: iss.type === "oos" ? "Critical" : "Major",
+            detail: iss.detail,
+            fromAnalysis: true,
+          });
+        });
+      });
+    });
+
+    onDispatchRestock(restockItems);
+  };
 
   const handleShelfSelect = (id) => {
     setSelectedShelf(id);
@@ -222,7 +263,7 @@ const ManagerInspection = () => {
               <p>All products correctly placed and fully stocked. No discrepancies detected.</p>
               <div className="insp-section-pass-img">
                 <div className="insp-img-wrap">
-                  <img src={s.masterImage} alt={s.sectionName} className="insp-img" />
+                  <img src={s.masterImage} alt={s.sectionName} className="insp-img" loading="lazy" />
                 </div>
               </div>
               <span className="insp-compliant-badge">100% Compliant</span>
@@ -260,7 +301,7 @@ const ManagerInspection = () => {
             <div className="insp-panel master-panel">
               <div className="insp-panel-label"><ShieldCheck size={14} weight="duotone" /> Master Planogram</div>
               <div className="insp-img-wrap">
-                <img src={s.masterImage} alt="Master planogram" className="insp-img" />
+                <img src={s.masterImage} alt="Master planogram" className="insp-img" loading="lazy" />
               </div>
             </div>
 
@@ -273,7 +314,7 @@ const ManagerInspection = () => {
                 <Eye size={14} weight="duotone" /> {showAfter ? "After Restock" : "Captured Photo"}
               </div>
               <div className="insp-img-wrap">
-                <img src={showAfter ? s.afterImg : s.capturedImg} alt="Captured" className="insp-img" />
+                <img src={showAfter ? s.afterImg : s.capturedImg} alt="Captured" className="insp-img" loading="lazy" />
                 {!showAfter && <AnnotationOverlay annotations={s.annotations} showGreen={showGreen} />}
                 {showAfter && (
                   <div className="insp-after-overlay">
@@ -330,11 +371,16 @@ const ManagerInspection = () => {
                 <div key={i} className={`disc-card disc-${d.severity.toLowerCase()}`}>
                   <span className="disc-icon">{d.icon}</span>
                   <div className="disc-body">
-                    <strong>{d.product}</strong>
+                    <div className="disc-product-row">
+                      <strong>{d.product}</strong>
+                      {d.shelfPosition && <span className="disc-shelf-pos">{d.shelfPosition}</span>}
+                    </div>
+                    {d.detail && <span className="disc-detail">{d.detail}</span>}
                     <div className="disc-tags">
                       <span className={`disc-type type-${d.type.toLowerCase()}`}>{d.type}</span>
                       <span className={`disc-severity sev-${d.severity.toLowerCase()}`}>{d.severity}</span>
                       {d.facings && <span className="disc-facings">{d.facings}</span>}
+                      {d.qtyNeeded && <span className="disc-qty">Need {d.qtyNeeded} units</span>}
                       {d.note && <span className="disc-note">{d.note}</span>}
                     </div>
                   </div>
@@ -358,6 +404,30 @@ const ManagerInspection = () => {
           </div>
           </>}
         </>
+      )}
+
+      {/* ═══ Dispatch All Restock Items Button ═══ */}
+      {onDispatchRestock && (
+        <motion.div className="insp-dispatch-bar"
+          initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3, type: "spring", stiffness: 300, damping: 30 }}>
+          <div className="insp-dispatch-info">
+            <Warning size={16} weight="fill" style={{ color: "#f59e0b" }} />
+            <span>
+              {(() => {
+                let total = 0;
+                managerShelves.forEach(sh => {
+                  (allShelfSections[sh.id] || []).forEach(sec => { total += (sec.issues || []).length; });
+                });
+                return `${total} restock items found across all shelves`;
+              })()}
+            </span>
+          </div>
+          <button className="insp-dispatch-btn" onClick={handleDispatchRestock}>
+            <PaperPlaneTilt size={16} weight="fill" />
+            Dispatch to Restock
+          </button>
+        </motion.div>
       )}
     </div>
   );

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import {
   TrendUp, TrendDown, Minus, CurrencyInr,
-  CheckCircle, Package, Warning, Star, Buildings
+  CheckCircle, Warning, Star, Buildings
 } from "@phosphor-icons/react";
 import { BarChart, Bar, XAxis, YAxis, Tooltip as RTooltip, ResponsiveContainer, LineChart, Line } from "recharts";
 import "./Regional.css";
@@ -21,15 +21,8 @@ const kpis = [
   { label: "Empty Shelves Caught Today", value: "147", sub: "139 restocked (95% fix rate)", icon: CheckCircle, color: "#059669" },
   { label: "Sales Today", value: "₹18.6L", sub: "Across all stores", icon: CurrencyInr, color: "#2563eb", trend: "+4.2% vs yesterday" },
   { label: "Revenue Recovered", value: "₹4.2L/mo", sub: "From fast restocking", icon: TrendUp, color: "#059669" },
-  { label: "Top Selling Product", value: "Parle-G 250g", sub: "340 units/day across chain", icon: Package, color: "#f59e0b" },
 ];
 
-const salesBreakdown = [
-  { label: "Fast Restock (filled before customer noticed)", value: 2.1, color: "#059669" },
-  { label: "Reduced Customer Walkouts", value: 1.2, color: "#2563eb" },
-  { label: "Better Product Placement (misplaced items fixed)", value: 0.6, color: "#8b5cf6" },
-  { label: "Reduced Shrinkage/Expiry", value: 0.3, color: "#f59e0b" },
-];
 
 const TrendIcon = ({ trend }) => {
   if (trend === "up") return <TrendUp size={13} weight="bold" className="trend-icon trend-up" />;
@@ -37,17 +30,6 @@ const TrendIcon = ({ trend }) => {
   return <Minus size={13} weight="bold" className="trend-icon trend-flat" />;
 };
 
-const MiniSparkline = ({ data }) => {
-  const max = Math.max(...data), min = Math.min(...data);
-  const range = max - min || 1;
-  const h = 24, w = 60;
-  const points = data.map((v, i) => `${(i / (data.length - 1)) * w},${h - ((v - min) / range) * h}`).join(" ");
-  return (
-    <svg width={w} height={h} viewBox={`0 0 ${w} ${h}`} style={{ display: "block" }}>
-      <polyline points={points} fill="none" stroke="#059669" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
-  );
-};
 
 const AnimCounter = ({ target, prefix = "" }) => {
   const [val, setVal] = useState(0);
@@ -104,7 +86,6 @@ const PortfolioHQ = () => {
                 <th>Restock Speed</th>
                 <th>Top Product</th>
                 <th>Slow Product</th>
-                <th>30-Day Trend</th>
               </tr>
             </thead>
             <tbody>
@@ -128,7 +109,6 @@ const PortfolioHQ = () => {
                   </td>
                   <td style={{ fontSize: ".72rem" }}>{s.topProduct}</td>
                   <td style={{ fontSize: ".72rem", color: "#94a3b8" }}>{s.slowProduct}</td>
-                  <td><MiniSparkline data={s.sparkline} /></td>
                 </tr>
               ))}
             </tbody>
@@ -158,28 +138,6 @@ const PortfolioHQ = () => {
         </div>
       </div>
 
-      {/* Sales Breakdown — Revenue Recovery */}
-      <div className="reg-card reg-card-full">
-        <h3><CurrencyInr size={16} weight="bold" /> Revenue Recovered This Month</h3>
-        <div className="owner-recovery-hero">
-          <div className="owner-recovery-big">₹4.2L</div>
-          <span>recovered revenue this month</span>
-        </div>
-        <div className="owner-breakdown-bars">
-          {salesBreakdown.map((b, i) => (
-            <div key={i} className="owner-bar-row">
-              <span className="owner-bar-label">{b.label}</span>
-              <div className="owner-bar-track">
-                <motion.div className="owner-bar-fill" style={{ background: b.color }}
-                  initial={{ width: 0 }} animate={{ width: `${(b.value / 2.1) * 100}%` }}
-                  transition={{ delay: 0.2 + i * 0.1, duration: 0.6 }} />
-              </div>
-              <span className="owner-bar-value">₹{b.value}L</span>
-            </div>
-          ))}
-        </div>
-        <div className="owner-recovery-footer">₹28,000 per store per day in extra sales</div>
-      </div>
     </div>
   );
 };

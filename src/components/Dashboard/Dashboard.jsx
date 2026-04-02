@@ -21,7 +21,6 @@ import DailyReport from "../DailyReport";
 import PlanogramGallery from "../PlanogramGallery";
 import PortfolioHQ from "../regional/PortfolioHQ";
 import StoreCompare from "../regional/StoreCompare";
-import FinancialROI from "../regional/FinancialROI";
 import BrandHeatmap from "../regional/BrandHeatmap";
 import StaffAnalytics from "../regional/StaffAnalytics";
 import ReportGenerator from "../regional/ReportGenerator";
@@ -255,12 +254,23 @@ const Dashboard = () => {
   const [activeMode, setActiveMode] = useState(null); // null | 'photo' | 'video'
   const [currentRole, setCurrentRole] = useState(() => sessionStorage.getItem("q100_role") || "worker");
   const [currentPage, setCurrentPageRaw] = useState(() => sessionStorage.getItem("q100_page") || "shift");
+  const [analysisRestockItems, setAnalysisRestockItems] = useState(null);
+  const [scanResults, setScanResults] = useState(null);
+  const [inspectionShelf, setInspectionShelf] = useState(null);
   const setCurrentPage = useCallback((page) => { sessionStorage.setItem("q100_page", page); setCurrentPageRaw(page); }, []);
+  const handleDispatchRestock = useCallback((items) => {
+    setAnalysisRestockItems(items);
+    setCurrentPage("dispatch");
+  }, [setCurrentPage]);
+  const handleHeatmapShelfClick = useCallback((shelfId) => {
+    setInspectionShelf(shelfId);
+    setCurrentPage("inspection");
+  }, [setCurrentPage]);
   const handleRoleSwitch = useCallback((role) => {
     sessionStorage.setItem("q100_role", role);
     setCurrentRole(role);
     if (role === "worker") setCurrentPage("shift");
-    else if (role === "manager") setCurrentPage("heatmap");
+    else if (role === "manager") setCurrentPage("planograms");
     else if (role === "regional") setCurrentPage("portfolio");
   }, [setCurrentPage]);
   const progress = Math.round((shiftData.scanned / shiftData.total) * 100);
@@ -283,7 +293,40 @@ const Dashboard = () => {
   const openShelf = useCallback((a) => { setSelectedShelf(a); setScannerOpen(true); }, []);
   const closeScan = useCallback(() => { setScannerOpen(false); setSelectedShelf(null); setActiveMode(null); setCurrentPage("shift"); }, []);
   const handleModeSelect = useCallback((mode) => { setScannerOpen(false); setActiveMode(mode); }, []);
-  const handleModeComplete = useCallback(() => { setActiveMode(null); setCurrentPage("report"); }, []);
+  const handleModeComplete = useCallback((llmResults, sections, shelfInfo) => {
+    setActiveMode(null);
+    if (llmResults && sections) {
+      const items = [];
+      let id = 1;
+      const now = new Date();
+      const timeStr = now.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
+      Object.entries(llmResults).forEach(([sIdx, result]) => {
+        const sec = sections[+sIdx];
+        (result.missing_products || []).forEach(p => {
+          items.push({
+            id: `scan-${id++}`, product: p.product,
+            qty: p.restock_needed || ((p.expected_count || 0) - (p.found_count || 0)) || 1,
+            shelf: `${shelfInfo?.name || 'Shelf'}, Section ${sec?.id || +sIdx + 1}`,
+            shelfCategory: shelfInfo?.category || '', sectionName: sec?.name || '',
+            status: 'flagged', time: timeStr, type: 'OOS', severity: 'Critical',
+            detail: p.shelf ? `${p.shelf} shelf` : '', fromAnalysis: true,
+          });
+        });
+        (result.misplaced_products || []).forEach(p => {
+          items.push({
+            id: `scan-${id++}`, product: p.product, qty: 1,
+            shelf: `${shelfInfo?.name || 'Shelf'}, Section ${sec?.id || +sIdx + 1}`,
+            shelfCategory: shelfInfo?.category || '', sectionName: sec?.name || '',
+            status: 'flagged', time: timeStr, type: 'Misplacement', severity: 'Major',
+            detail: `Move from ${p.current_location || '?'} to ${p.correct_location || '?'}`,
+            fromAnalysis: true,
+          });
+        });
+      });
+      setScanResults(items);
+    }
+    setCurrentPage("report");
+  }, [setCurrentPage]);
   const handleReportComplete = useCallback(() => { setCurrentPage("shift"); setSelectedShelf(null); }, []);
 
   return (
@@ -308,16 +351,16 @@ const Dashboard = () => {
                 { icon: <Tooltip text="Shelf History"><Clock size={18} weight="duotone" /></Tooltip>, label: "Shelf History", page: "history" },
                 { icon: <Tooltip text="Shift Summary"><Trophy size={18} weight="duotone" /></Tooltip>, label: "Shift Summary", page: "summary" },
               ] : currentRole === "manager" ? [
+                { icon: <Tooltip text="Planogram Gallery"><Grains size={18} weight="duotone" /></Tooltip>, label: "Planogram Gallery", page: "planograms" },
                 { icon: <Tooltip text="Store Heatmap"><MapPin size={18} weight="duotone" /></Tooltip>, label: "Store Heatmap", page: "heatmap" },
                 { icon: <Tooltip text="AI Inspection"><Scan size={18} weight="duotone" /></Tooltip>, label: "AI Inspection", page: "inspection" },
                 { icon: <Tooltip text="Restock Dispatch"><Package size={18} weight="duotone" /></Tooltip>, label: "Restock Dispatch", page: "dispatch" },
                 { icon: <Tooltip text="Daily Report"><ChartBar size={18} weight="duotone" /></Tooltip>, label: "Daily Report", page: "daily-report" },
-                { icon: <Tooltip text="Planogram Gallery"><Grains size={18} weight="duotone" /></Tooltip>, label: "Planogram Gallery", page: "planograms" },
+                { icon: <Tooltip text="Product Intelligence"><Package size={18} weight="duotone" /></Tooltip>, label: "Product Intelligence", page: "brand-standards" },
               ] : [
                 { icon: <Tooltip text="Store Dashboard"><Buildings size={18} weight="duotone" /></Tooltip>, label: "Store Dashboard", page: "portfolio" },
                 { icon: <Tooltip text="Store Performance"><ChartBar size={18} weight="duotone" /></Tooltip>, label: "Store Performance", page: "compare" },
                 { icon: <Tooltip text="Product Intelligence"><Package size={18} weight="duotone" /></Tooltip>, label: "Product Intelligence", page: "brand-standards" },
-                { icon: <Tooltip text="Revenue Impact"><Trophy size={18} weight="duotone" /></Tooltip>, label: "Revenue Impact", page: "roi" },
                 { icon: <Tooltip text="Staff Analytics"><UserCircle size={18} weight="duotone" /></Tooltip>, label: "Staff Analytics", page: "staff" },
                 { icon: <Tooltip text="Reports"><Grains size={18} weight="duotone" /></Tooltip>, label: "Reports", page: "reports" },
               ]).map((n) => {
@@ -380,7 +423,7 @@ const Dashboard = () => {
                     <div className="greeting-row">
                       <h1>Store Dashboard</h1>
                     </div>
-                    <p className="shift-sub">Q-Mart Kothrud, Pune &middot; Wed, 25 Mar 2026</p>
+                    <p className="shift-sub">Q-Mart Kothrud, Pune &middot; {new Date().toLocaleDateString("en-IN", { weekday: "short", day: "numeric", month: "short", year: "numeric" })}</p>
                   </>
                 ) : (
                   <>
@@ -445,20 +488,27 @@ const Dashboard = () => {
                   </motion.div>
                 </>
               )}
+              <motion.button className="logout-btn" whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}
+                onClick={() => { if (window.confirm("Are you sure you want to logout?")) window.location.reload(); }}
+                title="Logout">
+                <SignOut size={18} weight="bold" />
+              </motion.button>
             </div>
           </header>
 
           {/* ════ MOBILE ROLE SWITCHER ════ */}
           <div className="mobile-role-strip">
-            {roles.map(r => (
-              <button key={r.id}
-                className={`mobile-role-btn${r.id === currentRole ? " active" : ""}`}
-                onClick={() => handleRoleSwitch(r.id)}>
-                <r.icon size={15} weight={r.id === currentRole ? "fill" : "duotone"} />
-                <span className="mobile-role-label">{r.id === "worker" ? "Worker" : r.id === "manager" ? "Manager" : "Owner"}</span>
-                {r.id === currentRole && <Check size={12} weight="bold" className="mobile-role-check" />}
-              </button>
-            ))}
+            <span className="mobile-role-heading">View as</span>
+            <div className="mobile-role-track">
+              {roles.map(r => (
+                <button key={r.id}
+                  className={`mobile-role-btn${r.id === currentRole ? " active" : ""}`}
+                  onClick={() => handleRoleSwitch(r.id)}>
+                  <r.icon size={16} weight={r.id === currentRole ? "fill" : "duotone"} />
+                  <span className="mobile-role-label">{r.id === "worker" ? "Worker" : r.id === "manager" ? "Manager" : "Owner"}</span>
+                </button>
+              ))}
+            </div>
           </div>
 
           {/* ════ INNER CONTENT ════ */}
@@ -467,19 +517,19 @@ const Dashboard = () => {
             <motion.div key="heatmap" style={{ flex: 1, display: 'flex', flexDirection: 'column', minHeight: 0, overflow: 'hidden' }}
               initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }}
               transition={{ type: 'spring', stiffness: 300, damping: 30 }}>
-              <StoreHeatmap />
+              <StoreHeatmap onShelfClick={handleHeatmapShelfClick} />
             </motion.div>
           ) : currentRole === "manager" && currentPage === "inspection" ? (
             <motion.div key="inspection" style={{ flex: 1, display: 'flex', flexDirection: 'column', minHeight: 0, overflow: 'hidden' }}
               initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -30 }}
               transition={{ type: 'spring', stiffness: 300, damping: 30 }}>
-              <ManagerInspection />
+              <ManagerInspection onDispatchRestock={handleDispatchRestock} initialShelf={inspectionShelf} />
             </motion.div>
           ) : currentRole === "manager" && currentPage === "dispatch" ? (
             <motion.div key="dispatch" style={{ flex: 1, display: 'flex', flexDirection: 'column', minHeight: 0, overflow: 'hidden' }}
               initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -30 }}
               transition={{ type: 'spring', stiffness: 300, damping: 30 }}>
-              <RestockDispatcher />
+              <RestockDispatcher analysisItems={analysisRestockItems} onClearAnalysis={() => setAnalysisRestockItems(null)} />
             </motion.div>
           ) : currentRole === "manager" && currentPage === "daily-report" ? (
             <motion.div key="daily-report" style={{ flex: 1, display: 'flex', flexDirection: 'column', minHeight: 0, overflow: 'hidden' }}
@@ -493,6 +543,12 @@ const Dashboard = () => {
               transition={{ type: 'spring', stiffness: 300, damping: 30 }}>
               <PlanogramGallery />
             </motion.div>
+          ) : currentRole === "manager" && currentPage === "brand-standards" ? (
+            <motion.div key="mgr-brand-standards" style={{ flex: 1, display: 'flex', flexDirection: 'column', minHeight: 0, overflow: 'hidden' }}
+              initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -30 }}
+              transition={{ type: 'spring', stiffness: 300, damping: 30 }}>
+              <BrandHeatmap role="manager" />
+            </motion.div>
           ) : currentRole === "regional" && currentPage === "portfolio" ? (
             <motion.div key="portfolio" style={{ flex: 1, display: 'flex', flexDirection: 'column', minHeight: 0, overflow: 'hidden' }}
               initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }}
@@ -504,12 +560,6 @@ const Dashboard = () => {
               initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -30 }}
               transition={{ type: 'spring', stiffness: 300, damping: 30 }}>
               <StoreCompare />
-            </motion.div>
-          ) : currentRole === "regional" && currentPage === "roi" ? (
-            <motion.div key="roi" style={{ flex: 1, display: 'flex', flexDirection: 'column', minHeight: 0, overflow: 'hidden' }}
-              initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }}
-              transition={{ type: 'spring', stiffness: 300, damping: 30 }}>
-              <FinancialROI />
             </motion.div>
           ) : currentRole === "regional" && currentPage === "brand-standards" ? (
             <motion.div key="brand-standards" style={{ flex: 1, display: 'flex', flexDirection: 'column', minHeight: 0, overflow: 'hidden' }}
@@ -533,7 +583,7 @@ const Dashboard = () => {
             <motion.div key="report" style={{flex:1,display:'flex',flexDirection:'column',overflow:'hidden'}}
               initial={{opacity:0,x:40}} animate={{opacity:1,x:0}} exit={{opacity:0,x:-40}}
               transition={{type:'spring',stiffness:300,damping:30}}>
-              <ActionReport shelf={selectedShelf} mode={activeMode} onComplete={handleReportComplete} onClose={handleReportComplete} />
+              <ActionReport shelf={selectedShelf} mode={activeMode} scanResults={scanResults} onComplete={handleReportComplete} onClose={handleReportComplete} />
             </motion.div>
           ) : currentPage === "summary" ? (
             <motion.div key="summary" style={{flex:1,display:'flex',flexDirection:'column',overflow:'hidden'}}
@@ -551,34 +601,6 @@ const Dashboard = () => {
             <motion.div key="dashboard" style={{flex:1,display:'flex',flexDirection:'column',overflow:'hidden'}}
               initial={{opacity:0}} animate={{opacity:1}} exit={{opacity:0}}
               transition={{duration:0.2}}>
-              {/* Quick Stats Cards */}
-              <div className="stats-cards">
-                <div className="sc-card sc-green">
-                  <span className="sc-num">{counts.done}</span>
-                  <span className="sc-label">Compliant</span>
-                  <span className="sc-dot green" />
-                </div>
-                <div className="sc-card sc-red">
-                  <span className="sc-num">{counts.oos}</span>
-                  <span className="sc-label">OOS Detected</span>
-                  <span className="sc-dot red" />
-                </div>
-                <div className="sc-card sc-grey">
-                  <span className="sc-num">{counts.pending}</span>
-                  <span className="sc-label">Pending</span>
-                  <span className="sc-dot grey" />
-                </div>
-                <div className="sc-card sc-amber">
-                  <span className="sc-num">{counts.priority}</span>
-                  <span className="sc-label">Priority</span>
-                  <span className="sc-dot amber" />
-                </div>
-                <div className="sc-card sc-coverage">
-                  <span className="sc-num">{animProg}%</span>
-                  <span className="sc-label">Coverage</span>
-                  <span className="sc-dot coverage" />
-                </div>
-              </div>
 
               {/* Scrollable Content */}
               <motion.main className="content-scroll" initial="hidden" animate="visible"
@@ -587,33 +609,72 @@ const Dashboard = () => {
                 {/* Stats row */}
                 <section className="stats-row">
                   <div className="card progress-card">
+                    <div className="progress-card-shimmer" />
                     <div className="card-top">
-                      <div>
+                      <div className="card-top-left">
                         <span className="label-upper">Today's Progress</span>
                         <h2>Shelf Coverage</h2>
                       </div>
-                      <motion.span className="pct-badge" key={animProg}
-                        initial={{ scale: 0.85 }} animate={{ scale: 1 }}
+                      <motion.div className="pct-badge-wrap" key={animProg}
+                        initial={{ scale: 0.85, opacity: 0 }} animate={{ scale: 1, opacity: 1 }}
                         transition={{ type: "spring", stiffness: 400 }}
                       >
-                        {animProg}%
-                      </motion.span>
+                        <span className="pct-badge">{animProg}%</span>
+                        <span className="pct-badge-sub">{progress >= 80 ? 'Great!' : progress >= 50 ? 'On track' : 'Keep going'}</span>
+                      </motion.div>
                     </div>
                     <div className="progress-body">
-                      <ProgressRing progress={progress} scanned={shiftData.scanned} total={shiftData.total} />
+                      <div className="ring-col">
+                        <ProgressRing progress={progress} scanned={shiftData.scanned} total={shiftData.total} />
+                        <div className="ring-status-dot">
+                          <span className={`ring-dot ${progress >= 80 ? 'green' : progress >= 50 ? 'amber' : 'red'}`} />
+                          <span className="ring-dot-label">{progress >= 80 ? 'Ahead' : progress >= 50 ? 'On pace' : 'Behind'}</span>
+                        </div>
+                      </div>
                       <div className="metric-stack">
-                        <motion.div className="metric" whileHover={{ x: 3 }}>
+                        <motion.div className="metric" whileHover={{ x: 4, scale: 1.01 }} transition={{ type: 'spring', stiffness: 300 }}>
                           <span className="metric-ic ic-done"><Tooltip text="Completed Shelves"><CheckCircle size={14} weight="duotone" /></Tooltip></span>
-                          <div><span className="metric-lbl">Completed</span><strong>{shiftData.scanned} shelves</strong></div>
+                          <div className="metric-text">
+                            <span className="metric-lbl">Completed</span>
+                            <strong>{shiftData.scanned} <span className="metric-unit">shelves</span></strong>
+                          </div>
+                          <span className="metric-arrow"><CaretRight size={10} weight="bold" /></span>
                         </motion.div>
-                        <motion.div className="metric" whileHover={{ x: 3 }}>
+                        <motion.div className="metric" whileHover={{ x: 4, scale: 1.01 }} transition={{ type: 'spring', stiffness: 300 }}>
                           <span className="metric-ic ic-left"><Tooltip text="Remaining Shelves"><Lightning size={14} weight="duotone" /></Tooltip></span>
-                          <div><span className="metric-lbl">Remaining</span><strong>{shiftData.total - shiftData.scanned} shelves</strong></div>
+                          <div className="metric-text">
+                            <span className="metric-lbl">Remaining</span>
+                            <strong>{shiftData.total - shiftData.scanned} <span className="metric-unit">shelves</span></strong>
+                          </div>
+                          <span className="metric-arrow"><CaretRight size={10} weight="bold" /></span>
                         </motion.div>
-                        <motion.div className="metric" whileHover={{ x: 3 }}>
+                        <motion.div className="metric" whileHover={{ x: 4, scale: 1.01 }} transition={{ type: 'spring', stiffness: 300 }}>
                           <span className="metric-ic ic-pace"><Tooltip text="Target Pace"><Crosshair size={14} weight="duotone" /></Tooltip></span>
-                          <div><span className="metric-lbl">Target pace</span><strong>Under 90 sec / scan</strong></div>
+                          <div className="metric-text">
+                            <span className="metric-lbl">Target pace</span>
+                            <strong>&lt;90 <span className="metric-unit">sec/scan</span></strong>
+                          </div>
+                          <span className="metric-arrow"><CaretRight size={10} weight="bold" /></span>
                         </motion.div>
+                      </div>
+                    </div>
+                    <div className="progress-quick-stats">
+                      <div className="pq-stat">
+                        <span className="pq-dot done" />
+                        <span className="pq-num">{shiftData.scanned}</span>
+                        <span className="pq-label">Done</span>
+                      </div>
+                      <div className="pq-divider" />
+                      <div className="pq-stat">
+                        <span className="pq-dot pending" />
+                        <span className="pq-num">{shiftData.total - shiftData.scanned}</span>
+                        <span className="pq-label">Left</span>
+                      </div>
+                      <div className="pq-divider" />
+                      <div className="pq-stat">
+                        <span className="pq-dot flag" />
+                        <span className="pq-num">{counts.priority}</span>
+                        <span className="pq-label">Flagged</span>
                       </div>
                     </div>
                   </div>
@@ -701,17 +762,18 @@ const Dashboard = () => {
           { icon: <Tooltip text="Restock Alerts"><BellRinging size={20} weight="duotone" /></Tooltip>, label: "Alerts", page: "alerts", matchPages: ["alerts", "report"] },
           { icon: <Tooltip text="Shift Summary"><Trophy size={20} weight="duotone" /></Tooltip>, label: "Summary", page: "summary" },
         ] : currentRole === "manager" ? [
+          { icon: <Tooltip text="Planograms"><Grains size={20} weight="duotone" /></Tooltip>, label: "Planogram", page: "planograms" },
           { icon: <Tooltip text="Heatmap"><MapPin size={20} weight="duotone" /></Tooltip>, label: "Heatmap", page: "heatmap" },
           { icon: <Tooltip text="Inspect"><Scan size={20} weight="duotone" /></Tooltip>, label: "Inspect", page: "inspection" },
-          { icon: <Tooltip text="Dispatch"><Package size={22} weight="duotone" /></Tooltip>, label: "Dispatch", page: "dispatch", isFab: true },
+          { icon: <Tooltip text="Dispatch"><Package size={20} weight="duotone" /></Tooltip>, label: "Dispatch", page: "dispatch" },
+          { icon: <Tooltip text="Products"><Package size={20} weight="duotone" /></Tooltip>, label: "Products", page: "brand-standards" },
           { icon: <Tooltip text="Report"><ChartBar size={20} weight="duotone" /></Tooltip>, label: "Report", page: "daily-report" },
-          { icon: <Tooltip text="Planograms"><Grains size={20} weight="duotone" /></Tooltip>, label: "Planogram", page: "planograms" },
         ] : [
           { icon: <Tooltip text="Dashboard"><Buildings size={20} weight="duotone" /></Tooltip>, label: "Dashboard", page: "portfolio" },
           { icon: <Tooltip text="Stores"><ChartBar size={20} weight="duotone" /></Tooltip>, label: "Stores", page: "compare" },
-          { icon: <Tooltip text="Revenue"><Trophy size={22} weight="duotone" /></Tooltip>, label: "Revenue", page: "roi", isFab: true },
-          { icon: <Tooltip text="Products"><Package size={20} weight="duotone" /></Tooltip>, label: "Products", page: "brand-standards" },
+          { icon: <Tooltip text="Products"><Package size={22} weight="duotone" /></Tooltip>, label: "Products", page: "brand-standards", isFab: true },
           { icon: <Tooltip text="Staff"><UserCircle size={20} weight="duotone" /></Tooltip>, label: "Staff", page: "staff" },
+          { icon: <Tooltip text="Reports"><Grains size={20} weight="duotone" /></Tooltip>, label: "Reports", page: "reports" },
         ]).map((n) => {
           const isActive = n.matchPages
             ? n.matchPages.includes(currentPage)

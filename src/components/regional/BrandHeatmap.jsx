@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Warning, TrendUp, TrendDown, Minus, Eye, EyeSlash, Envelope, Package } from "@phosphor-icons/react";
+import { Warning, TrendUp, TrendDown, Minus, Eye, EyeSlash, Envelope, Package, Storefront, Crown, Star, CaretDown, CaretUp } from "@phosphor-icons/react";
 import "./Regional.css";
 
 /* ── Product Performance Data ── */
@@ -67,10 +67,75 @@ const actionItems = [
   { store: "Q-Mart Pune", issue: "Maggi 2-Min stock critically low at Nagpur — transfer 2 cases from Pune warehouse.", priority: "medium" },
 ];
 
-const BrandHeatmap = () => {
+/* ── Top Sale Stores (Manager view) ── */
+const topStores = [
+  { rank: 1, store: "Q-Mart Kothrud", city: "Pune", dailySales: 48500, growth: 12.3, compliance: 94, topCategory: "Dairy" },
+  { rank: 2, store: "Q-Mart Hinjewadi", city: "Pune", dailySales: 42200, growth: 8.7, compliance: 91, topCategory: "Snacks" },
+  { rank: 3, store: "Q-Mart Wakad", city: "Pune", dailySales: 38900, growth: 5.2, compliance: 88, topCategory: "Beverages" },
+  { rank: 4, store: "Q-Mart Baner", city: "Pune", dailySales: 35600, growth: -2.1, compliance: 85, topCategory: "Staples" },
+  { rank: 5, store: "Q-Mart Viman Nagar", city: "Pune", dailySales: 31200, growth: 3.8, compliance: 82, topCategory: "Personal Care" },
+];
+
+/* ── Store-wise Top Selling Products (Manager view) ── */
+const storeProducts = [
+  {
+    store: "Q-Mart Kothrud", city: "Pune", dailySales: 48500, compliance: 94,
+    products: [
+      { rank: 1, product: "Amul Taza 500ml", category: "Dairy", units: 120, revenue: 3000 },
+      { rank: 2, product: "Parle-G 250g", category: "Biscuits", units: 95, revenue: 1425 },
+      { rank: 3, product: "Maggi 2-Min Noodles", category: "Noodles", units: 88, revenue: 1056 },
+      { rank: 4, product: "Tata Salt 1kg", category: "Staples", units: 72, revenue: 1440 },
+      { rank: 5, product: "Thums Up 750ml", category: "Beverages", units: 65, revenue: 2600 },
+    ]
+  },
+  {
+    store: "Q-Mart Hinjewadi", city: "Pune", dailySales: 42200, compliance: 91,
+    products: [
+      { rank: 1, product: "Lay's Classic 52g", category: "Snacks", units: 110, revenue: 2200 },
+      { rank: 2, product: "Coca-Cola 750ml", category: "Beverages", units: 98, revenue: 3920 },
+      { rank: 3, product: "Britannia Good Day", category: "Biscuits", units: 85, revenue: 1700 },
+      { rank: 4, product: "Surf Excel 1kg", category: "Household", units: 60, revenue: 1800 },
+      { rank: 5, product: "Amul Butter 500g", category: "Dairy", units: 55, revenue: 1375 },
+    ]
+  },
+  {
+    store: "Q-Mart Wakad", city: "Pune", dailySales: 38900, compliance: 88,
+    products: [
+      { rank: 1, product: "Thums Up 750ml", category: "Beverages", units: 105, revenue: 4200 },
+      { rank: 2, product: "Parle-G 250g", category: "Biscuits", units: 90, revenue: 1350 },
+      { rank: 3, product: "Fortune Oil 1L", category: "Cooking", units: 70, revenue: 2800 },
+      { rank: 4, product: "Colgate MaxFresh", category: "Personal Care", units: 62, revenue: 1860 },
+      { rank: 5, product: "Maggi 2-Min Noodles", category: "Noodles", units: 58, revenue: 696 },
+    ]
+  },
+  {
+    store: "Q-Mart Baner", city: "Pune", dailySales: 35600, compliance: 85,
+    products: [
+      { rank: 1, product: "Tata Salt 1kg", category: "Staples", units: 95, revenue: 1900 },
+      { rank: 2, product: "Amul Taza 500ml", category: "Dairy", units: 80, revenue: 2000 },
+      { rank: 3, product: "Surf Excel 1kg", category: "Household", units: 68, revenue: 2040 },
+      { rank: 4, product: "Lay's Classic 52g", category: "Snacks", units: 55, revenue: 1100 },
+      { rank: 5, product: "Britannia Good Day", category: "Biscuits", units: 50, revenue: 1000 },
+    ]
+  },
+  {
+    store: "Q-Mart Viman Nagar", city: "Pune", dailySales: 31200, compliance: 82,
+    products: [
+      { rank: 1, product: "Colgate MaxFresh", category: "Personal Care", units: 85, revenue: 2550 },
+      { rank: 2, product: "Parle-G 250g", category: "Biscuits", units: 78, revenue: 1170 },
+      { rank: 3, product: "Coca-Cola 750ml", category: "Beverages", units: 65, revenue: 2600 },
+      { rank: 4, product: "Fortune Oil 1L", category: "Cooking", units: 52, revenue: 2080 },
+      { rank: 5, product: "Amul Butter 500g", category: "Dairy", units: 48, revenue: 1200 },
+    ]
+  },
+];
+
+const BrandHeatmap = ({ role }) => {
   const [drillDown, setDrillDown] = useState(null);
+  const [expandedStore, setExpandedStore] = useState(null);
   const now = new Date();
   const timestamp = now.toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" }) + ", " + now.toLocaleTimeString("en-IN", { hour: "2-digit", minute: "2-digit" });
+  const isManager = role === "manager";
 
   return (
     <div className="reg-screen">
@@ -78,60 +143,181 @@ const BrandHeatmap = () => {
 
       <div style={{ marginBottom: -4 }}>
         <h2 style={{ fontSize: "1.1rem", fontWeight: 800, color: "#0f172a", margin: 0 }}>Product Intelligence</h2>
-        <span style={{ fontSize: ".72rem", color: "#64748b" }}>What's selling, what's not, and where are the gaps?</span>
+        <span style={{ fontSize: ".72rem", color: "#64748b" }}>
+          {isManager ? "Store performance, top sellers, and product insights" : "What's selling, what's not, and where are the gaps?"}
+        </span>
       </div>
 
-      {/* Top Selling & Slow Moving — Side by Side */}
-      <div className="reg-body">
-        <div className="reg-left">
-          <div className="reg-card" style={{ display: "flex", flexDirection: "column" }}>
-            <h3 style={{ color: "#059669" }}><TrendUp size={16} weight="fill" /> Top 10 Best Selling Products</h3>
-            <div style={{ overflowX: "auto", flex: 1 }}>
-              <table className="owner-table compact" style={{ height: "100%" }}>
-                <thead>
-                  <tr><th>#</th><th>Product</th><th>Category</th><th>Units/Day</th><th>₹/Day</th><th>Stock</th></tr>
-                </thead>
-                <tbody>
-                  {topSelling.map(p => (
-                    <tr key={p.rank}>
-                      <td style={{ fontWeight: 800 }}>{p.rank}</td>
-                      <td style={{ fontWeight: 700 }}>{p.product}</td>
-                      <td style={{ color: "#64748b" }}>{p.category}</td>
-                      <td style={{ fontWeight: 700 }}>{p.units}</td>
-                      <td style={{ fontWeight: 700, color: "#059669" }}>₹{p.revenue.toLocaleString()}</td>
-                      <td>{p.stock === "in" ? <span className="pill-good">In Stock</span> : <span className="pill-warn">Low</span>}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+      {!isManager ? (
+        /* ── Regional Owner: Top Selling & Slow Moving — Side by Side ── */
+        <div className="reg-body">
+          <div className="reg-left">
+            <div className="reg-card" style={{ display: "flex", flexDirection: "column" }}>
+              <h3 style={{ color: "#059669" }}><TrendUp size={16} weight="fill" /> Top 10 Best Selling Products</h3>
+              <div className="reg-table-scroll">
+                <table className="owner-table compact">
+                  <thead>
+                    <tr><th>#</th><th>Product</th><th>Category</th><th>Units/Day</th><th>₹/Day</th><th>Stock</th></tr>
+                  </thead>
+                  <tbody>
+                    {topSelling.map(p => (
+                      <tr key={p.rank}>
+                        <td style={{ fontWeight: 800 }}>{p.rank}</td>
+                        <td style={{ fontWeight: 700 }}>{p.product}</td>
+                        <td style={{ color: "#64748b" }}>{p.category}</td>
+                        <td style={{ fontWeight: 700 }}>{p.units}</td>
+                        <td style={{ fontWeight: 700, color: "#059669" }}>₹{p.revenue.toLocaleString()}</td>
+                        <td>{p.stock === "in" ? <span className="pill-good">In Stock</span> : <span className="pill-warn">Low</span>}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+          <div className="reg-right">
+            <div className="reg-card">
+              <h3 style={{ color: "#f59e0b" }}><Package size={16} weight="fill" /> Top 10 Slowest Moving Products</h3>
+              <div className="reg-table-scroll">
+                <table className="owner-table compact">
+                  <thead>
+                    <tr><th>#</th><th>Product</th><th>Category</th><th>Units/Day</th><th>Days on Shelf</th><th>Action</th></tr>
+                  </thead>
+                  <tbody>
+                    {slowMoving.map(p => (
+                      <tr key={p.rank}>
+                        <td style={{ fontWeight: 800 }}>{p.rank}</td>
+                        <td style={{ fontWeight: 700 }}>{p.product}</td>
+                        <td style={{ color: "#64748b" }}>{p.category}</td>
+                        <td style={{ fontWeight: 700 }}>{p.units}</td>
+                        <td><span className="pill-bad">{p.daysOnShelf} days</span></td>
+                        <td style={{ fontSize: ".66rem", color: "#f59e0b", fontWeight: 700 }}>{p.action}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             </div>
           </div>
         </div>
-        <div className="reg-right">
-          <div className="reg-card">
-            <h3 style={{ color: "#f59e0b" }}><Package size={16} weight="fill" /> Top 10 Slowest Moving Products</h3>
-            <div style={{ overflowX: "auto" }}>
-              <table className="owner-table compact">
-                <thead>
-                  <tr><th>#</th><th>Product</th><th>Category</th><th>Units/Day</th><th>Days on Shelf</th><th>Action</th></tr>
-                </thead>
-                <tbody>
-                  {slowMoving.map(p => (
-                    <tr key={p.rank}>
-                      <td style={{ fontWeight: 800 }}>{p.rank}</td>
-                      <td style={{ fontWeight: 700 }}>{p.product}</td>
-                      <td style={{ color: "#64748b" }}>{p.category}</td>
-                      <td style={{ fontWeight: 700 }}>{p.units}</td>
-                      <td><span className="pill-bad">{p.daysOnShelf} days</span></td>
-                      <td style={{ fontSize: ".66rem", color: "#f59e0b", fontWeight: 700 }}>{p.action}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+      ) : (
+        <>
+          {/* ── Store Manager: Top Sale Stores ── */}
+          <div className="reg-card reg-card-full">
+            <h3 style={{ color: "#059669", display: "flex", alignItems: "center", gap: 6 }}>
+              <Crown size={16} weight="fill" /> Top Sale Stores
+            </h3>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(240px, 1fr))", gap: 12 }}>
+              {topStores.map(s => (
+                <div key={s.rank} style={{
+                  background: s.rank === 1 ? "linear-gradient(135deg, #fefce8, #fef9c3)" : s.rank <= 3 ? "#f0fdf4" : "#f8fafc",
+                  border: s.rank === 1 ? "1.5px solid #fbbf24" : s.rank <= 3 ? "1px solid #bbf7d0" : "1px solid #e2e8f0",
+                  borderRadius: 12, padding: 16, display: "flex", flexDirection: "column", gap: 12
+                }}>
+                  {/* Row 1: Rank + Store name + City */}
+                  <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                    <div style={{
+                      width: 32, height: 32, borderRadius: 8, display: "grid", placeItems: "center", flexShrink: 0,
+                      background: s.rank === 1 ? "linear-gradient(135deg, #f59e0b, #d97706)" : s.rank <= 3 ? "linear-gradient(135deg, #059669, #047857)" : "#94a3b8",
+                      color: "#fff", fontSize: ".7rem", fontWeight: 900
+                    }}>
+                      #{s.rank}
+                    </div>
+                    <div style={{ minWidth: 0 }}>
+                      <div style={{ fontSize: ".78rem", fontWeight: 800, color: "#0f172a", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{s.store}</div>
+                      <div style={{ fontSize: ".6rem", color: "#64748b", fontWeight: 600 }}>{s.city} · {s.compliance}% compliance</div>
+                    </div>
+                  </div>
+                  {/* Row 2: Sales + Growth */}
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end" }}>
+                    <div>
+                      <div style={{ fontSize: ".54rem", color: "#94a3b8", fontWeight: 700, textTransform: "uppercase", letterSpacing: ".04em" }}>Daily Sales</div>
+                      <div style={{ fontSize: "1.1rem", fontWeight: 900, color: "#0f172a", letterSpacing: "-.02em" }}>₹{s.dailySales.toLocaleString("en-IN")}</div>
+                    </div>
+                    <span style={{
+                      display: "inline-flex", alignItems: "center", gap: 2,
+                      fontSize: ".62rem", fontWeight: 700, padding: "3px 8px", borderRadius: 6,
+                      background: s.growth >= 0 ? "#dcfce7" : "#fef2f2",
+                      color: s.growth >= 0 ? "#16a34a" : "#ef4444"
+                    }}>
+                      {s.growth >= 0 ? <TrendUp size={11} weight="bold" /> : <TrendDown size={11} weight="bold" />}
+                      {s.growth >= 0 ? "+" : ""}{s.growth}%
+                    </span>
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
-        </div>
-      </div>
+
+          {/* ── Regional Owner: Store-wise Top Selling Products ── */}
+          <div className="reg-card reg-card-full">
+            <h3 style={{ color: "#4f46e5", display: "flex", alignItems: "center", gap: 6 }}>
+              <Storefront size={16} weight="fill" /> All Stores — Top Selling Products
+            </h3>
+            <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+              {storeProducts.map((s, i) => {
+                const isOpen = expandedStore === i;
+                return (
+                  <div key={i} style={{
+                    border: isOpen ? "1.5px solid #c7d2fe" : "1px solid #e2e8f0",
+                    borderRadius: 14, overflow: "hidden", background: isOpen ? "#fafbff" : "#fff",
+                    transition: "all .2s ease"
+                  }}>
+                    {/* Store Header — clickable */}
+                    <div onClick={() => setExpandedStore(isOpen ? null : i)} style={{
+                      display: "flex", alignItems: "center", justifyContent: "space-between",
+                      padding: "14px 16px", cursor: "pointer", gap: 12
+                    }}>
+                      <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                        <div style={{
+                          width: 32, height: 32, borderRadius: 9,
+                          background: "linear-gradient(135deg, #6366f1, #4f46e5)",
+                          color: "#fff", display: "grid", placeItems: "center",
+                          boxShadow: "0 2px 6px rgba(99,102,241,0.25)"
+                        }}>
+                          <Storefront size={15} weight="fill" />
+                        </div>
+                        <div>
+                          <div style={{ fontSize: ".8rem", fontWeight: 800, color: "#0f172a" }}>{s.store}</div>
+                          <div style={{ fontSize: ".62rem", color: "#64748b", fontWeight: 600 }}>{s.city} · {s.compliance}% compliance</div>
+                        </div>
+                      </div>
+                      <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                        <div style={{ textAlign: "right" }}>
+                          <div style={{ fontSize: ".92rem", fontWeight: 900, color: "#0f172a" }}>₹{s.dailySales.toLocaleString("en-IN")}</div>
+                          <div style={{ fontSize: ".58rem", color: "#94a3b8", fontWeight: 600 }}>daily sales</div>
+                        </div>
+                        {isOpen ? <CaretUp size={16} weight="bold" color="#94a3b8" /> : <CaretDown size={16} weight="bold" color="#94a3b8" />}
+                      </div>
+                    </div>
+                    {/* Products Table — expandable */}
+                    {isOpen && (
+                      <div style={{ padding: "0 16px 14px", borderTop: "1px solid #e2e8f0" }}>
+                        <table className="owner-table compact" style={{ marginTop: 10 }}>
+                          <thead>
+                            <tr><th>#</th><th>Product</th><th>Category</th><th>Units/Day</th><th>₹/Day</th></tr>
+                          </thead>
+                          <tbody>
+                            {s.products.map(p => (
+                              <tr key={p.rank}>
+                                <td style={{ fontWeight: 800 }}>{p.rank}</td>
+                                <td style={{ fontWeight: 700 }}>{p.product}</td>
+                                <td style={{ color: "#64748b" }}>{p.category}</td>
+                                <td style={{ fontWeight: 700 }}>{p.units}</td>
+                                <td style={{ fontWeight: 700, color: "#059669" }}>₹{p.revenue.toLocaleString()}</td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </>
+      )}
 
       {/* Sales Heatmap */}
       <div className="reg-card reg-card-full">

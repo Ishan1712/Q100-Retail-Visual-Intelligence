@@ -293,7 +293,7 @@
   display: flex; align-items: center; justify-content: center;
   padding: 80px 24px 50px;
   position: relative;
-  flex-shrink: 0;
+  flex-shrink: 1;
 }
 
 /* Success check icon */
@@ -310,6 +310,7 @@
 .scanner-confirm-card-wrap {
   flex: 1; display: flex; flex-direction: column;
   min-height: 0;
+  justify-content: flex-end;
 }
 
 /* The white card */
@@ -318,7 +319,7 @@
   border-radius: 24px 24px 0 0;
   padding: 16px 24px 20px;
   display: flex; flex-direction: column;
-  flex: 1; overflow-y: auto;
+  flex: 0 1 auto; overflow-y: auto;
   box-shadow: 0 -12px 40px rgba(0,0,0,0.12);
   position: relative;
   z-index: 2;
@@ -583,6 +584,7 @@
   .scanner-viewfinder { width: 200px; height: 200px; border-radius: 22px; }
   .scanner-corner { width: 40px; height: 40px; }
   .scanner-title { font-size: 16px; margin-top: 18px; }
+  .scanner-confirm-dark-top { padding: 40px 24px 24px; }
   .scanner-confirm-card { padding: 16px 18px 24px; }
   .scanner-shelf-name { font-size: 22px; }
   .scanner-shelf-meta { font-size: 13px; }
@@ -619,7 +621,8 @@
   .scanner-title { font-size: 15px; margin-top: 14px; }
   .scanner-countdown-wrap { margin-top: 10px; }
   .scanner-fallback { margin-top: 20px; font-size: 12px; padding: 8px 16px; }
-  .scanner-confirm-card { padding: 14px 14px 22px; max-height: 90vh; }
+  .scanner-confirm-dark-top { padding: 28px 20px 16px; }
+  .scanner-confirm-card { padding: 14px 14px 22px; }
   .scanner-card-handle { margin-bottom: 14px; }
   .scanner-shelf-name { font-size: 20px; }
   .scanner-shelf-meta { font-size: 12px; gap: 6px; }
@@ -649,7 +652,8 @@
   .scanner-countdown-num { font-size: 12px; }
   .scanner-countdown-text { font-size: 11px; }
   .scanner-fallback { margin-top: 16px; font-size: 11px; padding: 6px 14px; }
-  .scanner-confirm-card { padding: 10px 10px 18px; max-height: 92vh; }
+  .scanner-confirm-dark-top { padding: 20px 16px 12px; }
+  .scanner-confirm-card { padding: 10px 10px 18px; }
   .scanner-card-handle { margin-bottom: 12px; }
   .scanner-shelf-name { font-size: 16px; }
   .scanner-shelf-meta { font-size: 11px; gap: 5px; }

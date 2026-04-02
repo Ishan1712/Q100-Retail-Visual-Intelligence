@@ -33,13 +33,20 @@ const DonutChart = ({ compliance }) => {
   return (
     <div className="donut-wrap">
       <svg viewBox="0 0 110 110" className="donut-svg">
-        <circle cx="55" cy="55" r={r} fill="none" stroke="#e2e8f0" strokeWidth="10" />
+        {/* Soft glow behind the ring */}
+        <circle cx="55" cy="55" r={r} fill="none" stroke="#e2e8f0" strokeWidth="11" opacity="0.5" />
+        {/* Background track */}
+        <circle cx="55" cy="55" r={r} fill="none" stroke="#f1f5f9" strokeWidth="10" />
+        {/* Compliant segment */}
         <circle cx="55" cy="55" r={r} fill="none" stroke="#22c55e" strokeWidth="10"
           strokeDasharray={`${seg1} ${circ - seg1}`} strokeDashoffset="0"
-          strokeLinecap="round" transform="rotate(-90 55 55)" />
+          strokeLinecap="round" transform="rotate(-90 55 55)"
+          style={{ filter: 'drop-shadow(0 0 3px rgba(34,197,94,0.4))' }} />
+        {/* OOS segment */}
         <circle cx="55" cy="55" r={r} fill="none" stroke="#ef4444" strokeWidth="10"
           strokeDasharray={`${seg2} ${circ - seg2}`} strokeDashoffset={`${-seg1}`}
           strokeLinecap="round" transform="rotate(-90 55 55)" />
+        {/* Misplaced segment */}
         <circle cx="55" cy="55" r={r} fill="none" stroke="#f59e0b" strokeWidth="10"
           strokeDasharray={`${seg3} ${circ - seg3}`} strokeDashoffset={`${-(seg1 + seg2)}`}
           strokeLinecap="round" transform="rotate(-90 55 55)" />
@@ -84,7 +91,7 @@ const RevenueTicker = ({ base, rate }) => {
 };
 
 /* ───── Store Floor Heatmap ───── */
-const FloorHeatmap = ({ shelves, hoveredShelf, setHoveredShelf }) => {
+const FloorHeatmap = ({ shelves, hoveredShelf, setHoveredShelf, onShelfClick }) => {
   // Layout: 2 rows of 5 shelves each, with checkout at top and endcaps on sides
   const leftShelves = shelves.filter(a => a.id <= 5);
   const rightShelves = shelves.filter(a => a.id > 5);
@@ -110,7 +117,8 @@ const FloorHeatmap = ({ shelves, hoveredShelf, setHoveredShelf }) => {
           <div className="floor-col">
             {leftShelves.map(a => (
               <ShelfStrip key={a.id} shelf={a} isHovered={hoveredShelf === a.id}
-                onHover={() => setHoveredShelf(a.id)} onLeave={() => setHoveredShelf(null)} />
+                onHover={() => setHoveredShelf(a.id)} onLeave={() => setHoveredShelf(null)}
+                onClick={() => onShelfClick?.(a.id)} />
             ))}
           </div>
           <div className="floor-divider">
@@ -119,7 +127,8 @@ const FloorHeatmap = ({ shelves, hoveredShelf, setHoveredShelf }) => {
           <div className="floor-col">
             {rightShelves.map(a => (
               <ShelfStrip key={a.id} shelf={a} isHovered={hoveredShelf === a.id}
-                onHover={() => setHoveredShelf(a.id)} onLeave={() => setHoveredShelf(null)} />
+                onHover={() => setHoveredShelf(a.id)} onLeave={() => setHoveredShelf(null)}
+                onClick={() => onShelfClick?.(a.id)} />
             ))}
           </div>
         </div>
@@ -159,13 +168,15 @@ const shelfIconMap = {
 };
 
 /* ───── Shelf Strip ───── */
-const ShelfStrip = ({ shelf, isHovered, onHover, onLeave }) => {
+const ShelfStrip = ({ shelf, isHovered, onHover, onLeave, onClick }) => {
   const cm = colorMap[shelf.color];
   const Icon = shelfIconMap[shelf.id] || Package;
   return (
     <motion.div
       className={`shelf-strip ${cm.cls}${shelf.vip ? " shelf-vip" : ""}${isHovered ? " shelf-hovered" : ""}`}
       onMouseEnter={onHover} onMouseLeave={onLeave}
+      onClick={onClick}
+      style={{ cursor: "pointer" }}
       whileHover={{ scale: 1.03, y: -2 }}
       whileTap={{ scale: 0.98 }}
       layout
@@ -273,7 +284,7 @@ const FeedItem = ({ item, index }) => (
 /* ═══════════════════════════
    MAIN COMPONENT
    ═══════════════════════════ */
-const StoreHeatmap = () => {
+const StoreHeatmap = ({ onShelfClick }) => {
   const [hoveredShelf, setHoveredShelf] = useState(null);
   const store = managerStore;
   const shelves = managerShelves;
@@ -305,8 +316,8 @@ const StoreHeatmap = () => {
 
         <div className="hero-stats">
           <div className="hero-stat">
-            <span className="hs-val">{store.totalShelfs}</span>
-            <span className="hs-label">Shelfs</span>
+            <span className="hs-val">{store.totalShelves}</span>
+            <span className="hs-label">Shelves</span>
           </div>
           <div className="hero-stat">
             <span className="hs-val hs-red">{totalOOS}</span>
@@ -325,14 +336,14 @@ const StoreHeatmap = () => {
       <div className="heatmap-body">
         {/* Left: Floor Heatmap */}
         <div className="heatmap-left">
-          <FloorHeatmap shelves={shelves} hoveredShelf={hoveredShelf} setHoveredShelf={setHoveredShelf} />
+          <FloorHeatmap shelves={shelves} hoveredShelf={hoveredShelf} setHoveredShelf={setHoveredShelf} onShelfClick={onShelfClick} />
 
           {/* VIP Shelfs */}
           {vipShelves.length > 0 && (
             <div className="vip-section">
               <div className="vip-header">
                 <Star size={15} weight="fill" />
-                <span>VIP Shelfs — Brand Partner Displays</span>
+                <span>VIP Shelves — Brand Partner Displays</span>
               </div>
               <div className="vip-cards">
                 {vipShelves.map(a => (

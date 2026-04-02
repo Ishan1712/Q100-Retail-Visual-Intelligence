@@ -25,7 +25,7 @@ const shiftData = {
     { icon: Trophy,       value: '5',       label: 'Full-Shelf Streak', color: 'rose' },
   ],
   salesSaved: '₹18,400',
-  impact: `You prevented 14 empty shelves today. That's approximately ₹18,400 in sales that would have been lost. Your top catch: Parle-G 250g (Section 2, Shelf 7) — this product sells 22 units/day at this store.`,
+  impact: `You prevented 14 empty shelves today. Your top catch: Parle-G 250g (Section 2, Shelf 7) — this product sells 22 units/day at this store.`,
   personalBest: {
     active: true,
     text: 'New record! 14 OOS catches — your previous best was 11',
@@ -167,9 +167,6 @@ export default function ShiftSummary({ onClose }) {
             Amazing work today, {d.worker}. All {d.shelvesTotal} shelves scanned and verified.
           </p>
           <div className="ss-hero-actions">
-            <button className="ss-hero-btn ss-hero-btn-outline" onClick={onClose}>
-              Sign Out
-            </button>
             <button className="ss-hero-btn ss-hero-btn-solid">
               Review Shifts <ArrowRight size={14} weight="bold" />
             </button>
@@ -203,15 +200,6 @@ export default function ShiftSummary({ onClose }) {
                 </motion.div>
               );
             })}
-            {/* Sales Saved — special card */}
-            <motion.div className="ss-stat-card ss-stat--indigo ss-stat-sales"
-              initial="hidden" animate="visible" custom={8} variants={fadeUp}>
-              <div className="ss-stat-icon ss-stat-icon--indigo">
-                <CurrencyInr size={20} weight="duotone" />
-              </div>
-              <div className="ss-stat-value">{d.salesSaved}</div>
-              <div className="ss-stat-label">Sales Saved</div>
-            </motion.div>
           </div>
         </div>
 

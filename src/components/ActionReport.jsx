@@ -139,8 +139,25 @@ function ShelfComparison({ type }) {
 /* ═══════════════════════════════════════
    ACTION REPORT (Main Component)
    ═══════════════════════════════════════ */
-export default function ActionReport({ shelf, mode, onComplete, onClose }) {
-  const data = reportData;
+export default function ActionReport({ shelf, mode, scanResults, onComplete, onClose }) {
+  // Transform real scan results into the issues format, or fall back to dummy data
+  const data = scanResults && scanResults.length > 0
+    ? {
+        ...reportData,
+        issues: scanResults.map((item, i) => ({
+          id: i + 1,
+          type: item.type === 'OOS' ? 'oos' : 'misplaced',
+          product: item.product,
+          section: item.sectionName || '',
+          shelf: item.detail || item.shelf,
+          position: '',
+          qty: item.type === 'OOS' ? `${item.qty} units needed` : (item.detail || 'Needs repositioning'),
+          icon: 'package',
+          brand: '', brandColor: item.type === 'OOS' ? '#ef4444' : '#f59e0b',
+          brandBg: item.type === 'OOS' ? '#fef2f2' : '#fffbeb',
+        })),
+      }
+    : reportData;
   const shelfInfo = shelf || data.shelf;
   const captureMode = mode || data.mode;
 

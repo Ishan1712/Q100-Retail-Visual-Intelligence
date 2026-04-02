@@ -319,6 +319,21 @@
   background: #fff;
 }
 .pg-field input[type="text"]::placeholder { color: #94a3b8; font-weight: 500; }
+.pg-field textarea {
+  width: 100%; padding: 11px 14px;
+  border: 1.5px solid #e2e8f0; border-radius: 10px;
+  font-size: .82rem; color: #0f172a;
+  font-family: inherit; font-weight: 500;
+  background: #f8fafc;
+  outline: none; transition: all 0.15s;
+  resize: vertical; line-height: 1.5;
+}
+.pg-field textarea:focus {
+  border-color: #059669;
+  box-shadow: 0 0 0 3px rgba(5,150,105,0.08);
+  background: #fff;
+}
+.pg-field textarea::placeholder { color: #94a3b8; font-weight: 500; }
 
 /* ── Icon Picker Grid ── */
 .pg-icon-grid {

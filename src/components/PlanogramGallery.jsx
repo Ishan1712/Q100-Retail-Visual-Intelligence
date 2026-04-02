@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Eye, Crosshair, Clock, ArrowClockwise, ChartBar, Warning,
-  CaretRight, X, ArrowLeft, Plus, Image, Tag, Hash,
+  CaretRight, X, ArrowLeft, Plus, Image, Tag, Hash, TextAa,
   ShoppingCart, Drop, Grains, CookingPot, Coffee, SprayBottle,
   Cookie, FirstAidKit, Sparkle, BowlFood, Leaf, Wine,
   Package, Broom, Gift, Cube, BeerBottle, Heart,
@@ -60,22 +60,22 @@ const iconPickerOptions = [
 ];
 
 const defaultShelfData = [
-  { id: 1,  cat: "Checkout Impulse",     icon: "cart",      sections: 3, updated: "15 Mar 2026",  points: 18, compliance: 91.2, img: "/shelves/shelf1-checkout/shelf1S1(master).png" },
-  { id: 2,  cat: "Dairy & Frozen",       icon: "dairy",     sections: 5, updated: "1 Mar 2026",   points: 32, compliance: 76.8, img: "/shelves/shelf2-dairy/shelf2S1(master).png", alert: "Planogram 24 days old. Mother Dairy new SKU (Curd 200g) — consider adding." },
-  { id: 3,  cat: "Staples & Grains",     icon: "grains",    sections: 4, updated: "12 Jan 2026",  points: 24, compliance: 94.1, img: "/shelves/shelf3-staples/shelf3S1(master).png" },
-  { id: 4,  cat: "Cooking Oil & Masalas", icon: "cooking",   sections: 4, updated: "12 Jan 2026",  points: 22, compliance: 86.5, img: "/shelves/shelf4-cooking/shelf4S1(master).png" },
-  { id: 5,  cat: "Beverages",            icon: "beverage",  sections: 6, updated: "20 Mar 2026",  points: 38, compliance: 89.3, img: "/shelves/shelf5-beverages/shelf5S1(master).png",
+  { id: 1,  cat: "Checkout Impulse",     icon: "cart",      sections: 3, updated: "15 Mar 2026",  points: 18, compliance: 91.2, img: "/shelves/shelf1-checkout/shelf1S1(master).webp" },
+  { id: 2,  cat: "Dairy & Frozen",       icon: "dairy",     sections: 5, updated: "1 Mar 2026",   points: 32, compliance: 76.8, img: "/shelves/shelf2-dairy/shelf2S1(master).webp", alert: "Planogram 24 days old. Mother Dairy new SKU (Curd 200g) — consider adding." },
+  { id: 3,  cat: "Staples & Grains",     icon: "grains",    sections: 4, updated: "12 Jan 2026",  points: 24, compliance: 94.1, img: "/shelves/shelf3-staples/shelf3S1(master).webp" },
+  { id: 4,  cat: "Cooking Oil & Masalas", icon: "cooking",   sections: 4, updated: "12 Jan 2026",  points: 22, compliance: 86.5, img: "/shelves/shelf4-cooking/shelf4S1(master).webp" },
+  { id: 5,  cat: "Beverages",            icon: "beverage",  sections: 6, updated: "20 Mar 2026",  points: 38, compliance: 89.3, img: "/shelves/shelf5-beverages/shelf5S1(master).webp",
     history: [
       { date: "12 Jan 2026", note: "Initial setup" },
       { date: "8 Feb 2026", note: "Pepsi promotional bay added" },
       { date: "20 Mar 2026", note: "Coca-Cola end-cap refresh — replaced Thumbs Up with Coca-Cola Zero Sugar" },
     ]
   },
-  { id: 6,  cat: "Household & Cleaning",  icon: "cleaning",  sections: 5, updated: "5 Feb 2026",  points: 30, compliance: 78.4, img: "/shelves/shelf3-staples/shelf3S1(master).png" },
-  { id: 7,  cat: "Snacks & Biscuits",    icon: "snacks",    sections: 6, updated: "12 Jan 2026",  points: 36, compliance: 82.7, img: "/shelves/shelf7-snacks/shelf7S1(master).png" },
-  { id: 8,  cat: "Baby & Health",        icon: "health",    sections: 4, updated: "12 Jan 2026",  points: 20, compliance: 92.8, img: "/shelves/shelf2-dairy/shelf2S3(master).png" },
-  { id: 9,  cat: "Personal Care",        icon: "care",      sections: 5, updated: "5 Feb 2026",   points: 28, compliance: 87.1, img: "/shelves/shelf1-checkout/shelf1S2(master).png" },
-  { id: 10, cat: "Breakfast & Cereals",  icon: "breakfast",  sections: 4, updated: "1 Mar 2026",   points: 26, compliance: 85.6, img: "/shelves/shelf3-staples/shelf3S2(master).png" },
+  { id: 6,  cat: "Household & Cleaning",  icon: "cleaning",  sections: 5, updated: "5 Feb 2026",  points: 30, compliance: 78.4, img: "/shelves/shelf3-staples/shelf3S1(master).webp" },
+  { id: 7,  cat: "Snacks & Biscuits",    icon: "snacks",    sections: 6, updated: "12 Jan 2026",  points: 36, compliance: 82.7, img: "/shelves/shelf7-snacks/shelf7S1(master).webp" },
+  { id: 8,  cat: "Baby & Health",        icon: "health",    sections: 4, updated: "12 Jan 2026",  points: 20, compliance: 92.8, img: "/shelves/shelf2-dairy/shelf2S3(master).webp" },
+  { id: 9,  cat: "Personal Care",        icon: "care",      sections: 5, updated: "5 Feb 2026",   points: 28, compliance: 87.1, img: "/shelves/shelf1-checkout/shelf1S2(master).webp" },
+  { id: 10, cat: "Breakfast & Cereals",  icon: "breakfast",  sections: 4, updated: "1 Mar 2026",   points: 26, compliance: 85.6, img: "/shelves/shelf3-staples/shelf3S2(master).webp" },
 ];
 
 const compColor = (c) => c >= 90 ? "#16a34a" : c >= 80 ? "#059669" : c >= 70 ? "#f59e0b" : "#ef4444";
@@ -102,6 +102,7 @@ const PlanogramGallery = () => {
 
   // Add section form
   const [newSecName, setNewSecName] = useState("");
+  const [newSecDesc, setNewSecDesc] = useState("");
   const [newSecImg, setNewSecImg] = useState(null);
   const [newSecImgPreview, setNewSecImgPreview] = useState("");
 
@@ -140,7 +141,7 @@ const PlanogramGallery = () => {
       updated: today(),
       points: 0,
       compliance: 0,
-      img: newShelfImgPreview || "/shelves/shelf3-staples/shelf3S1(master).png",
+      img: newShelfImgPreview || "/shelves/shelf3-staples/shelf3S1(master).webp",
       isNew: true,
     };
     setShelves(prev => [...prev, newShelf]);
@@ -157,8 +158,9 @@ const PlanogramGallery = () => {
     const newSec = {
       id: `custom-${Date.now()}`,
       name: newSecName.trim(),
+      description: newSecDesc.trim(),
       icon: "package",
-      masterImage: newSecImgPreview || "/shelves/shelf3-staples/shelf3S1(master).png",
+      masterImage: newSecImgPreview || "/shelves/shelf3-staples/shelf3S1(master).webp",
       isNew: true,
     };
     setCustomSections(prev => ({
@@ -171,6 +173,7 @@ const PlanogramGallery = () => {
         : s
     ));
     setNewSecName("");
+    setNewSecDesc("");
     setNewSecImg(null);
     setNewSecImgPreview("");
     setShowAddSection(false);
@@ -198,7 +201,7 @@ const PlanogramGallery = () => {
                   onClick={() => setSelected(a.id)}
                 >
                   <div className="pc-img-wrap">
-                    <img src={a.img} alt={a.cat} className="pc-img" />
+                    <img src={a.img} alt={a.cat} className="pc-img" loading="lazy" />
                     <span className="pc-sections">{a.isNew ? getSections(a.id).length : a.sections} sections</span>
                     {a.isNew && <span className="pc-new-badge">NEW</span>}
                   </div>
@@ -242,7 +245,6 @@ const PlanogramGallery = () => {
                 <button className={`plano-toggle${showPoints ? " active" : ""}`} onClick={() => setShowPoints(!showPoints)}>
                   <Eye size={14} weight="duotone" /> {showPoints ? "Hide" : "Show"} Detection Points
                 </button>
-                <button className="plano-update-btn"><ArrowClockwise size={14} weight="bold" /> Request Update</button>
               </div>
             </div>
 
@@ -251,7 +253,7 @@ const PlanogramGallery = () => {
               {getSections(shelf.id).map((sec) => (
                 <div key={sec.id} className={`pd-section-card${sec.isNew ? " pd-section-new" : ""}`}>
                   <div className="pds-img-wrap">
-                    <img src={sec.masterImage} alt={sec.name} className="pds-img" />
+                    <img src={sec.masterImage} alt={sec.name} className="pds-img" loading="lazy" />
                     {sec.isNew && <span className="pds-new-badge">NEW</span>}
                     {showPoints && !sec.isNew && (
                       <div className="pds-points">
@@ -402,6 +404,10 @@ const PlanogramGallery = () => {
                 <div className="pg-field">
                   <label><Tag size={13} /> Section Name</label>
                   <input type="text" placeholder="e.g. Top Shelf, Eye Level, Promo Bay..." value={newSecName} onChange={e => setNewSecName(e.target.value)} />
+                </div>
+                <div className="pg-field">
+                  <label><TextAa size={13} /> Description</label>
+                  <textarea placeholder="e.g. Contains premium snacks and branded items on eye-level shelf..." value={newSecDesc} onChange={e => setNewSecDesc(e.target.value)} rows={3} />
                 </div>
                 <div className="pg-field">
                   <label><Image size={13} /> Master Image</label>
