@@ -250,9 +250,9 @@
   background: #fff; border-radius: 18px;
   width: 100%; max-width: 480px;
   box-shadow: 0 24px 64px rgba(0,0,0,0.18), 0 0 0 1px rgba(0,0,0,0.04);
-  overflow: hidden;
   max-height: 90vh;
   display: flex; flex-direction: column;
+  overflow: hidden;
 }
 
 /* ── Modal Header ── */
@@ -260,6 +260,7 @@
   display: flex; align-items: center; justify-content: space-between;
   padding: 20px 24px 16px;
   border-bottom: 1px solid #f1f5f9;
+  flex-shrink: 0;
 }
 .pg-modal-title-row {
   display: flex; align-items: center; gap: 12px;
@@ -295,6 +296,8 @@
   padding: 20px 24px;
   display: flex; flex-direction: column; gap: 18px;
   overflow-y: auto;
+  flex: 1;
+  min-height: 0;
 }
 
 /* ── Form Fields ── */
@@ -392,6 +395,7 @@
   gap: 10px; padding: 16px 24px;
   border-top: 1px solid #f1f5f9;
   background: #fafbfc;
+  flex-shrink: 0;
 }
 .pg-modal-cancel {
   padding: 9px 18px; border-radius: 9px;
@@ -427,19 +431,39 @@
 }
 
 /* ═══ Modal Responsive ═══ */
-@media (max-width: 480px) {
-  .pg-modal-overlay { padding: 12px; }
-  .pg-modal { border-radius: 14px; max-height: 92vh; }
-  .pg-modal-header { padding: 16px 16px 12px; }
+@media (max-width: 600px) {
+  .pg-modal-overlay {
+    padding: 0;
+    align-items: flex-end;
+  }
+  .pg-modal {
+    border-radius: 16px 16px 0 0;
+    max-height: 85vh;
+    width: 100%;
+    max-width: 100%;
+  }
+  .pg-modal-header { padding: 14px 16px 10px; }
   .pg-modal-header h3 { font-size: .88rem; }
-  .pg-modal-icon { width: 36px; height: 36px; border-radius: 10px; }
-  .pg-modal-body { padding: 16px; gap: 14px; }
-  .pg-field input[type="text"] { padding: 10px 12px; font-size: .82rem; }
-  .pg-icon-opt { width: 36px; height: 36px; font-size: 1rem; }
-  .pg-upload-empty { padding: 20px 16px; }
-  .pg-modal-footer { padding: 14px 16px; }
-  .pg-modal-cancel { padding: 8px 14px; font-size: .74rem; }
-  .pg-modal-submit { padding: 8px 16px; font-size: .74rem; }
+  .pg-modal-header span { font-size: .64rem; }
+  .pg-modal-icon { width: 34px; height: 34px; border-radius: 9px; }
+  .pg-modal-close { width: 32px; height: 32px; border-radius: 8px; }
+  .pg-modal-body {
+    padding: 14px 16px;
+    gap: 14px;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .pg-field label { font-size: .64rem; margin-bottom: 6px; }
+  .pg-field input[type="text"] { padding: 10px 12px; font-size: .82rem; border-radius: 8px; }
+  .pg-field textarea { padding: 10px 12px; font-size: .78rem; border-radius: 8px; max-height: 60px; }
+  .pg-icon-grid { gap: 5px; }
+  .pg-icon-opt { width: 36px; height: 36px; border-radius: 8px; }
+  .pg-upload-empty { padding: 18px 14px; border-radius: 10px; }
+  .pg-upload-empty span { font-size: .72rem; }
+  .pg-upload-preview { height: 100px; border-radius: 10px; }
+  .pg-modal-footer { padding: 10px 16px; }
+  .pg-modal-cancel { padding: 8px 14px; font-size: .74rem; border-radius: 8px; }
+  .pg-modal-submit { padding: 8px 16px; font-size: .74rem; border-radius: 8px; }
   .pg-add-shelf-btn { padding: 8px 14px; font-size: .7rem; }
   .pds-add-content { padding: 14px; }
   .pds-add-icon { width: 40px; height: 40px; border-radius: 10px; }
@@ -448,17 +472,18 @@
 }
 
 @media (max-width: 360px) {
-  .pg-modal { border-radius: 12px; }
-  .pg-modal-header { padding: 14px 14px 10px; }
+  .pg-modal { max-height: 80vh; }
+  .pg-modal-header { padding: 12px 12px 8px; }
   .pg-modal-header h3 { font-size: .82rem; }
-  .pg-modal-header span { font-size: .62rem; }
-  .pg-modal-icon { width: 32px; height: 32px; border-radius: 8px; }
-  .pg-modal-close { width: 32px; height: 32px; border-radius: 8px; }
-  .pg-modal-body { padding: 14px 12px; gap: 12px; }
-  .pg-icon-opt { width: 32px; height: 32px; font-size: .9rem; border-radius: 8px; }
+  .pg-modal-header span { font-size: .6rem; }
+  .pg-modal-icon { width: 30px; height: 30px; border-radius: 8px; }
+  .pg-modal-close { width: 28px; height: 28px; border-radius: 7px; }
+  .pg-modal-body { padding: 12px; gap: 10px; }
+  .pg-icon-opt { width: 32px; height: 32px; border-radius: 7px; }
   .pg-icon-grid { gap: 4px; }
-  .pg-upload-preview { height: 110px; }
-  .pg-modal-footer { padding: 12px; }
+  .pg-upload-empty { padding: 14px 10px; }
+  .pg-upload-preview { height: 90px; }
+  .pg-modal-footer { padding: 10px 12px; }
   .pd-add-section-card { min-height: 130px; }
   .pds-add-icon { width: 36px; height: 36px; }
   .pds-add-label { font-size: .7rem; }
