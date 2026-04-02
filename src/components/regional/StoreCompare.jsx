@@ -2,8 +2,8 @@ import React, { useState } from "react";
 import { motion } from "framer-motion";
 import {
   Radar, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis,
-  ResponsiveContainer, LineChart, Line, XAxis, YAxis, Tooltip, Legend,
-  CartesianGrid, ReferenceLine
+  ResponsiveContainer, Tooltip, LineChart, Line, BarChart, Bar,
+  XAxis, YAxis, CartesianGrid, Legend
 } from "recharts";
 import { Star, Warning, TrendUp, Envelope } from "@phosphor-icons/react";
 import "./Regional.css";
@@ -21,21 +21,27 @@ const radarData = radarMetrics.map((m, i) => ({
   Industry: [75, 78, 70, 75, 72, 80][i],
 }));
 
-/* Before & After Q100 — 12 month data */
-const beforeAfterData = [
-  { month: "Jul '25", sales: 14.2, emptyShelf: 380, walkout: 8.2 },
-  { month: "Aug", sales: 14.5, emptyShelf: 365, walkout: 7.9 },
-  { month: "Sep", sales: 14.1, emptyShelf: 390, walkout: 8.5 },
-  { month: "Oct", sales: 14.8, emptyShelf: 372, walkout: 8.0 },
-  { month: "Nov", sales: 14.4, emptyShelf: 385, walkout: 8.3 },
-  { month: "Dec", sales: 15.0, emptyShelf: 370, walkout: 7.8 },
-  /* Q100 deployed Jan '26 */
-  { month: "Jan '26", sales: 15.8, emptyShelf: 290, walkout: 6.8, deploy: true },
-  { month: "Feb", sales: 16.9, emptyShelf: 210, walkout: 5.6 },
-  { month: "Mar", sales: 17.8, emptyShelf: 165, walkout: 4.8 },
-  { month: "Apr", sales: 18.6, emptyShelf: 147, walkout: 4.5 },
-  { month: "May*", sales: 19.2, emptyShelf: 130, walkout: 4.2 },
-  { month: "Jun*", sales: 19.8, emptyShelf: 118, walkout: 3.9 },
+
+/* ── Daily Sales Trend (Last 7 Days) ── */
+const dailySalesTrend = [
+  { day: "27 Mar", Pune: 4.2, Mumbai: 3.8, Nashik: 3.1, Nagpur: 3.4, "Nagpur-S": 2.4 },
+  { day: "28 Mar", Pune: 4.5, Mumbai: 4.0, Nashik: 3.3, Nagpur: 3.6, "Nagpur-S": 2.3 },
+  { day: "29 Mar", Pune: 4.3, Mumbai: 4.1, Nashik: 3.2, Nagpur: 3.5, "Nagpur-S": 2.1 },
+  { day: "30 Mar", Pune: 4.6, Mumbai: 3.9, Nashik: 3.4, Nagpur: 3.7, "Nagpur-S": 2.2 },
+  { day: "31 Mar", Pune: 4.4, Mumbai: 4.2, Nashik: 3.5, Nagpur: 3.8, "Nagpur-S": 2.0 },
+  { day: "1 Apr",  Pune: 4.7, Mumbai: 4.3, Nashik: 3.6, Nagpur: 3.9, "Nagpur-S": 2.1 },
+  { day: "2 Apr",  Pune: 4.8, Mumbai: 4.2, Nashik: 3.6, Nagpur: 3.9, "Nagpur-S": 2.1 },
+];
+
+/* ── Daily Empty Shelf Incidents (Last 7 Days) ── */
+const dailyEmptyShelf = [
+  { day: "27 Mar", Pune: 12, Mumbai: 18, Nashik: 22, Nagpur: 28, "Nagpur-S": 35 },
+  { day: "28 Mar", Pune: 10, Mumbai: 16, Nashik: 24, Nagpur: 30, "Nagpur-S": 38 },
+  { day: "29 Mar", Pune: 14, Mumbai: 20, Nashik: 20, Nagpur: 26, "Nagpur-S": 40 },
+  { day: "30 Mar", Pune: 11, Mumbai: 15, Nashik: 25, Nagpur: 32, "Nagpur-S": 36 },
+  { day: "31 Mar", Pune: 9,  Mumbai: 17, Nashik: 21, Nagpur: 29, "Nagpur-S": 42 },
+  { day: "1 Apr",  Pune: 8,  Mumbai: 14, Nashik: 23, Nagpur: 27, "Nagpur-S": 37 },
+  { day: "2 Apr",  Pune: 10, Mumbai: 16, Nashik: 22, Nagpur: 28, "Nagpur-S": 35 },
 ];
 
 const bestPractices = [
@@ -88,31 +94,51 @@ const StoreCompare = () => {
           </div>
         </div>
 
-        {/* Before & After Q100 */}
+      </div>
+
+      {/* Daily Reports — Line & Bar Charts */}
+      <div className="reg-charts-row">
+        {/* Daily Sales Trend — Line Chart */}
         <div className="reg-card">
-          <h3>Before & After Q100 — 12 Month View</h3>
+          <h3 style={{ display: "flex", alignItems: "center", gap: 6, color: "#059669" }}>
+            <TrendUp size={16} weight="fill" /> Daily Sales — Last 7 Days (₹L)
+          </h3>
           <ResponsiveContainer width="100%" height={280}>
-            <LineChart data={beforeAfterData} margin={{ left: 0, right: 10, top: 10 }}>
+            <LineChart data={dailySalesTrend} margin={{ left: -10, right: 10, top: 10, bottom: 0 }}>
               <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
-              <XAxis dataKey="month" tick={{ fontSize: 10 }} />
-              <YAxis yAxisId="sales" tick={{ fontSize: 10 }} domain={[12, 22]} />
-              <YAxis yAxisId="empty" orientation="right" tick={{ fontSize: 10 }} domain={[0, 450]} />
-              <Tooltip />
-              <ReferenceLine x="Jan '26" stroke="#6366f1" strokeDasharray="4 4" yAxisId="sales"
-                label={{ value: "Q100 Deployed", fontSize: 10, fill: "#6366f1", position: "top" }} />
-              <Line yAxisId="sales" type="monotone" dataKey="sales" name="Daily Sales (₹L)" stroke="#059669" strokeWidth={2.5} dot={{ r: 3 }} />
-              <Line yAxisId="empty" type="monotone" dataKey="emptyShelf" name="Empty Shelf Incidents" stroke="#ef4444" strokeWidth={2} dot={{ r: 3 }} />
-              <Legend />
+              <XAxis dataKey="day" tick={{ fontSize: 10, fontWeight: 600 }} />
+              <YAxis tick={{ fontSize: 10 }} domain={[0, 6]} />
+              <Tooltip contentStyle={{ borderRadius: 10, fontSize: ".72rem", border: "1px solid #e2e8f0", boxShadow: "0 4px 16px rgba(0,0,0,.08)" }} />
+              {Object.entries(storeColors).map(([name, color]) => (
+                <Line key={name} type="monotone" dataKey={name} stroke={color} strokeWidth={2.5} dot={{ r: 3, strokeWidth: 2 }} activeDot={{ r: 5 }} />
+              ))}
+              <Legend iconType="circle" wrapperStyle={{ fontSize: ".65rem", fontWeight: 600 }} />
             </LineChart>
           </ResponsiveContainer>
-          <div className="owner-insight-bar">
-            Since Q100: Sales up <strong>+₹4.2L/month</strong>, Empty shelves down <strong>68%</strong>, Walkouts reduced <strong>45%</strong>
-          </div>
+        </div>
+
+        {/* Daily Empty Shelf Incidents — Bar Chart */}
+        <div className="reg-card">
+          <h3 style={{ display: "flex", alignItems: "center", gap: 6, color: "#ef4444" }}>
+            <Warning size={16} weight="fill" /> Empty Shelf Incidents — Last 7 Days
+          </h3>
+          <ResponsiveContainer width="100%" height={280}>
+            <BarChart data={dailyEmptyShelf} margin={{ left: -10, right: 10, top: 10, bottom: 0 }}>
+              <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
+              <XAxis dataKey="day" tick={{ fontSize: 10, fontWeight: 600 }} />
+              <YAxis tick={{ fontSize: 10 }} />
+              <Tooltip contentStyle={{ borderRadius: 10, fontSize: ".72rem", border: "1px solid #e2e8f0", boxShadow: "0 4px 16px rgba(0,0,0,.08)" }} />
+              {Object.entries(storeColors).map(([name, color]) => (
+                <Bar key={name} dataKey={name} fill={color} radius={[3, 3, 0, 0]} />
+              ))}
+              <Legend iconType="circle" wrapperStyle={{ fontSize: ".65rem", fontWeight: 600 }} />
+            </BarChart>
+          </ResponsiveContainer>
         </div>
       </div>
 
       {/* Best Practices & Needs Attention */}
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
+      <div className="reg-charts-row">
         <div>
           <h3 style={{ fontSize: ".82rem", fontWeight: 800, color: "#065f46", marginBottom: 10, display: "flex", alignItems: "center", gap: 6 }}><TrendUp size={15} weight="fill" /> Best Practices</h3>
           <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>

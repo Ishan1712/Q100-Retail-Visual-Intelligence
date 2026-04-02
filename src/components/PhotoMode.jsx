@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useRef } from 'react';
+import React, { useState, useCallback, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   Camera, X, Warning, CheckCircle, PaperPlaneTilt, Package,
@@ -22,11 +22,12 @@ export default function PhotoMode({ shelf, onComplete, onClose }) {
   const [states, setStates] = useState(sections.map(() => ({ status: 'pending' })));
   const [showPlan, setShowPlan] = useState(false);
   const [sent, setSent] = useState({});
-  const [inputMode, setInputMode] = useState('capture');
+  const [inputMode, setInputMode] = useState('upload');
   const [uploadedImage, setUploadedImage] = useState(null);
   const [uploadedFile, setUploadedFile] = useState(null);
   const [capturedFrame, setCapturedFrame] = useState(null);
   const fileInputRef = useRef(null);
+  const contentRef = useRef(null);
 
   // LLM state
   const [apiKey, setApiKey] = useState(() => getApiKey());
@@ -49,16 +50,6 @@ export default function PhotoMode({ shelf, onComplete, onClose }) {
     setApiKey(key);
     saveApiKey(key);
   };
-
-  // Handle upload
-  const handleUpload = useCallback((e) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    setUploadedFile(file);
-    const reader = new FileReader();
-    reader.onload = (ev) => setUploadedImage(ev.target.result);
-    reader.readAsDataURL(file);
-  }, []);
 
   // Analyze with LLM — compare master vs inspection
   const analyzeWithLLM = useCallback(async (inspectionDataUrl, inspectionFile) => {
@@ -102,6 +93,19 @@ export default function PhotoMode({ shelf, onComplete, onClose }) {
       setIsAnalyzing(false);
     }
   }, [apiKey, idx, sec]);
+
+  // Handle upload — auto-analyze once image is loaded
+  const handleUpload = useCallback((e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setUploadedFile(file);
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      setUploadedImage(ev.target.result);
+      analyzeWithLLM(ev.target.result, file);
+    };
+    reader.readAsDataURL(file);
+  }, [analyzeWithLLM]);
 
   // Capture from camera and analyze
   const capture = useCallback(() => {
@@ -157,7 +161,7 @@ export default function PhotoMode({ shelf, onComplete, onClose }) {
     setUploadedFile(null);
     setCapturedFrame(null);
     if (idx < sections.length - 1) setIdx(i => i + 1);
-    else onComplete?.();
+    else onComplete?.(llmResults, sections, displayShelf);
   };
 
   const completedCount = states.filter(s => s.status === 'result').length;
@@ -168,6 +172,31 @@ export default function PhotoMode({ shelf, onComplete, onClose }) {
   const currentResult = llmResults[idx];
   const isPass = currentResult?.status === 'OK';
   const isFail = currentResult?.status === 'NOT_OK';
+
+  // Scroll content to top when switching sections
+  useEffect(() => {
+    contentRef.current?.scrollTo({ top: 0 });
+  }, [idx]);
+
+  // Auto-redirect to Action Report 5s after last section is analyzed
+  const allDone = isLastSection && st.status === 'result';
+  const [autoRedirectCountdown, setAutoRedirectCountdown] = useState(null);
+
+  useEffect(() => {
+    if (!allDone) { setAutoRedirectCountdown(null); return; }
+    setAutoRedirectCountdown(5);
+    const timer = setInterval(() => {
+      setAutoRedirectCountdown(prev => {
+        if (prev <= 1) {
+          clearInterval(timer);
+          onComplete?.(llmResults, sections, displayShelf);
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+    return () => clearInterval(timer);
+  }, [allDone]);
 
   return (
     <div className="pm-overlay">
@@ -237,7 +266,7 @@ export default function PhotoMode({ shelf, onComplete, onClose }) {
       </div>
 
       {/* Content */}
-      <div className="pm-content">
+      <div className="pm-content" ref={contentRef}>
         <AnimatePresence mode="wait">
           <motion.div key={idx} initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} transition={{ duration: 0.18 }}>
 
@@ -333,17 +362,31 @@ export default function PhotoMode({ shelf, onComplete, onClose }) {
                     <div className="pm-mode-toggle-compact">
                       <button
                         className={`pm-mode-tab-sm ${inputMode === 'capture' ? 'active' : ''}`}
-                        onClick={() => setInputMode('capture')}
+                        onClick={() => {
+                          if (inputMode === 'capture') {
+                            capture();
+                          } else {
+                            setInputMode('capture');
+                          }
+                        }}
+                        disabled={isAnalyzing}
                       >
                         <Camera size={14} weight={inputMode === 'capture' ? 'fill' : 'duotone'} />
-                        Capture
+                        {inputMode === 'capture' && isAnalyzing ? 'Scanning...' : 'Capture'}
                       </button>
                       <button
                         className={`pm-mode-tab-sm ${inputMode === 'upload' ? 'active' : ''}`}
-                        onClick={() => setInputMode('upload')}
+                        onClick={() => {
+                          if (inputMode === 'upload') {
+                            fileInputRef.current?.click();
+                          } else {
+                            setInputMode('upload');
+                          }
+                        }}
+                        disabled={isAnalyzing}
                       >
                         <UploadSimple size={14} weight={inputMode === 'upload' ? 'fill' : 'duotone'} />
-                        Upload
+                        {inputMode === 'upload' && isAnalyzing ? 'Scanning...' : 'Upload'}
                       </button>
                     </div>
                   </div>
@@ -384,8 +427,8 @@ export default function PhotoMode({ shelf, onComplete, onClose }) {
                     animate={{ rotate: 360 }} transition={{ repeat: Infinity, duration: 1.2, ease: 'linear' }}>
                     <Scan size={22} weight="duotone" />
                   </motion.div>
-                  <h3>Analyzing with AI...</h3>
-                  <p>Comparing inspection image against master reference</p>
+                  <h3>Scanning shelf...</h3>
+                  <p>Detecting missing & misplaced products on shelf</p>
                 </div>
                 <motion.div className="pm-analyze-scanline"
                   animate={{ top: ['0%', '100%', '0%'] }} transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }} />
@@ -415,7 +458,7 @@ export default function PhotoMode({ shelf, onComplete, onClose }) {
                     <div className="pm-result-img-vs">VS</div>
                     <div className="pm-result-img-box">
                       <span className="pm-result-img-label inspection">Inspection</span>
-                      <img src={uploadedImage || sec.masterImage} alt="Inspection" />
+                      <img src={uploadedImage || capturedFrame || sec.masterImage} alt="Inspection" />
                     </div>
                   </div>
 
@@ -608,12 +651,6 @@ export default function PhotoMode({ shelf, onComplete, onClose }) {
                     </details>
                   )}
 
-                  {/* ── Meta Footer ── */}
-                  <div className="pm-meta-footer">
-                    <span>{currentResult?.model}</span>
-                    <span>{currentResult?.latencyMs ? `${(currentResult.latencyMs / 1000).toFixed(1)}s` : ''}</span>
-                    {currentResult?.tokens?.total > 0 && <span>{currentResult.tokens.total} tokens</span>}
-                  </div>
 
                   {/* ── Re-analyze Button ── */}
                   <button
@@ -636,7 +673,7 @@ export default function PhotoMode({ shelf, onComplete, onClose }) {
                   ) : null}
                   <motion.button onClick={next} className={`pm-next-btn ${isPass ? 'pass-next' : ''}`} whileTap={{ scale: 0.98 }}>
                     {isLastSection
-                      ? <>View Action Report <ArrowRight size={16} weight="bold" /></>
+                      ? <>View Action Report {autoRedirectCountdown > 0 ? `(${autoRedirectCountdown}s)` : ''} <ArrowRight size={16} weight="bold" /></>
                       : <>Next Section <ArrowRight size={16} weight="bold" /></>}
                   </motion.button>
 
@@ -647,42 +684,6 @@ export default function PhotoMode({ shelf, onComplete, onClose }) {
         </AnimatePresence>
       </div>
 
-      {/* Capture / Submit CTA */}
-      {st.status === 'pending' && (
-        <div className="pm-capture-bar">
-          {inputMode === 'capture' ? (
-            <motion.button
-              onClick={capture}
-              className="pm-capture-btn"
-              whileTap={{ scale: 0.97 }}
-              disabled={isAnalyzing || !apiKey}
-            >
-              <div className="pm-capture-btn-ring">
-                {isAnalyzing ? <SpinnerGap size={20} weight="bold" className="pm-spin" /> : <Camera size={20} weight="fill" />}
-              </div>
-              {!apiKey ? 'Set API Key First' : `Capture & Analyze Section ${sec.id}`}
-            </motion.button>
-          ) : (
-            <motion.button
-              onClick={uploadedImage ? submitUpload : () => fileInputRef.current?.click()}
-              className={`pm-capture-btn ${uploadedImage ? 'pm-capture-btn-upload-ready' : ''}`}
-              whileTap={{ scale: 0.97 }}
-              disabled={isAnalyzing || (uploadedImage && !apiKey)}
-            >
-              <div className="pm-capture-btn-ring">
-                {isAnalyzing
-                  ? <SpinnerGap size={20} weight="bold" className="pm-spin" />
-                  : uploadedImage
-                    ? <Scan size={20} weight="fill" />
-                    : <UploadSimple size={20} weight="fill" />}
-              </div>
-              {uploadedImage
-                ? (!apiKey ? 'Set API Key First' : `Analyze Section ${sec.id}`)
-                : `Upload Section ${sec.id}`}
-            </motion.button>
-          )}
-        </div>
-      )}
 
       {/* Fullscreen master image */}
       <AnimatePresence>

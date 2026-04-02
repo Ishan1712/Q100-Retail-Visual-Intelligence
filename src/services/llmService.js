@@ -152,7 +152,7 @@ export async function compareWithMaster({
   parts.push({ inline_data: { mime_type: inspectionMime, data: inspectionBase64 } });
 
   // Call Gemini API
-  const model = 'gemini-2.5-flash';
+  const model = 'gemini-3-flash-preview';
   const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
 
   let response;
@@ -165,6 +165,10 @@ export async function compareWithMaster({
         generationConfig: {
           temperature: 0.1,
           maxOutputTokens: 16384,
+          responseMimeType: 'application/json',
+          thinkingConfig: {
+            thinkingLevel: 'minimal',
+          },
         },
       }),
     });
