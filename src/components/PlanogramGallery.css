@@ -239,7 +239,7 @@
    MODAL OVERLAY & CARD
    ═══════════════════════════════════════ */
 .pg-modal-overlay {
-  position: fixed; inset: 0; z-index: 100;
+  position: fixed; inset: 0; z-index: 200;
   background: rgba(15,23,42,0.5);
   backdrop-filter: blur(6px);
   -webkit-backdrop-filter: blur(6px);
@@ -435,31 +435,62 @@
 
 /* ═══ Modal Responsive ═══ */
 @media (max-width: 600px) {
-  .pg-modal-overlay { padding: 16px 12px; }
+  /* Overlay: use padding to keep modal above the 64px bottom nav.
+     12px top + 76px bottom (64px nav + 12px breathing room) */
+  .pg-modal-overlay {
+    padding: 12px 10px 76px;
+    align-items: flex-start;    /* pin modal to top of padded area so it doesn't creep behind nav */
+  }
   .pg-modal {
     border-radius: 14px;
-    max-height: 80vh;
+    /* Fill available space between top padding and bottom padding */
+    max-height: calc(100vh - 88px);   /* 12px top + 76px bottom = 88px */
     max-width: 100%;
+    margin: auto 0;    /* re-center vertically within the remaining space */
   }
-  .pg-modal-header { padding: 12px 14px 10px; }
-  .pg-modal-header h3 { font-size: .86rem; }
-  .pg-modal-header span { font-size: .62rem; }
-  .pg-modal-icon { width: 32px; height: 32px; border-radius: 9px; }
-  .pg-modal-close { width: 30px; height: 30px; border-radius: 8px; }
-  .pg-modal-body { padding: 12px 14px; gap: 12px; }
-  .pg-field label { font-size: .6rem; margin-bottom: 4px; }
-  .pg-field input[type="text"] { padding: 8px 10px; font-size: .78rem; border-radius: 8px; }
-  .pg-field textarea { padding: 8px 10px; font-size: .74rem; border-radius: 8px; max-height: 50px; }
-  .pg-icon-grid { gap: 4px; }
-  .pg-icon-opt { width: 34px; height: 34px; border-radius: 7px; }
-  .pg-upload-empty { padding: 14px 12px; border-radius: 8px; }
-  .pg-upload-empty svg { width: 22px; height: 22px; }
-  .pg-upload-empty span { font-size: .68rem; }
-  .pg-upload-hint { font-size: .58rem !important; }
-  .pg-upload-preview { height: 80px; border-radius: 8px; }
-  .pg-modal-footer { padding: 10px 14px; }
-  .pg-modal-cancel { padding: 7px 12px; font-size: .72rem; border-radius: 8px; }
-  .pg-modal-submit { padding: 7px 14px; font-size: .72rem; border-radius: 8px; }
+  .pg-modal-header { padding: 10px 14px 8px; }
+  .pg-modal-header h3 { font-size: .84rem; }
+  .pg-modal-header span { font-size: .6rem; }
+  .pg-modal-icon { width: 30px; height: 30px; border-radius: 8px; }
+  .pg-modal-icon svg { width: 14px; height: 14px; }
+  .pg-modal-close { width: 28px; height: 28px; border-radius: 7px; }
+  .pg-modal-body {
+    padding: 10px 14px;
+    gap: 10px;
+    overflow-y: auto;
+    /* Ensure body shrinks so footer stays visible */
+    min-height: 0;
+    flex: 1 1 auto;
+  }
+  .pg-field label { font-size: .58rem; margin-bottom: 3px; }
+  .pg-field input[type="text"] { padding: 7px 10px; font-size: .76rem; border-radius: 7px; }
+  .pg-field textarea { padding: 7px 10px; font-size: .72rem; border-radius: 7px; max-height: 44px; }
+  /* Icon grid: 2 scrollable rows */
+  .pg-icon-grid {
+    gap: 3px;
+    max-height: 62px;
+    overflow-y: auto;
+    scrollbar-width: thin;
+  }
+  .pg-icon-opt { width: 28px; height: 28px; border-radius: 6px; }
+  .pg-icon-opt svg { width: 15px; height: 15px; }
+  /* Upload: compact single line */
+  .pg-upload-empty {
+    padding: 10px 12px;
+    border-radius: 8px;
+    flex-direction: row;
+    gap: 8px;
+  }
+  .pg-upload-empty svg { width: 18px; height: 18px; flex-shrink: 0; }
+  .pg-upload-empty span { font-size: .66rem; }
+  .pg-upload-hint { display: none !important; }
+  .pg-upload-preview { height: 60px; border-radius: 7px; }
+  .pg-modal-footer {
+    padding: 8px 14px;
+    flex-shrink: 0;    /* never collapse the footer */
+  }
+  .pg-modal-cancel { padding: 6px 12px; font-size: .7rem; border-radius: 7px; }
+  .pg-modal-submit { padding: 6px 14px; font-size: .7rem; border-radius: 7px; }
   .pg-add-shelf-btn { padding: 8px 14px; font-size: .7rem; }
   .pds-add-content { padding: 14px; }
   .pds-add-icon { width: 40px; height: 40px; border-radius: 10px; }
