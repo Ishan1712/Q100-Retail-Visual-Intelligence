@@ -435,16 +435,16 @@
 
 /* ═══ Modal Responsive ═══ */
 @media (max-width: 600px) {
-  /* Overlay: padding clears app header (top) and bottom nav (bottom) */
   .pg-modal-overlay {
-    padding: 20px 10px 76px;
-    align-items: center;
+    padding: 0 0 64px;
+    align-items: flex-end;
+    justify-content: center;
   }
   .pg-modal {
-    border-radius: 14px;
-    max-height: calc(100vh - 96px);   /* 20px top + 76px bottom */
+    border-radius: 16px 16px 0 0;
+    max-height: 60vh;
     max-width: 100%;
-    margin: auto 0;    /* re-center vertically within the remaining space */
+    width: 100%;
   }
   .pg-modal-header { padding: 10px 14px 8px; }
   .pg-modal-header h3 { font-size: .84rem; }
