@@ -435,16 +435,14 @@
 
 /* ═══ Modal Responsive ═══ */
 @media (max-width: 600px) {
-  /* Overlay: use padding to keep modal above the 64px bottom nav.
-     12px top + 76px bottom (64px nav + 12px breathing room) */
+  /* Overlay: padding clears app header (top) and bottom nav (bottom) */
   .pg-modal-overlay {
-    padding: 12px 10px 76px;
-    align-items: flex-start;    /* pin modal to top of padded area so it doesn't creep behind nav */
+    padding: 20px 10px 76px;
+    align-items: center;
   }
   .pg-modal {
     border-radius: 14px;
-    /* Fill available space between top padding and bottom padding */
-    max-height: calc(100vh - 88px);   /* 12px top + 76px bottom = 88px */
+    max-height: calc(100vh - 96px);   /* 20px top + 76px bottom */
     max-width: 100%;
     margin: auto 0;    /* re-center vertically within the remaining space */
   }
