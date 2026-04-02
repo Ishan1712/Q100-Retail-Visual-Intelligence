@@ -19,22 +19,25 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 28px;
-  height: 56px;
+  padding: 0 14px;
+  min-height: 44px;
   background: #ffffff;
   border-bottom: 1px solid #e8ecf1;
   box-shadow: 0 1px 4px rgba(0,0,0,0.04);
   flex-shrink: 0;
+  gap: 8px;
 }
 
 .ah-header-title {
-  font-size: 0.95rem;
+  font-size: 0.82rem;
   font-weight: 800;
   color: #0f172a;
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 5px;
   letter-spacing: -0.01em;
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 .ah-header-title svg { color: #059669; }
 
@@ -42,14 +45,14 @@
 .ah-calendar-strip {
   display: flex;
   align-items: center;
-  gap: 2px;
+  gap: 1px;
   background: #f1f5f9;
   border: 1px solid #e2e8f0;
-  border-radius: 10px;
-  padding: 3px;
+  border-radius: 8px;
+  padding: 2px;
 }
 .ah-cal-arrow {
-  width: 28px; height: 36px; border-radius: 7px;
+  width: 22px; height: 28px; border-radius: 6px;
   border: none; background: transparent;
   color: #94a3b8;
   cursor: pointer; display: flex; align-items: center; justify-content: center;
@@ -58,16 +61,17 @@
 .ah-cal-arrow:hover { background: #e2e8f0; color: #475569; }
 
 .ah-cal-day {
-  display: flex; flex-direction: column; align-items: center; gap: 1px;
-  padding: 4px 10px; border-radius: 8px; border: none;
-  background: transparent; cursor: pointer; transition: all 0.15s; min-width: 44px;
+  display: flex; flex-direction: column; align-items: center; gap: 0;
+  padding: 3px 6px; border-radius: 6px; border: none;
+  background: transparent; cursor: pointer; transition: all 0.15s; min-width: 32px;
 }
 .ah-cal-day:hover { background: #e2e8f0; }
 .ah-cal-day-name {
-  font-size: 9px; font-weight: 700; color: #94a3b8;
-  text-transform: uppercase; letter-spacing: 0.05em;
+  font-size: 8px; font-weight: 700; color: #94a3b8;
+  text-transform: uppercase; letter-spacing: 0.03em;
+  line-height: 1.2;
 }
-.ah-cal-day-label { font-size: 12px; font-weight: 700; color: #64748b; }
+.ah-cal-day-label { font-size: 10px; font-weight: 700; color: #64748b; line-height: 1.3; }
 .ah-cal-day.ah-cal-active { background: #059669; }
 .ah-cal-day.ah-cal-active .ah-cal-day-name { color: rgba(255,255,255,0.8); }
 .ah-cal-day.ah-cal-active .ah-cal-day-label { color: #fff; font-weight: 800; }
@@ -492,7 +496,6 @@
 }
 
 @media (max-width: 768px) {
-  .ah-header { padding: 0 18px; height: 50px; }
   .ah-segmented { margin: 16px 18px 0; }
   .ah-body { padding: 16px 18px 100px; gap: 14px; }
   .ah-summary-row { gap: 10px; }
@@ -507,8 +510,7 @@
 }
 
 @media (max-width: 600px) {
-  .ah-header { padding: 0 16px; }
-  .ah-header-title { font-size: 0.9rem; }
+  .ah-header { padding: 0 12px; }
   .ah-segmented { margin: 10px 16px 0; }
   .ah-body { padding: 14px 16px 100px; }
   .ah-summary-row { grid-template-columns: repeat(3, 1fr); gap: 8px; }
@@ -520,8 +522,11 @@
 }
 
 @media (max-width: 480px) {
-  .ah-header { padding: 0 14px; height: 48px; }
-  .ah-header-title { font-size: 0.88rem; }
+  .ah-header { padding: 0 10px; }
+  .ah-cal-arrow { width: 20px; height: 24px; }
+  .ah-cal-day { padding: 2px 5px; min-width: 28px; }
+  .ah-cal-day-name { font-size: 7px; }
+  .ah-cal-day-label { font-size: 9px; }
   .ah-segmented { margin: 12px 14px 0; }
   .ah-seg-btn { padding: 8px 12px; font-size: 0.78rem; }
   .ah-body { padding: 14px 14px 100px; gap: 12px; }
@@ -551,7 +556,12 @@
 }
 
 @media (max-width: 360px) {
-  .ah-header { padding: 0 10px; }
+  .ah-header { padding: 0 6px; }
+  .ah-header-title { font-size: 0.75rem; gap: 4px; }
+  .ah-cal-arrow { width: 16px; height: 22px; }
+  .ah-cal-day { padding: 2px 3px; min-width: 24px; }
+  .ah-cal-day-name { font-size: 6.5px; }
+  .ah-cal-day-label { font-size: 8px; }
   .ah-segmented { margin: 8px 10px 0; }
   .ah-seg-btn { font-size: 0.58rem; padding: 5px 8px; }
   .ah-body { padding: 10px 10px 96px; gap: 10px; }

@@ -1,6 +1,6 @@
 import React from "react";
 import { motion } from "framer-motion";
-import { User, Warning, TrendUp, Lightning, Star, Envelope, Timer } from "@phosphor-icons/react";
+import { User, Warning, TrendUp, Lightning, Envelope, Timer, Trophy } from "@phosphor-icons/react";
 import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid, ReferenceLine, Legend } from "recharts";
 import "./Regional.css";
 
@@ -25,22 +25,18 @@ const bottleneckAlerts = [
   { store: "Q-Mart Gangapur, Nashik", issue: "1 storeroom vacancy unfilled for 6 weeks.", impact: "₹18K/month lost from delayed restocking", fix: "Fill vacancy urgently. Cost: ₹18K/mo. Projected recovery: ₹18K/mo." },
 ];
 
-const topPerformers = [
-  { rank: 1, name: "Amit D.", store: "Pune", role: "Floor", stat: "16 restocks/day, 12m avg speed" },
-  { rank: 2, name: "Priya N.", store: "Mumbai", role: "Floor", stat: "15 restocks/day, 14m avg speed" },
-  { rank: 3, name: "Suresh K.", store: "Pune", role: "Storeroom", stat: "12m avg, 16 tasks/day" },
-  { rank: 4, name: "Rahul M.", store: "Pune", role: "Floor", stat: "14 restocks/day, 13m avg speed" },
-  { rank: 5, name: "Kiran S.", store: "Mumbai", role: "Floor", stat: "13 restocks/day, 15m avg speed" },
-  { rank: 6, name: "Manoj T.", store: "Pune", role: "Storeroom", stat: "15m avg, 14 tasks/day" },
-  { rank: 7, name: "Sanjay M.", store: "Mumbai", role: "Storeroom", stat: "14m avg, 15 tasks/day" },
-  { rank: 8, name: "Deepa S.", store: "Pune", role: "Storeroom", stat: "16m avg, 8 tasks/day" },
-  { rank: 9, name: "Ravi P.", store: "Nashik", role: "Floor", stat: "12 restocks/day, 18m avg speed" },
-  { rank: 10, name: "Neha K.", store: "Nagpur", role: "Floor", stat: "11 restocks/day, 20m avg speed" },
-];
 
-const mostImproved = [
-  { name: "Ravi P.", store: "Nashik", improvement: "Restock speed improved from 24m to 18m (-25%)" },
-  { name: "Neha K.", store: "Nagpur", improvement: "Catches per day up from 7 to 11 (+57%)" },
+const managerLeaderboard = [
+  { rank: 1, name: "Sneha Patil", store: "Q-Mart Kothrud, Pune", dailyRevenue: "₹48,500", revenueSaved: "₹1,82,000", issuesResolved: 48, compliance: "94.2%", score: 968 },
+  { rank: 2, name: "Rajesh Iyer", store: "Q-Mart Andheri, Mumbai", dailyRevenue: "₹42,200", revenueSaved: "₹1,64,000", issuesResolved: 42, compliance: "91.8%", score: 935 },
+  { rank: 3, name: "Meena Kulkarni", store: "Q-Mart Gangapur, Nashik", dailyRevenue: "₹38,900", revenueSaved: "₹1,48,000", issuesResolved: 38, compliance: "90.5%", score: 904 },
+  { rank: 4, name: "Anil Deshmukh", store: "Q-Mart Dharampeth, Nagpur", dailyRevenue: "₹35,600", revenueSaved: "₹1,26,000", issuesResolved: 35, compliance: "88.1%", score: 862 },
+  { rank: 5, name: "Pooja Sharma", store: "Q-Mart Sadar, Nagpur", dailyRevenue: "₹31,200", revenueSaved: "₹1,12,000", issuesResolved: 30, compliance: "86.4%", score: 828 },
+  { rank: 6, name: "Vikrant Joshi", store: "Q-Mart Hinjewadi, Pune", dailyRevenue: "₹29,800", revenueSaved: "₹1,05,000", issuesResolved: 28, compliance: "85.7%", score: 810 },
+  { rank: 7, name: "Deepa Nair", store: "Q-Mart Vashi, Mumbai", dailyRevenue: "₹27,400", revenueSaved: "₹98,000", issuesResolved: 26, compliance: "84.2%", score: 785 },
+  { rank: 8, name: "Sunil Rao", store: "Q-Mart Camp, Pune", dailyRevenue: "₹25,100", revenueSaved: "₹92,000", issuesResolved: 24, compliance: "83.5%", score: 762 },
+  { rank: 9, name: "Kavita Reddy", store: "Q-Mart Baner, Pune", dailyRevenue: "₹23,600", revenueSaved: "₹86,000", issuesResolved: 22, compliance: "82.1%", score: 738 },
+  { rank: 10, name: "Amit Patil", store: "Q-Mart Thane, Mumbai", dailyRevenue: "₹21,800", revenueSaved: "₹78,000", issuesResolved: 19, compliance: "80.8%", score: 710 },
 ];
 
 /* Restock SLA Trend — 30 day data (weekly aggregation) */
@@ -107,54 +103,61 @@ const StaffAnalytics = () => {
         </div>
       </div>
 
-      <div className="reg-body">
-        {/* Staff Leaderboard */}
-        <div className="reg-left">
-          <div className="reg-card">
-            <h3><Star size={16} weight="fill" /> Staff Leaderboard — Top 10</h3>
-            <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
-              {topPerformers.map(p => (
-                <div key={p.rank} className="top-performer">
-                  <span className="tp-rank">#{p.rank}</span>
-                  <span className="tp-avatar">{p.name[0]}</span>
-                  <div className="tp-info">
-                    <strong>{p.name}</strong>
-                    <span>{p.store} · {p.role}</span>
-                  </div>
-                  <span className="tp-stat">{p.stat}</span>
-                </div>
+      {/* Manager Leaderboard */}
+      <div className="mgr-leaderboard-card">
+        <h3 className="mgr-lb-title"><Trophy size={16} weight="fill" style={{ color: "#f59e0b" }} /> Manager Leaderboard — Top 10</h3>
+        <div className="mgr-lb-wrap">
+          <table className="mgr-lb-table">
+            <thead>
+              <tr>
+                <th>Rank</th>
+                <th>Manager</th>
+                <th>Store</th>
+                <th>Daily Revenue</th>
+                <th>Compliance</th>
+                <th>Revenue Saved</th>
+                <th>Issues Resolved</th>
+                <th>Score</th>
+              </tr>
+            </thead>
+            <tbody>
+              {managerLeaderboard.map((m) => (
+                <tr key={m.rank} className={m.rank <= 3 ? "mlb-top3" : ""}>
+                  <td className="mlb-rank">
+                    {m.rank === 1 ? "🥇" : m.rank === 2 ? "🥈" : m.rank === 3 ? "🥉" : m.rank}
+                  </td>
+                  <td className="mlb-name">
+                    <span className="mlb-avatar">{m.name[0]}</span>
+                    {m.name}
+                  </td>
+                  <td className="mlb-store">{m.store}</td>
+                  <td className="mlb-revenue">{m.dailyRevenue}</td>
+                  <td className="mlb-compliance">{m.compliance}</td>
+                  <td className="mlb-revenue">{m.revenueSaved}</td>
+                  <td className="mlb-issues">{m.issuesResolved}</td>
+                  <td className="mlb-score">{m.score}</td>
+                </tr>
               ))}
-            </div>
-            {/* Most Improved */}
-            <div style={{ marginTop: 12, padding: "10px 12px", background: "#ecfdf5", borderRadius: 10, border: "1px solid #a7f3d0" }}>
-              <div style={{ fontSize: ".74rem", fontWeight: 800, color: "#065f46", marginBottom: 6 }}>Most Improved This Month</div>
-              {mostImproved.map((m, i) => (
-                <div key={i} style={{ fontSize: ".72rem", color: "#047857", fontWeight: 500, padding: "3px 0" }}>
-                  <strong>{m.name}</strong> ({m.store}) — {m.improvement}
-                </div>
-              ))}
-            </div>
-          </div>
+            </tbody>
+          </table>
         </div>
+      </div>
 
-        {/* Bottleneck Alerts — right side */}
-        <div className="reg-right">
-          <div className="reg-card" style={{ display: "flex", flexDirection: "column" }}>
-            <h3 style={{ color: "#dc2626" }}><Warning size={16} weight="fill" /> Bottleneck Alerts</h3>
-            <div style={{ display: "flex", flexDirection: "column", gap: 10, flex: 1, justifyContent: "space-between" }}>
-              {bottleneckAlerts.map((b, i) => (
-                <div key={i} className="redflag-card" style={{ display: "flex", flexDirection: "column", gap: 6, flex: 1 }}>
-                  <div className="redflag-header">{b.store}</div>
-                  <p className="redflag-text" style={{ margin: 0 }}>{b.issue}</p>
-                  <div style={{ fontSize: ".72rem", fontWeight: 700, color: "#ef4444" }}>Revenue impact: {b.impact}</div>
-                  <div className="risk-recommendation" style={{ margin: 0 }}>
-                    <Lightning size={12} weight="fill" /> <strong>Fix:</strong> {b.fix}
-                  </div>
-                  <button className="owner-action-btn red" style={{ alignSelf: "flex-start", marginTop: "auto" }}><Envelope size={13} weight="bold" /> Assign</button>
-                </div>
-              ))}
+      {/* Bottleneck Alerts */}
+      <div className="reg-card">
+        <h3 style={{ color: "#dc2626" }}><Warning size={16} weight="fill" /> Bottleneck Alerts</h3>
+        <div className="bottleneck-grid">
+          {bottleneckAlerts.map((b, i) => (
+            <div key={i} className="redflag-card bottleneck-item">
+              <div className="redflag-header">{b.store}</div>
+              <p className="redflag-text" style={{ margin: 0 }}>{b.issue}</p>
+              <div style={{ fontSize: ".72rem", fontWeight: 700, color: "#ef4444" }}>Revenue impact: {b.impact}</div>
+              <div className="risk-recommendation" style={{ margin: 0 }}>
+                <Lightning size={12} weight="fill" /> <strong>Fix:</strong> {b.fix}
+              </div>
+              <button className="owner-action-btn red" style={{ alignSelf: "flex-start", marginTop: "auto" }}><Envelope size={13} weight="bold" /> Assign</button>
             </div>
-          </div>
+          ))}
         </div>
       </div>
 

@@ -195,7 +195,7 @@ const RestockDispatcher = ({ analysisItems, onClearAnalysis }) => {
                         {notified[a.id] ? (
                           <><CheckCircle size={12} weight="fill" /> Sent</>
                         ) : (
-                          <><PaperPlaneTilt size={12} weight="fill" /> Notify Manager</>
+                          <><PaperPlaneTilt size={12} weight="fill" /> Notify Worker</>
                         )}
                       </motion.button>
                     )}

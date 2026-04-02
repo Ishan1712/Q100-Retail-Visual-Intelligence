@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Warning, TrendUp, TrendDown, Minus, Eye, EyeSlash, Envelope, Package, Storefront, Crown, Star, CaretDown, CaretUp } from "@phosphor-icons/react";
+import { Warning, TrendUp, TrendDown, Minus, Eye, EyeSlash, Envelope, Package, Storefront, Crown, Star, CaretDown, CaretUp, CurrencyInr, ChartLineUp, Wallet, ShoppingCart } from "@phosphor-icons/react";
 import "./Regional.css";
 
 /* ── Product Performance Data (Manager — single store view) ── */
@@ -132,9 +132,9 @@ const BrandHeatmap = ({ role }) => {
       <div className="owner-timestamp">Data as of: {timestamp}</div>
 
       <div style={{ marginBottom: -4 }}>
-        <h2 style={{ fontSize: "1.1rem", fontWeight: 800, color: "#0f172a", margin: 0 }}>Product Intelligence</h2>
+        <h2 style={{ fontSize: "1.1rem", fontWeight: 800, color: "#0f172a", margin: 0 }}>{isManager ? "Product Intelligence" : "Revenue Intelligence"}</h2>
         <span style={{ fontSize: ".72rem", color: "#64748b" }}>
-          {isManager ? "What's selling, what's not, and where are the gaps?" : "Store performance, top sellers, and product insights"}
+          {isManager ? "What's selling, what's not, and where are the gaps?" : "Revenue performance, top stores, and sales insights"}
         </span>
       </div>
 
@@ -189,9 +189,57 @@ const BrandHeatmap = ({ role }) => {
         </div>
       )}
 
-      {/* ── Regional Owner: Top Sale Stores + Store-wise Products ── */}
+      {/* ── Regional Owner: Revenue Summary + Top Stores + Products ── */}
       {!isManager && (
         <>
+          {/* ── Revenue Summary Strip ── */}
+          <div className="rev-summary-strip">
+            <div className="rev-summary-card rev-total">
+              <div className="rev-sum-icon" style={{ background: "#dcfce7", color: "#059669" }}>
+                <CurrencyInr size={20} weight="bold" />
+              </div>
+              <div className="rev-sum-body">
+                <span className="rev-sum-label">Total Revenue</span>
+                <strong className="rev-sum-value">₹9.84L<span className="rev-sum-period">/day</span></strong>
+                <span className="rev-sum-sub">All 5 stores combined</span>
+              </div>
+              <span className="rev-sum-trend rev-trend-up"><TrendUp size={12} weight="bold" /> +8.2%</span>
+            </div>
+            <div className="rev-summary-card">
+              <div className="rev-sum-icon" style={{ background: "#dbeafe", color: "#2563eb" }}>
+                <Wallet size={20} weight="bold" />
+              </div>
+              <div className="rev-sum-body">
+                <span className="rev-sum-label">Revenue Recovered</span>
+                <strong className="rev-sum-value">₹12.7L<span className="rev-sum-period">/mo</span></strong>
+                <span className="rev-sum-sub">Via Q100 OOS prevention</span>
+              </div>
+              <span className="rev-sum-trend rev-trend-up"><TrendUp size={12} weight="bold" /> +23%</span>
+            </div>
+            <div className="rev-summary-card">
+              <div className="rev-sum-icon" style={{ background: "#fef3c7", color: "#d97706" }}>
+                <ShoppingCart size={20} weight="bold" />
+              </div>
+              <div className="rev-sum-body">
+                <span className="rev-sum-label">Avg Basket Value</span>
+                <strong className="rev-sum-value">₹438</strong>
+                <span className="rev-sum-sub">Up from ₹412 last month</span>
+              </div>
+              <span className="rev-sum-trend rev-trend-up"><TrendUp size={12} weight="bold" /> +6.3%</span>
+            </div>
+            <div className="rev-summary-card">
+              <div className="rev-sum-icon" style={{ background: "#fef2f2", color: "#ef4444" }}>
+                <Warning size={20} weight="bold" />
+              </div>
+              <div className="rev-sum-body">
+                <span className="rev-sum-label">Revenue at Risk</span>
+                <strong className="rev-sum-value" style={{ color: "#ef4444" }}>₹1.2L<span className="rev-sum-period">/mo</span></strong>
+                <span className="rev-sum-sub">From chronic OOS items</span>
+              </div>
+              <span className="rev-sum-trend rev-trend-down"><TrendDown size={12} weight="bold" /> -15%</span>
+            </div>
+          </div>
+
           {/* ── Top Sale Stores ── */}
           <div className="reg-card reg-card-full">
             <h3 style={{ color: "#059669", display: "flex", alignItems: "center", gap: 6 }}>

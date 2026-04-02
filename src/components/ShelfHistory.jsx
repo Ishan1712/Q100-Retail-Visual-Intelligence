@@ -68,104 +68,370 @@ function ScanThumb({ status }) {
   );
 }
 
-/* ─── Dummy data ─── */
-const todayScans = [
-  {
-    id: 3, name: "Shelf 3", category: "Staples & Grains", time: "8:15 AM", status: "pass", note: "All clear",
-    sections: [
-      { name: "Rice & Atta", status: "pass" },
-      { name: "Pulses", status: "pass" },
-      { name: "Sugar & Salt", status: "pass" },
-      { name: "Spice Powders", status: "pass" },
-    ],
-    scanTime: "1m 48s", restocks: 0, turnaround: null,
-  },
-  {
-    id: 5, name: "Shelf 5", category: "Beverages", time: "8:32 AM", status: "pass", note: "All clear",
-    sections: [
-      { name: "Soft Drinks", status: "pass" },
-      { name: "Juices", status: "pass" },
-      { name: "Water & Soda", status: "pass" },
-    ],
-    scanTime: "1m 22s", restocks: 0, turnaround: null,
-  },
-  {
-    id: 7, name: "Shelf 7", category: "Snacks & Biscuits", time: "8:48 AM", status: "fail", note: "3 OOS · 1 misplacement",
-    sections: [
-      { name: "Premium Biscuits", status: "pass" },
-      { name: "Value Biscuits", status: "fail", issues: [{ type: "oos", product: "Parle-G 250g", detail: "4 units OOS" }] },
-      { name: "Namkeen & Savoury", status: "fail", issues: [{ type: "oos", product: "Kurkure Multi Grain" }, { type: "misplaced", product: "Shree Ganesh Mixture" }] },
-      { name: "Chips & Crisps", status: "pass" },
-      { name: "Chocolates & Candy", status: "fail", issues: [{ type: "oos", product: "Dairy Milk 50g", detail: "3 units OOS" }] },
-      { name: "Health Snacks & Rusks", status: "pass" },
-    ],
-    scanTime: "2m 15s", restocks: 3, turnaround: "14 min",
-  },
-  {
-    id: 9, name: "Shelf 9", category: "Personal Care", time: "9:05 AM", status: "pass", note: "All clear",
-    sections: [
-      { name: "Shampoo & Hair", status: "pass" },
-      { name: "Soaps & Body", status: "pass" },
-      { name: "Oral Care", status: "pass" },
-      { name: "Skincare", status: "pass" },
-    ],
-    scanTime: "1m 55s", restocks: 0, turnaround: null,
-  },
-  {
-    id: 2, name: "Shelf 2", category: "Dairy & Frozen", time: "9:28 AM", status: "fail", note: "2 OOS detected",
-    sections: [
-      { name: "Milk & Curd", status: "fail", issues: [{ type: "oos", product: "Mother Dairy Curd 400g", detail: "Completely OOS" }] },
-      { name: "Butter & Cheese", status: "fail", issues: [{ type: "oos", product: "Amul Butter 100g", detail: "1 of 4 facings" }] },
-      { name: "Ice Cream", status: "pass" },
-      { name: "Frozen Vegs", status: "pass" },
-    ],
-    scanTime: "2m 05s", restocks: 2, turnaround: "11 min",
-  },
-  {
-    id: 4, name: "Shelf 4", category: "Cooking Oil & Masalas", time: "9:52 AM", status: "pass", note: "All clear",
-    sections: [
-      { name: "Cooking Oils", status: "pass" },
-      { name: "Masalas & Spices", status: "pass" },
-      { name: "Pickles & Chutneys", status: "pass" },
-    ],
-    scanTime: "1m 35s", restocks: 0, turnaround: null,
-  },
-  {
-    id: 6, name: "Shelf 6", category: "Household & Cleaning", time: "10:15 AM", status: "fail", note: "1 OOS detected",
-    sections: [
-      { name: "Detergent", status: "pass" },
-      { name: "Floor Cleaners", status: "fail", issues: [{ type: "oos", product: "Lizol 500ml", detail: "2 units OOS" }] },
-      { name: "Dishwash", status: "pass" },
-    ],
-    scanTime: "1m 42s", restocks: 1, turnaround: "18 min",
-  },
-  {
-    id: 8, name: "Shelf 8", category: "Baby & Health", time: "10:38 AM", status: "pass", note: "All clear",
-    sections: [
-      { name: "Baby Food", status: "pass" },
-      { name: "Diapers", status: "pass" },
-      { name: "Health Drinks", status: "pass" },
-    ],
-    scanTime: "1m 28s", restocks: 0, turnaround: null,
-  },
-  {
-    id: 10, name: "Shelf 10", category: "Breakfast & Cereals", time: "11:02 AM", status: "pass", note: "All clear",
-    sections: [
-      { name: "Cereals & Oats", status: "pass" },
-      { name: "Bread & Spreads", status: "pass" },
-      { name: "Tea & Coffee", status: "pass" },
-    ],
-    scanTime: "1m 18s", restocks: 0, turnaround: null,
-  },
-  {
-    id: 1, name: "Shelf 1", category: "Checkout Impulse Zone", time: "11:25 AM", status: "pass", note: "All clear",
-    sections: [
-      { name: "Gum & Mints", status: "pass" },
-      { name: "Small Chocolates", status: "pass" },
-    ],
-    scanTime: "0m 55s", restocks: 0, turnaround: null,
-  },
-];
+/* ─── Dummy data per date ─── */
+const scansByDate = {
+  "Mon 28": [
+    {
+      id: 3, name: "Shelf 3", category: "Staples & Grains", time: "8:30 AM", status: "pass", note: "All clear",
+      sections: [
+        { name: "Rice & Atta", status: "pass" },
+        { name: "Pulses", status: "pass" },
+        { name: "Sugar & Salt", status: "pass" },
+      ],
+      scanTime: "1m 40s", restocks: 0, turnaround: null,
+    },
+    {
+      id: 7, name: "Shelf 7", category: "Snacks & Biscuits", time: "9:10 AM", status: "fail", note: "2 OOS detected",
+      sections: [
+        { name: "Premium Biscuits", status: "pass" },
+        { name: "Value Biscuits", status: "fail", issues: [{ type: "oos", product: "Parle-G 250g", detail: "6 units OOS" }] },
+        { name: "Chips & Crisps", status: "pass" },
+        { name: "Chocolates & Candy", status: "fail", issues: [{ type: "oos", product: "5 Star 25g", detail: "4 units OOS" }] },
+      ],
+      scanTime: "2m 10s", restocks: 2, turnaround: "16 min",
+    },
+    {
+      id: 5, name: "Shelf 5", category: "Beverages", time: "9:45 AM", status: "pass", note: "All clear",
+      sections: [
+        { name: "Soft Drinks", status: "pass" },
+        { name: "Juices", status: "pass" },
+        { name: "Water & Soda", status: "pass" },
+      ],
+      scanTime: "1m 15s", restocks: 0, turnaround: null,
+    },
+    {
+      id: 9, name: "Shelf 9", category: "Personal Care", time: "10:20 AM", status: "pass", note: "All clear",
+      sections: [
+        { name: "Shampoo & Hair", status: "pass" },
+        { name: "Soaps & Body", status: "pass" },
+        { name: "Oral Care", status: "pass" },
+      ],
+      scanTime: "1m 30s", restocks: 0, turnaround: null,
+    },
+    {
+      id: 2, name: "Shelf 2", category: "Dairy & Frozen", time: "10:55 AM", status: "fail", note: "1 OOS detected",
+      sections: [
+        { name: "Milk & Curd", status: "fail", issues: [{ type: "oos", product: "Amul Toned Milk 500ml", detail: "Completely OOS" }] },
+        { name: "Butter & Cheese", status: "pass" },
+        { name: "Ice Cream", status: "pass" },
+      ],
+      scanTime: "1m 50s", restocks: 1, turnaround: "12 min",
+    },
+    {
+      id: 4, name: "Shelf 4", category: "Cooking Oil & Masalas", time: "11:20 AM", status: "pass", note: "All clear",
+      sections: [
+        { name: "Cooking Oils", status: "pass" },
+        { name: "Masalas & Spices", status: "pass" },
+      ],
+      scanTime: "1m 05s", restocks: 0, turnaround: null,
+    },
+    {
+      id: 1, name: "Shelf 1", category: "Checkout Impulse Zone", time: "11:50 AM", status: "pass", note: "All clear",
+      sections: [
+        { name: "Gum & Mints", status: "pass" },
+        { name: "Small Chocolates", status: "pass" },
+      ],
+      scanTime: "0m 50s", restocks: 0, turnaround: null,
+    },
+    {
+      id: 6, name: "Shelf 6", category: "Household & Cleaning", time: "12:15 PM", status: "pass", note: "All clear",
+      sections: [
+        { name: "Detergent", status: "pass" },
+        { name: "Floor Cleaners", status: "pass" },
+        { name: "Dishwash", status: "pass" },
+      ],
+      scanTime: "1m 20s", restocks: 0, turnaround: null,
+    },
+  ],
+  "Tue 29": [
+    {
+      id: 7, name: "Shelf 7", category: "Snacks & Biscuits", time: "8:05 AM", status: "fail", note: "4 OOS · 2 misplacements",
+      sections: [
+        { name: "Premium Biscuits", status: "fail", issues: [{ type: "oos", product: "Oreo 120g", detail: "3 units OOS" }] },
+        { name: "Value Biscuits", status: "fail", issues: [{ type: "oos", product: "Parle-G 250g", detail: "5 units OOS" }] },
+        { name: "Namkeen & Savoury", status: "fail", issues: [{ type: "misplaced", product: "Haldiram Bhujia" }, { type: "misplaced", product: "Bikaji Aloo Bhujia" }] },
+        { name: "Chips & Crisps", status: "pass" },
+        { name: "Chocolates & Candy", status: "fail", issues: [{ type: "oos", product: "Kit Kat 37g", detail: "2 units OOS" }, { type: "oos", product: "Munch 23g", detail: "4 units OOS" }] },
+        { name: "Health Snacks & Rusks", status: "pass" },
+      ],
+      scanTime: "2m 40s", restocks: 4, turnaround: "20 min",
+    },
+    {
+      id: 3, name: "Shelf 3", category: "Staples & Grains", time: "8:35 AM", status: "pass", note: "All clear",
+      sections: [
+        { name: "Rice & Atta", status: "pass" },
+        { name: "Pulses", status: "pass" },
+        { name: "Sugar & Salt", status: "pass" },
+        { name: "Spice Powders", status: "pass" },
+      ],
+      scanTime: "1m 52s", restocks: 0, turnaround: null,
+    },
+    {
+      id: 2, name: "Shelf 2", category: "Dairy & Frozen", time: "9:10 AM", status: "fail", note: "3 OOS detected",
+      sections: [
+        { name: "Milk & Curd", status: "fail", issues: [{ type: "oos", product: "Mother Dairy Curd 400g", detail: "Completely OOS" }] },
+        { name: "Butter & Cheese", status: "fail", issues: [{ type: "oos", product: "Amul Butter 100g", detail: "2 of 4 facings" }, { type: "oos", product: "Britannia Cheese 200g", detail: "Completely OOS" }] },
+        { name: "Ice Cream", status: "pass" },
+        { name: "Frozen Vegs", status: "pass" },
+      ],
+      scanTime: "2m 20s", restocks: 3, turnaround: "15 min",
+    },
+    {
+      id: 5, name: "Shelf 5", category: "Beverages", time: "9:40 AM", status: "pass", note: "All clear",
+      sections: [
+        { name: "Soft Drinks", status: "pass" },
+        { name: "Juices", status: "pass" },
+        { name: "Water & Soda", status: "pass" },
+      ],
+      scanTime: "1m 18s", restocks: 0, turnaround: null,
+    },
+    {
+      id: 9, name: "Shelf 9", category: "Personal Care", time: "10:05 AM", status: "fail", note: "1 misplacement",
+      sections: [
+        { name: "Shampoo & Hair", status: "pass" },
+        { name: "Soaps & Body", status: "fail", issues: [{ type: "misplaced", product: "Dove Shampoo in Soap section" }] },
+        { name: "Oral Care", status: "pass" },
+        { name: "Skincare", status: "pass" },
+      ],
+      scanTime: "1m 58s", restocks: 0, turnaround: null,
+    },
+    {
+      id: 6, name: "Shelf 6", category: "Household & Cleaning", time: "10:30 AM", status: "pass", note: "All clear",
+      sections: [
+        { name: "Detergent", status: "pass" },
+        { name: "Floor Cleaners", status: "pass" },
+        { name: "Dishwash", status: "pass" },
+      ],
+      scanTime: "1m 25s", restocks: 0, turnaround: null,
+    },
+    {
+      id: 4, name: "Shelf 4", category: "Cooking Oil & Masalas", time: "10:55 AM", status: "pass", note: "All clear",
+      sections: [
+        { name: "Cooking Oils", status: "pass" },
+        { name: "Masalas & Spices", status: "pass" },
+        { name: "Pickles & Chutneys", status: "pass" },
+      ],
+      scanTime: "1m 30s", restocks: 0, turnaround: null,
+    },
+    {
+      id: 10, name: "Shelf 10", category: "Breakfast & Cereals", time: "11:15 AM", status: "pass", note: "All clear",
+      sections: [
+        { name: "Cereals & Oats", status: "pass" },
+        { name: "Bread & Spreads", status: "pass" },
+        { name: "Tea & Coffee", status: "pass" },
+      ],
+      scanTime: "1m 12s", restocks: 0, turnaround: null,
+    },
+    {
+      id: 8, name: "Shelf 8", category: "Baby & Health", time: "11:40 AM", status: "pass", note: "All clear",
+      sections: [
+        { name: "Baby Food", status: "pass" },
+        { name: "Diapers", status: "pass" },
+        { name: "Health Drinks", status: "pass" },
+      ],
+      scanTime: "1m 22s", restocks: 0, turnaround: null,
+    },
+    {
+      id: 1, name: "Shelf 1", category: "Checkout Impulse Zone", time: "12:05 PM", status: "pass", note: "All clear",
+      sections: [
+        { name: "Gum & Mints", status: "pass" },
+        { name: "Small Chocolates", status: "pass" },
+      ],
+      scanTime: "0m 48s", restocks: 0, turnaround: null,
+    },
+    {
+      id: 11, name: "Shelf 3", category: "Staples & Grains", time: "3:30 PM", status: "pass", note: "Recheck — all restocked",
+      sections: [
+        { name: "Rice & Atta", status: "pass" },
+        { name: "Pulses", status: "pass" },
+      ],
+      scanTime: "0m 55s", restocks: 0, turnaround: null,
+    },
+  ],
+  "Wed 30": [
+    {
+      id: 3, name: "Shelf 3", category: "Staples & Grains", time: "8:20 AM", status: "pass", note: "All clear",
+      sections: [
+        { name: "Rice & Atta", status: "pass" },
+        { name: "Pulses", status: "pass" },
+        { name: "Sugar & Salt", status: "pass" },
+      ],
+      scanTime: "1m 35s", restocks: 0, turnaround: null,
+    },
+    {
+      id: 5, name: "Shelf 5", category: "Beverages", time: "8:50 AM", status: "fail", note: "1 OOS detected",
+      sections: [
+        { name: "Soft Drinks", status: "fail", issues: [{ type: "oos", product: "Thums Up 750ml", detail: "3 units OOS" }] },
+        { name: "Juices", status: "pass" },
+        { name: "Water & Soda", status: "pass" },
+      ],
+      scanTime: "1m 28s", restocks: 1, turnaround: "10 min",
+    },
+    {
+      id: 9, name: "Shelf 9", category: "Personal Care", time: "9:15 AM", status: "pass", note: "All clear",
+      sections: [
+        { name: "Shampoo & Hair", status: "pass" },
+        { name: "Soaps & Body", status: "pass" },
+        { name: "Oral Care", status: "pass" },
+        { name: "Skincare", status: "pass" },
+      ],
+      scanTime: "1m 48s", restocks: 0, turnaround: null,
+    },
+    {
+      id: 2, name: "Shelf 2", category: "Dairy & Frozen", time: "9:40 AM", status: "pass", note: "All clear",
+      sections: [
+        { name: "Milk & Curd", status: "pass" },
+        { name: "Butter & Cheese", status: "pass" },
+        { name: "Ice Cream", status: "pass" },
+        { name: "Frozen Vegs", status: "pass" },
+      ],
+      scanTime: "1m 55s", restocks: 0, turnaround: null,
+    },
+    {
+      id: 7, name: "Shelf 7", category: "Snacks & Biscuits", time: "10:05 AM", status: "fail", note: "1 OOS · 1 misplacement",
+      sections: [
+        { name: "Premium Biscuits", status: "pass" },
+        { name: "Value Biscuits", status: "pass" },
+        { name: "Namkeen & Savoury", status: "fail", issues: [{ type: "misplaced", product: "Kurkure in wrong slot" }] },
+        { name: "Chips & Crisps", status: "pass" },
+        { name: "Chocolates & Candy", status: "fail", issues: [{ type: "oos", product: "Dairy Milk Silk 60g", detail: "2 units OOS" }] },
+      ],
+      scanTime: "2m 05s", restocks: 1, turnaround: "9 min",
+    },
+    {
+      id: 4, name: "Shelf 4", category: "Cooking Oil & Masalas", time: "10:35 AM", status: "pass", note: "All clear",
+      sections: [
+        { name: "Cooking Oils", status: "pass" },
+        { name: "Masalas & Spices", status: "pass" },
+        { name: "Pickles & Chutneys", status: "pass" },
+      ],
+      scanTime: "1m 20s", restocks: 0, turnaround: null,
+    },
+    {
+      id: 6, name: "Shelf 6", category: "Household & Cleaning", time: "11:00 AM", status: "pass", note: "All clear",
+      sections: [
+        { name: "Detergent", status: "pass" },
+        { name: "Floor Cleaners", status: "pass" },
+        { name: "Dishwash", status: "pass" },
+      ],
+      scanTime: "1m 15s", restocks: 0, turnaround: null,
+    },
+    {
+      id: 8, name: "Shelf 8", category: "Baby & Health", time: "11:30 AM", status: "pass", note: "All clear",
+      sections: [
+        { name: "Baby Food", status: "pass" },
+        { name: "Diapers", status: "pass" },
+      ],
+      scanTime: "1m 10s", restocks: 0, turnaround: null,
+    },
+    {
+      id: 10, name: "Shelf 10", category: "Breakfast & Cereals", time: "11:55 AM", status: "pass", note: "All clear",
+      sections: [
+        { name: "Cereals & Oats", status: "pass" },
+        { name: "Bread & Spreads", status: "pass" },
+        { name: "Tea & Coffee", status: "pass" },
+      ],
+      scanTime: "1m 18s", restocks: 0, turnaround: null,
+    },
+  ],
+  "Today": [
+    {
+      id: 3, name: "Shelf 3", category: "Staples & Grains", time: "8:15 AM", status: "pass", note: "All clear",
+      sections: [
+        { name: "Rice & Atta", status: "pass" },
+        { name: "Pulses", status: "pass" },
+        { name: "Sugar & Salt", status: "pass" },
+        { name: "Spice Powders", status: "pass" },
+      ],
+      scanTime: "1m 48s", restocks: 0, turnaround: null,
+    },
+    {
+      id: 5, name: "Shelf 5", category: "Beverages", time: "8:32 AM", status: "pass", note: "All clear",
+      sections: [
+        { name: "Soft Drinks", status: "pass" },
+        { name: "Juices", status: "pass" },
+        { name: "Water & Soda", status: "pass" },
+      ],
+      scanTime: "1m 22s", restocks: 0, turnaround: null,
+    },
+    {
+      id: 7, name: "Shelf 7", category: "Snacks & Biscuits", time: "8:48 AM", status: "fail", note: "3 OOS · 1 misplacement",
+      sections: [
+        { name: "Premium Biscuits", status: "pass" },
+        { name: "Value Biscuits", status: "fail", issues: [{ type: "oos", product: "Parle-G 250g", detail: "4 units OOS" }] },
+        { name: "Namkeen & Savoury", status: "fail", issues: [{ type: "oos", product: "Kurkure Multi Grain" }, { type: "misplaced", product: "Shree Ganesh Mixture" }] },
+        { name: "Chips & Crisps", status: "pass" },
+        { name: "Chocolates & Candy", status: "fail", issues: [{ type: "oos", product: "Dairy Milk 50g", detail: "3 units OOS" }] },
+        { name: "Health Snacks & Rusks", status: "pass" },
+      ],
+      scanTime: "2m 15s", restocks: 3, turnaround: "14 min",
+    },
+    {
+      id: 9, name: "Shelf 9", category: "Personal Care", time: "9:05 AM", status: "pass", note: "All clear",
+      sections: [
+        { name: "Shampoo & Hair", status: "pass" },
+        { name: "Soaps & Body", status: "pass" },
+        { name: "Oral Care", status: "pass" },
+        { name: "Skincare", status: "pass" },
+      ],
+      scanTime: "1m 55s", restocks: 0, turnaround: null,
+    },
+    {
+      id: 2, name: "Shelf 2", category: "Dairy & Frozen", time: "9:28 AM", status: "fail", note: "2 OOS detected",
+      sections: [
+        { name: "Milk & Curd", status: "fail", issues: [{ type: "oos", product: "Mother Dairy Curd 400g", detail: "Completely OOS" }] },
+        { name: "Butter & Cheese", status: "fail", issues: [{ type: "oos", product: "Amul Butter 100g", detail: "1 of 4 facings" }] },
+        { name: "Ice Cream", status: "pass" },
+        { name: "Frozen Vegs", status: "pass" },
+      ],
+      scanTime: "2m 05s", restocks: 2, turnaround: "11 min",
+    },
+    {
+      id: 4, name: "Shelf 4", category: "Cooking Oil & Masalas", time: "9:52 AM", status: "pass", note: "All clear",
+      sections: [
+        { name: "Cooking Oils", status: "pass" },
+        { name: "Masalas & Spices", status: "pass" },
+        { name: "Pickles & Chutneys", status: "pass" },
+      ],
+      scanTime: "1m 35s", restocks: 0, turnaround: null,
+    },
+    {
+      id: 6, name: "Shelf 6", category: "Household & Cleaning", time: "10:15 AM", status: "fail", note: "1 OOS detected",
+      sections: [
+        { name: "Detergent", status: "pass" },
+        { name: "Floor Cleaners", status: "fail", issues: [{ type: "oos", product: "Lizol 500ml", detail: "2 units OOS" }] },
+        { name: "Dishwash", status: "pass" },
+      ],
+      scanTime: "1m 42s", restocks: 1, turnaround: "18 min",
+    },
+    {
+      id: 8, name: "Shelf 8", category: "Baby & Health", time: "10:38 AM", status: "pass", note: "All clear",
+      sections: [
+        { name: "Baby Food", status: "pass" },
+        { name: "Diapers", status: "pass" },
+        { name: "Health Drinks", status: "pass" },
+      ],
+      scanTime: "1m 28s", restocks: 0, turnaround: null,
+    },
+    {
+      id: 10, name: "Shelf 10", category: "Breakfast & Cereals", time: "11:02 AM", status: "pass", note: "All clear",
+      sections: [
+        { name: "Cereals & Oats", status: "pass" },
+        { name: "Bread & Spreads", status: "pass" },
+        { name: "Tea & Coffee", status: "pass" },
+      ],
+      scanTime: "1m 18s", restocks: 0, turnaround: null,
+    },
+    {
+      id: 1, name: "Shelf 1", category: "Checkout Impulse Zone", time: "11:25 AM", status: "pass", note: "All clear",
+      sections: [
+        { name: "Gum & Mints", status: "pass" },
+        { name: "Small Chocolates", status: "pass" },
+      ],
+      scanTime: "0m 55s", restocks: 0, turnaround: null,
+    },
+  ],
+};
 
 const weeklyTrend = [
   { day: "Mon", scans: 8 },
@@ -173,9 +439,6 @@ const weeklyTrend = [
   { day: "Wed", scans: 9 },
   { day: "Thu", scans: 14 },
 ];
-
-const passCount = todayScans.filter(s => s.status === "pass").length;
-const failCount = todayScans.filter(s => s.status === "fail").length;
 
 /* ─── Calendar dates ─── */
 const calendarDates = [
@@ -218,6 +481,10 @@ export default function ShelfHistory({ onClose }) {
   const [expandedId, setExpandedId] = useState(null);
   const [selectedDate, setSelectedDate] = useState("Today");
 
+  const currentScans = scansByDate[selectedDate] || [];
+  const passCount = currentScans.filter(s => s.status === "pass").length;
+  const failCount = currentScans.filter(s => s.status === "fail").length;
+
   return (
     <div className="ah-root">
 
@@ -235,7 +502,7 @@ export default function ShelfHistory({ onClose }) {
             <button
               key={d.label}
               className={`ah-cal-day ${selectedDate === d.label ? "ah-cal-active" : ""} ${d.isToday ? "ah-cal-today" : ""}`}
-              onClick={() => setSelectedDate(d.label)}
+              onClick={() => { setSelectedDate(d.label); setExpandedId(null); }}
             >
               <span className="ah-cal-day-name">{d.day}</span>
               <span className="ah-cal-day-label">{d.isToday ? "Today" : d.label.split(" ")[1]}</span>
@@ -299,7 +566,7 @@ export default function ShelfHistory({ onClose }) {
                     <Tooltip text="Total Scans Today"><CalendarBlank size={22} weight="fill" /></Tooltip>
                   </div>
                   <div>
-                    <div className="ah-summary-value">{todayScans.length}</div>
+                    <div className="ah-summary-value">{currentScans.length}</div>
                     <div className="ah-summary-label">Total Scans</div>
                   </div>
                 </div>
@@ -308,15 +575,15 @@ export default function ShelfHistory({ onClose }) {
               {/* Section bar */}
               <div className="ah-section-bar" style={{ marginTop: 18 }}>
                 <div className="ah-section-title">
-                  <Tooltip text="Today's Activity"><Clock size={14} weight="duotone" /></Tooltip>
-                  Today's Activity
+                  <Tooltip text={`${selectedDate === "Today" ? "Today's" : selectedDate} Activity`}><Clock size={14} weight="duotone" /></Tooltip>
+                  {selectedDate === "Today" ? "Today's" : selectedDate} Activity
                 </div>
-                <span className="ah-badge-count">{todayScans.length} scans</span>
+                <span className="ah-badge-count">{currentScans.length} scans</span>
               </div>
 
               {/* Timeline cards */}
               <div className="ah-timeline" style={{ marginTop: 2 }}>
-                {todayScans.map((scan, i) => (
+                {currentScans.map((scan, i) => (
                   <motion.div
                     key={scan.id}
                     className={`ah-tl-card ${expandedId === scan.id ? "ah-tl-expanded" : ""}`}

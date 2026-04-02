@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { FilePdf, Envelope, Slideshow, Clock, CheckCircle, Calendar, MapPin, ChartBar, Plus } from "@phosphor-icons/react";
+import { FilePdf, Envelope, Slideshow, Clock, CheckCircle, Calendar, MapPin, ChartBar, Plus, TrendUp, DownloadSimple, Eye, Warning, CurrencyInr, Users } from "@phosphor-icons/react";
 import "./Regional.css";
 
 const storeOptions = ["All Stores", "Q-Mart Kothrud (Pune)", "Q-Mart Andheri (Mumbai)", "Q-Mart Gangapur Rd (Nashik)", "Q-Mart Dharampeth (Nagpur)", "Q-Mart Sadar (Nagpur)"];
@@ -54,6 +54,33 @@ const previewPages = {
   ],
 };
 
+/* ── Quick Insights ── */
+const quickInsights = [
+  { label: "Reports Generated", value: "47", sub: "This month", icon: FilePdf, color: "#6366f1", bg: "#eef2ff" },
+  { label: "Revenue Tracked", value: "₹49.2L", sub: "March total", icon: CurrencyInr, color: "#059669", bg: "#dcfce7" },
+  { label: "Action Items", value: "12", sub: "Pending follow-up", icon: Warning, color: "#f59e0b", bg: "#fef3c7" },
+  { label: "Recipients", value: "18", sub: "Receiving reports", icon: Users, color: "#2563eb", bg: "#dbeafe" },
+];
+
+/* ── Recently Generated Reports ── */
+const recentReports = [
+  { name: "Monthly Store Report — Pune", date: "1 Apr 2026", format: "PDF", pages: 7, status: "sent", recipients: "owner@qmart.com, pune.mgr@qmart.com", size: "2.4 MB" },
+  { name: "Chain Performance Summary", date: "31 Mar 2026", format: "PDF", pages: 4, status: "sent", recipients: "owner@qmart.com", size: "1.8 MB" },
+  { name: "FMCG Partner Report — Q1", date: "28 Mar 2026", format: "PPT", pages: 3, status: "sent", recipients: "3 brand managers", size: "3.1 MB" },
+  { name: "Manager Performance — March", date: "25 Mar 2026", format: "PDF", pages: 3, status: "viewed", recipients: "5 store managers", size: "1.2 MB" },
+  { name: "Monthly Store Report — Mumbai", date: "1 Mar 2026", format: "PDF", pages: 7, status: "sent", recipients: "owner@qmart.com, mum.mgr@qmart.com", size: "2.6 MB" },
+  { name: "Weekly Chain Digest", date: "24 Mar 2026", format: "Email", pages: 2, status: "opened", recipients: "owner@qmart.com", size: "—" },
+];
+
+/* ── Key Findings from Last Report ── */
+const keyFindings = [
+  { text: "Pune store outperforms chain avg by 18% in restock speed", type: "positive" },
+  { text: "Nagpur-S losing ₹85K/mo from chronic dairy OOS", type: "critical" },
+  { text: "Maggi Noodles 70g is #1 seller across all 5 stores", type: "info" },
+  { text: "Overall chain compliance improved from 82% to 88.4%", type: "positive" },
+  { text: "3 slow-moving SKUs recommended for delisting", type: "warning" },
+];
+
 const scheduledReports = [
   { name: "Monthly Store Report", target: "owner@qmart.com", freq: "1st of each month" },
   { name: "Chain Performance Summary", target: "owner@qmart.com", freq: "Every Monday 8 AM" },
@@ -84,6 +111,22 @@ const ReportGenerator = () => {
     <div className="reg-screen">
       <div className="owner-timestamp">Data as of: {timestamp}</div>
       <h2 style={{ fontSize: "1.1rem", fontWeight: 800, color: "#0f172a", margin: 0 }}>Report Generator</h2>
+
+      {/* Quick Insights Strip */}
+      <div className="rg-insights-strip">
+        {quickInsights.map((q, i) => (
+          <div key={i} className="rg-insight-card">
+            <div className="rg-insight-icon" style={{ background: q.bg, color: q.color }}>
+              <q.icon size={18} weight="bold" />
+            </div>
+            <div className="rg-insight-body">
+              <span className="rg-insight-label">{q.label}</span>
+              <strong className="rg-insight-value">{q.value}</strong>
+              <span className="rg-insight-sub">{q.sub}</span>
+            </div>
+          </div>
+        ))}
+      </div>
 
       <div className="report-gen-body">
         {/* Config Panel */}
@@ -195,6 +238,47 @@ const ReportGenerator = () => {
           </div>
         </div>
       </div>
+
+      {/* Key Findings from Last Report */}
+      <div className="rg-findings-card">
+        <h3><TrendUp size={16} weight="fill" style={{ color: "#059669" }} /> Key Findings — Last Report</h3>
+        <div className="rg-findings-list">
+          {keyFindings.map((f, i) => (
+            <div key={i} className={`rg-finding-item rg-finding-${f.type}`}>
+              <span className="rg-finding-dot" />
+              <span className="rg-finding-text">{f.text}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Recently Generated Reports */}
+      <div className="rg-recent-card">
+        <h3><Clock size={16} weight="fill" style={{ color: "#6366f1" }} /> Recently Generated Reports</h3>
+        <div className="rg-recent-list">
+          {recentReports.map((r, i) => (
+            <div key={i} className="rg-recent-row">
+              <div className={`rg-recent-icon ${r.format.toLowerCase()}`}>
+                {r.format === "PDF" ? <FilePdf size={16} weight="fill" /> : r.format === "PPT" ? <Slideshow size={16} weight="fill" /> : <Envelope size={16} weight="fill" />}
+              </div>
+              <div className="rg-recent-body">
+                <strong>{r.name}</strong>
+                <span className="rg-recent-meta">{r.date} · {r.pages} pages · {r.size}</span>
+                <span className="rg-recent-recip">Sent to: {r.recipients}</span>
+              </div>
+              <div className="rg-recent-right">
+                <span className={`rg-recent-status rg-st-${r.status}`}>
+                  {r.status === "sent" ? <><CheckCircle size={10} weight="fill" /> Sent</> :
+                   r.status === "viewed" ? <><Eye size={10} weight="fill" /> Viewed</> :
+                   <><Eye size={10} weight="fill" /> Opened</>}
+                </span>
+                <button className="rg-recent-dl"><DownloadSimple size={12} weight="bold" /></button>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
     </div>
   );
 };

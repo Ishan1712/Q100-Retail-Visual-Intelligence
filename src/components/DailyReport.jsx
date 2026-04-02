@@ -2,19 +2,20 @@ import React from "react";
 import { motion } from "framer-motion";
 import {
   TrendUp, TrendDown, CheckCircle, Warning, Trophy, Clock,
-  Scan, Package, CurrencyInr, ChartBar, User, Printer,
-  Envelope, FilePdf
+  Scan, Package, CurrencyInr, ChartBar, Printer,
+  Envelope, FilePdf, Users, ShoppingCart
 } from "@phosphor-icons/react";
 import "./DailyReport.css";
 
 const metrics = [
+  { label: "Daily Sales", value: "₹48,500", sub: "Up from ₹44,200 yesterday", icon: ShoppingCart, color: "#059669", trend: "+9.7%" },
   { label: "Total Scans", value: "30", sub: "10 shelves × 3 cycles", icon: Scan, color: "#6366f1" },
-  { label: "Compliance Rate", value: "88.4%", sub: "Up from 82.1% last Wed", icon: ChartBar, color: "#059669", trend: "+6.3%" },
+  { label: "Compliance Rate", value: "88.4%", sub: "Up from 82.1% last week", icon: ChartBar, color: "#10b981", trend: "+6.3%" },
   { label: "OOS Detected", value: "42", sub: "Across all scans", icon: Warning, color: "#ef4444" },
   { label: "Restocked", value: "38/42", sub: "90.5% completion", icon: Package, color: "#22c55e" },
   { label: "Avg Restock Time", value: "14 min", sub: "Down from 22 min last week", icon: Clock, color: "#f59e0b", trend: "-36%" },
-  { label: "Revenue Saved", value: "₹52,800", sub: "Estimated today", icon: CurrencyInr, color: "#059669" },
-  { label: "Misplacements", value: "7", sub: "All corrected on-floor", icon: CheckCircle, color: "#8b5cf6" },
+  { label: "Revenue Saved", value: "₹52,800", sub: "From fast restocking today", icon: CurrencyInr, color: "#059669" },
+  { label: "Active Workers", value: "6/6", sub: "All staff on duty", icon: Users, color: "#6366f1" },
 ];
 
 const topSaves = [
@@ -32,22 +33,57 @@ const zeroStock = [
   { product: "Bisleri 1L (6-pack)", demand: 24, supplier: "Will OOS by tomorrow AM", status: "2 units" },
 ];
 
-const staff = [
-  { name: "Rahul M.", role: "Floor", scans: 10, catches: 14, avg: "20 min/shelf", icon: Scan },
-  { name: "Amit D.", role: "Floor", scans: 10, catches: 16, avg: "18 min/shelf", icon: Scan },
-  { name: "Vikram P.", role: "Floor", scans: 10, catches: 12, avg: "22 min/shelf", icon: Scan },
-  { name: "Suresh K.", role: "Storeroom", restocks: 16, avg: "12 min", icon: Package },
-  { name: "Manoj T.", role: "Storeroom", restocks: 14, avg: "15 min", icon: Package },
-  { name: "Deepa S.", role: "Storeroom", restocks: 8, avg: "16 min", icon: Package },
+const bestSelling = [
+  { rank: 1, product: "Maggi 2-Min Noodles 70g", category: "Instant Food", unitsSold: 148, revenue: 2072, trend: "+12%" },
+  { rank: 2, product: "Amul Taaza 500ml", category: "Dairy", unitsSold: 132, revenue: 3300, trend: "+8%" },
+  { rank: 3, product: "Parle-G 250g", category: "Biscuits", unitsSold: 124, revenue: 1240, trend: "+5%" },
+  { rank: 4, product: "Surf Excel Quick Wash 1kg", category: "Detergent", unitsSold: 98, revenue: 12740, trend: "+15%" },
+  { rank: 5, product: "Cadbury Dairy Milk 50g", category: "Chocolate", unitsSold: 92, revenue: 3680, trend: "+3%" },
+  { rank: 6, product: "Tata Salt 1kg", category: "Grocery", unitsSold: 88, revenue: 1760, trend: "+2%" },
+  { rank: 7, product: "Bisleri 1L", category: "Beverages", unitsSold: 84, revenue: 1680, trend: "+18%" },
+  { rank: 8, product: "Kurkure Masala Munch", category: "Snacks", unitsSold: 76, revenue: 1520, trend: "+6%" },
+  { rank: 9, product: "Amul Butter 100g", category: "Dairy", unitsSold: 72, revenue: 3600, trend: "+4%" },
+  { rank: 10, product: "Colgate MaxFresh 150g", category: "Oral Care", unitsSold: 68, revenue: 5440, trend: "+1%" },
 ];
 
-const DailyReport = () => (
+const slowMoving = [
+  { rank: 1, product: "Patanjali Honey 500g", category: "Health Foods", unitsSold: 2, revenue: 490, daysOnShelf: 18, trend: "-22%" },
+  { rank: 2, product: "Organic Tattva Quinoa 500g", category: "Health Foods", unitsSold: 3, revenue: 870, daysOnShelf: 15, trend: "-18%" },
+  { rank: 3, product: "Saffola Gold Oil 1L", category: "Cooking Oil", unitsSold: 4, revenue: 720, daysOnShelf: 14, trend: "-12%" },
+  { rank: 4, product: "Himalaya Face Wash 150ml", category: "Personal Care", unitsSold: 4, revenue: 600, daysOnShelf: 12, trend: "-8%" },
+  { rank: 5, product: "Kellogg's Muesli 500g", category: "Breakfast", unitsSold: 5, revenue: 1350, daysOnShelf: 11, trend: "-15%" },
+  { rank: 6, product: "Too Yumm Veggie Stix", category: "Snacks", unitsSold: 5, revenue: 250, daysOnShelf: 10, trend: "-10%" },
+  { rank: 7, product: "Real Activ Juice 1L", category: "Beverages", unitsSold: 6, revenue: 594, daysOnShelf: 9, trend: "-6%" },
+  { rank: 8, product: "Borges Olive Oil 250ml", category: "Cooking Oil", unitsSold: 6, revenue: 2094, daysOnShelf: 9, trend: "-20%" },
+  { rank: 9, product: "Hershey's Syrup 200g", category: "Confectionery", unitsSold: 7, revenue: 1260, daysOnShelf: 8, trend: "-5%" },
+  { rank: 10, product: "Paper Boat Aam Panna", category: "Beverages", unitsSold: 7, revenue: 280, daysOnShelf: 7, trend: "-3%" },
+];
+
+
+const staffLeaderboard = [
+  { rank: 1, name: "Amit D.", role: "Floor Scanner", tasksCompleted: 26, avgTime: "11 min", accuracy: "98%", score: 972 },
+  { rank: 2, name: "Suresh K.", role: "Storeroom", tasksCompleted: 24, avgTime: "12 min", accuracy: "96%", score: 948 },
+  { rank: 3, name: "Rahul M.", role: "Floor Scanner", tasksCompleted: 22, avgTime: "14 min", accuracy: "95%", score: 910 },
+  { rank: 4, name: "Manoj T.", role: "Storeroom", tasksCompleted: 20, avgTime: "15 min", accuracy: "94%", score: 876 },
+  { rank: 5, name: "Deepa S.", role: "Storeroom", tasksCompleted: 18, avgTime: "13 min", accuracy: "97%", score: 862 },
+  { rank: 6, name: "Vikram P.", role: "Floor Scanner", tasksCompleted: 18, avgTime: "16 min", accuracy: "93%", score: 830 },
+  { rank: 7, name: "Priya N.", role: "Floor Scanner", tasksCompleted: 16, avgTime: "17 min", accuracy: "92%", score: 795 },
+  { rank: 8, name: "Ravi S.", role: "Storeroom", tasksCompleted: 15, avgTime: "14 min", accuracy: "91%", score: 768 },
+  { rank: 9, name: "Anita K.", role: "Floor Scanner", tasksCompleted: 14, avgTime: "18 min", accuracy: "90%", score: 740 },
+  { rank: 10, name: "Kiran J.", role: "Storeroom", tasksCompleted: 12, avgTime: "16 min", accuracy: "89%", score: 710 },
+];
+
+const DailyReport = () => {
+  const today = new Date();
+  const dateStr = today.toLocaleDateString("en-IN", { weekday: "long", day: "numeric", month: "long", year: "numeric" });
+
+  return (
   <div className="report-screen">
     {/* Header */}
     <div className="report-header">
       <div>
         <h2>Daily Operations Report</h2>
-        <span className="report-date">Wednesday, 25 March 2026 — Q-Mart Kothrud, Pune</span>
+        <span className="report-date">{dateStr} — Q-Mart Kothrud, Pune</span>
       </div>
       <div className="report-actions">
         <button className="report-btn"><Printer size={14} weight="bold" /> Print</button>
@@ -163,30 +199,109 @@ const DailyReport = () => (
       </div>
     </div>
 
-    {/* Staff Performance */}
-    <div className="report-card staff-card">
-      <h3><User size={16} weight="duotone" /> Staff Performance</h3>
-      <div className="staff-grid">
-        {staff.map((s, i) => (
-          <div key={i} className={`staff-row staff-${s.role.toLowerCase()}`}>
-            <div className="staff-top">
-              <div className="staff-avatar">{s.name[0]}</div>
-              <div className="staff-body">
-                <strong>{s.name}</strong>
-                <span className="staff-role">{s.role}</span>
-              </div>
-            </div>
-            <div className="staff-stats">
-              {s.scans != null && <span>{s.scans} scans</span>}
-              {s.catches != null && <span>{s.catches} catches</span>}
-              {s.restocks != null && <span>{s.restocks} restocks</span>}
-              <span className="staff-avg">Avg: {s.avg}</span>
-            </div>
-          </div>
-        ))}
+
+    {/* Top 10 Best Selling & Slowest Moving Products */}
+    <div className="report-tables-row">
+      <div className="report-card">
+        <h3><TrendUp size={16} weight="fill" style={{ color: "#059669" }} /> Top 10 Best Selling Products</h3>
+        <div className="report-table-wrap">
+          <table className="report-table best-selling-table">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Product</th>
+                <th>Category</th>
+                <th>Units Sold</th>
+                <th>Revenue</th>
+                <th>Trend</th>
+              </tr>
+            </thead>
+            <tbody>
+              {bestSelling.map((p) => (
+                <tr key={p.rank}>
+                  <td className="rt-rank">{p.rank}</td>
+                  <td className="rt-product">{p.product}</td>
+                  <td className="rt-category">{p.category}</td>
+                  <td className="rt-units">{p.unitsSold}</td>
+                  <td className="rt-revenue">₹{p.revenue.toLocaleString("en-IN")}</td>
+                  <td><span className="rt-trend trend-up">{p.trend}</span></td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div className="report-card">
+        <h3><TrendDown size={16} weight="fill" style={{ color: "#ef4444" }} /> Top 10 Slowest Moving Products</h3>
+        <div className="report-table-wrap">
+          <table className="report-table slow-moving-table">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Product</th>
+                <th>Category</th>
+                <th>Units Sold</th>
+                <th>Days on Shelf</th>
+                <th>Trend</th>
+              </tr>
+            </thead>
+            <tbody>
+              {slowMoving.map((p) => (
+                <tr key={p.rank}>
+                  <td className="rt-rank">{p.rank}</td>
+                  <td className="rt-product">{p.product}</td>
+                  <td className="rt-category">{p.category}</td>
+                  <td className="rt-units">{p.unitsSold}</td>
+                  <td className="rt-days">{p.daysOnShelf} days</td>
+                  <td><span className="rt-trend trend-down-red">{p.trend}</span></td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    {/* Staff Leaderboard */}
+    <div className="report-card" style={{ marginTop: 14 }}>
+      <h3><Trophy size={16} weight="fill" style={{ color: "#f59e0b" }} /> Staff Leaderboard — Top 10</h3>
+      <div className="report-table-wrap">
+        <table className="report-table leaderboard-table">
+          <thead>
+            <tr>
+              <th>Rank</th>
+              <th>Staff</th>
+              <th>Role</th>
+              <th>Tasks Done</th>
+              <th>Avg Time</th>
+              <th>Accuracy</th>
+              <th>Score</th>
+            </tr>
+          </thead>
+          <tbody>
+            {staffLeaderboard.map((s) => (
+              <tr key={s.rank} className={s.rank <= 3 ? "lb-top3" : ""}>
+                <td className="lb-rank">
+                  {s.rank === 1 ? "🥇" : s.rank === 2 ? "🥈" : s.rank === 3 ? "🥉" : s.rank}
+                </td>
+                <td className="lb-name">
+                  <span className="lb-avatar">{s.name[0]}</span>
+                  {s.name}
+                </td>
+                <td className="lb-role">{s.role}</td>
+                <td className="lb-tasks">{s.tasksCompleted}</td>
+                <td className="lb-time">{s.avgTime}</td>
+                <td className="lb-accuracy">{s.accuracy}</td>
+                <td className="lb-score">{s.score}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
     </div>
   </div>
-);
+  );
+};
 
 export default DailyReport;
