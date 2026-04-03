@@ -210,7 +210,7 @@ const DailyReport = () => {
               <tr>
                 <th>#</th>
                 <th>Product</th>
-                <th>Category</th>
+                <th className="rt-category">Category</th>
                 <th>Units Sold</th>
                 <th>Revenue</th>
                 <th>Trend</th>
@@ -240,7 +240,7 @@ const DailyReport = () => {
               <tr>
                 <th>#</th>
                 <th>Product</th>
-                <th>Category</th>
+                <th className="rt-category">Category</th>
                 <th>Units Sold</th>
                 <th>Days on Shelf</th>
                 <th>Trend</th>
@@ -272,7 +272,7 @@ const DailyReport = () => {
             <tr>
               <th>Rank</th>
               <th>Staff</th>
-              <th>Role</th>
+              <th className="lb-role">Role</th>
               <th>Tasks Done</th>
               <th>Avg Time</th>
               <th>Accuracy</th>
