@@ -25,7 +25,7 @@
 .report-right-col { display: flex; flex-direction: column; gap: 14px; }
 
 /* Cards */
-.report-card { background: #fff; border: 1px solid #e2e8f0; border-radius: 14px; padding: 18px 20px; box-shadow: 0 1px 3px rgba(0,0,0,.03); }
+.report-card { background: #fff; border: 1px solid #e2e8f0; border-radius: 14px; padding: 18px 20px; box-shadow: 0 1px 3px rgba(0,0,0,.03); min-width: 0; overflow: hidden; }
 .report-card h3 { display: flex; align-items: center; gap: 8px; font-size: .88rem; font-weight: 800; color: #0f172a; margin: 0 0 14px; }
 
 /* Top Saves */
@@ -112,7 +112,7 @@
 }
 
 /* Product Tables */
-.report-tables-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 14px; }
+.report-tables-row { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 16px; margin-top: 14px; }
 .report-table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
 .report-table { width: 100%; min-width: 520px; border-collapse: collapse; font-size: .74rem; }
 .report-table thead th { text-align: left; font-size: .62rem; font-weight: 700; color: #94a3b8; text-transform: uppercase; letter-spacing: .06em; padding: 8px 10px; border-bottom: 2px solid #e2e8f0; white-space: nowrap; }
@@ -135,7 +135,7 @@
 .slow-moving-table tbody tr:first-child .rt-rank { color: #ef4444; }
 
 @media (max-width: 1024px) {
-  .report-tables-row { grid-template-columns: 1fr; }
+  .report-tables-row { grid-template-columns: minmax(0, 1fr); }
 }
 
 @media (max-width: 480px) {
