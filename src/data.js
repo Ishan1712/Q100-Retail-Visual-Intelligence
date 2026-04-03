@@ -12,10 +12,10 @@ export const shiftData = {
 };
 
 export const shelves = [
-  { id: 3, name: "Shelf 3", category: "Staples & Grains", icon: "🌾", status: "green", lastScan: "Scanned 8:15 AM", note: "Compliant", priority: false },
-  { id: 5, name: "Shelf 5", category: "Beverages", icon: "🍼", status: "green", lastScan: "Scanned 8:32 AM", note: "Compliant", priority: false },
+  { id: 3, name: "Shelf 3", category: "Staples & Grains", icon: "🌾", status: "green", lastScan: "Scanned 8:15 AM", note: "Completed", priority: false },
+  { id: 5, name: "Shelf 5", category: "Beverages", icon: "🍼", status: "green", lastScan: "Scanned 8:32 AM", note: "Completed", priority: false },
   { id: 7, name: "Shelf 7", category: "Snacks & Biscuits", icon: "🍪", status: "red", lastScan: "Scanned 8:48 AM", note: "3 OOS items detected · Restock pending", priority: false },
-  { id: 9, name: "Shelf 9", category: "Personal Care", icon: "🧼", status: "green", lastScan: "Scanned 9:05 AM", note: "Compliant", priority: false },
+  { id: 9, name: "Shelf 9", category: "Personal Care", icon: "🧼", status: "green", lastScan: "Scanned 9:05 AM", note: "Completed", priority: false },
   { id: 2, name: "Shelf 2", category: "Dairy & Frozen", icon: "🥛", status: "grey", lastScan: "Last scan 6:22 AM", note: "Not scanned · 3+ hours ago", priority: true },
   { id: 4, name: "Shelf 4", category: "Cooking Oil & Masalas", icon: "🫙", status: "grey", lastScan: "Not scanned yet", note: "Pending scan", priority: false },
   { id: 6, name: "Shelf 6", category: "Household & Cleaning", icon: "🧴", status: "grey", lastScan: "Not scanned yet", note: "Pending scan", priority: false },

@@ -124,7 +124,7 @@ const catConfig = {
 };
 
 const statusCfg = {
-  green: { label: "Compliant", cls: "st-green" },
+  green: { label: "Completed", cls: "st-green" },
   red:   { label: "OOS Detected", cls: "st-red" },
   amber: { label: "In Progress", cls: "st-amber" },
   grey:  { label: "Not Scanned", cls: "st-grey" },

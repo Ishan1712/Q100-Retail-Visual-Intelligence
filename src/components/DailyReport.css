@@ -113,8 +113,8 @@
 
 /* Product Tables */
 .report-tables-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 14px; }
-.report-table-wrap { overflow-x: auto; }
-.report-table { width: 100%; border-collapse: collapse; font-size: .74rem; }
+.report-table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+.report-table { width: 100%; min-width: 520px; border-collapse: collapse; font-size: .74rem; }
 .report-table thead th { text-align: left; font-size: .62rem; font-weight: 700; color: #94a3b8; text-transform: uppercase; letter-spacing: .06em; padding: 8px 10px; border-bottom: 2px solid #e2e8f0; white-space: nowrap; }
 .report-table tbody tr { transition: background .12s; }
 .report-table tbody tr:hover { background: #f8fafc; }
