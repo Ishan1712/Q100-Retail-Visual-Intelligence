@@ -337,7 +337,7 @@ export default function PhotoMode({ shelf, onComplete, onClose }) {
                           type="file"
                           ref={fileInputRef}
                           accept="image/*"
-                          capture="environment"
+
                           onChange={handleUpload}
                           style={{ display: 'none' }}
                         />
