@@ -2166,7 +2166,7 @@
   align-items: center;
   flex-wrap: wrap;
   gap: 6px;
-  padding: 8px 0;
+  padding: 8px 12px;
   margin-bottom: 4px;
 }
 .pm-alert-select-all {
