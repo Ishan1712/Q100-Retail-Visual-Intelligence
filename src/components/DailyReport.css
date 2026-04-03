@@ -1,5 +1,5 @@
 /* Screen 2.4 — Daily Operations Report */
-.report-screen { display: flex; flex-direction: column; gap: 16px; padding: 20px 24px 24px; overflow-y: auto; overflow-x: hidden; flex: 1; }
+.report-screen { display: flex; flex-direction: column; gap: 16px; padding: 20px 24px 24px; overflow-y: auto; flex: 1; }
 
 .report-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; }
 .report-header h2 { font-size: 1.15rem; font-weight: 800; color: #0f172a; margin: 0; }
@@ -25,7 +25,7 @@
 .report-right-col { display: flex; flex-direction: column; gap: 14px; }
 
 /* Cards */
-.report-card { background: #fff; border: 1px solid #e2e8f0; border-radius: 14px; padding: 18px 20px; box-shadow: 0 1px 3px rgba(0,0,0,.03); min-width: 0; overflow: hidden; }
+.report-card { background: #fff; border: 1px solid #e2e8f0; border-radius: 14px; padding: 18px 20px; box-shadow: 0 1px 3px rgba(0,0,0,.03); min-width: 0; }
 .report-card h3 { display: flex; align-items: center; gap: 8px; font-size: .88rem; font-weight: 800; color: #0f172a; margin: 0 0 14px; }
 
 /* Top Saves */
