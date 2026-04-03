@@ -21,6 +21,7 @@ export default function PhotoMode({ shelf, onComplete, onClose }) {
   const [idx, setIdx] = useState(0);
   const [states, setStates] = useState(sections.map(() => ({ status: 'pending' })));
   const [showPlan, setShowPlan] = useState(false);
+  const [viewImage, setViewImage] = useState(null); // 'master' | 'inspection' | null
   const [sent, setSent] = useState({});
   const [inputMode, setInputMode] = useState('upload');
   const [uploadedImage, setUploadedImage] = useState(null);
@@ -402,16 +403,16 @@ export default function PhotoMode({ shelf, onComplete, onClose }) {
               <div className="pm-analyze">
                 <div className="pm-analyze-comparison">
                   <div className="pm-analyze-img-pair">
-                    <div className="pm-analyze-img-box">
-                      <span className="pm-analyze-img-label">Master</span>
+                    <div className="pm-analyze-img-box" onClick={() => setViewImage('master')} style={{ cursor: 'pointer' }}>
+                      <span className="pm-analyze-img-label">Master <MagnifyingGlassPlus size={9} weight="bold" /></span>
                       <img src={sec.masterImage} alt="Master" />
                     </div>
                     <div className="pm-analyze-vs">
                       <ArrowsLeftRight size={20} weight="bold" />
                       <span>VS</span>
                     </div>
-                    <div className="pm-analyze-img-box">
-                      <span className="pm-analyze-img-label">Inspection</span>
+                    <div className="pm-analyze-img-box" onClick={() => setViewImage('inspection')} style={{ cursor: 'pointer' }}>
+                      <span className="pm-analyze-img-label">Inspection <MagnifyingGlassPlus size={9} weight="bold" /></span>
                       {(uploadedImage || capturedFrame) ? (
                         <img src={uploadedImage || capturedFrame} alt="Inspection" />
                       ) : (
@@ -451,13 +452,13 @@ export default function PhotoMode({ shelf, onComplete, onClose }) {
 
                   {/* ── Side-by-side Image Comparison ── */}
                   <div className="pm-result-images">
-                    <div className="pm-result-img-box">
-                      <span className="pm-result-img-label master">Master</span>
+                    <div className="pm-result-img-box" onClick={() => setViewImage('master')} style={{ cursor: 'pointer' }}>
+                      <span className="pm-result-img-label master">Master <MagnifyingGlassPlus size={9} weight="bold" /></span>
                       <img src={sec.masterImage} alt="Master" />
                     </div>
                     <div className="pm-result-img-vs">VS</div>
-                    <div className="pm-result-img-box">
-                      <span className="pm-result-img-label inspection">Inspection</span>
+                    <div className="pm-result-img-box" onClick={() => setViewImage('inspection')} style={{ cursor: 'pointer' }}>
+                      <span className="pm-result-img-label inspection">Inspection <MagnifyingGlassPlus size={9} weight="bold" /></span>
                       <img src={uploadedImage || capturedFrame || sec.masterImage} alt="Inspection" />
                     </div>
                   </div>
@@ -704,6 +705,38 @@ export default function PhotoMode({ shelf, onComplete, onClose }) {
                     <span key={j} className="pm-expected-tag">{p}</span>
                   ))}
                 </div>
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Fullscreen image viewer (master or inspection) */}
+      <AnimatePresence>
+        {viewImage && (
+          <motion.div className="pm-image-viewer" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+            onClick={() => setViewImage(null)}>
+            <div className="pm-image-viewer-content" onClick={(e) => e.stopPropagation()}>
+              <div className="pm-image-viewer-header">
+                <div className="pm-image-viewer-tabs">
+                  <button className={`pm-image-viewer-tab ${viewImage === 'master' ? 'active master' : ''}`}
+                    onClick={() => setViewImage('master')}>
+                    <Image size={14} weight="duotone" /> Master
+                  </button>
+                  <button className={`pm-image-viewer-tab ${viewImage === 'inspection' ? 'active inspection' : ''}`}
+                    onClick={() => setViewImage('inspection')}>
+                    <Eye size={14} weight="duotone" /> Inspected
+                  </button>
+                </div>
+                <button onClick={() => setViewImage(null)} className="pm-close" aria-label="Close">
+                  <X size={15} weight="bold" />
+                </button>
+              </div>
+              <div className="pm-image-viewer-body">
+                <img
+                  src={viewImage === 'master' ? sec.masterImage : (uploadedImage || capturedFrame || sec.masterImage)}
+                  alt={viewImage === 'master' ? 'Master' : 'Inspected'}
+                />
               </div>
             </div>
           </motion.div>
